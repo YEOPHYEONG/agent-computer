@@ -2,6 +2,8 @@
 
 Stop writing prompts. Boot an agent computer.
 
+![Agent Computer overview](computer/docs/assets/agent-computer-hero.svg)
+
 Agent Computer is a file-based workspace where AI agents work like apps. They read files, use tools, remember context, create reports, build decks, organize outputs, and help you run knowledge work.
 
 It is designed to be opened with coding agents such as Codex, Claude Code, or any assistant that can read and write files.
@@ -25,6 +27,8 @@ Most agent work disappears inside chat history. Agent Computer gives agents a du
 - user work lives under `workspace/`
 
 The goal is to make AI work feel less like one-off prompting and more like using a computer built for agents.
+
+![Before and after Agent Computer](computer/docs/assets/agent-computer-before-after.svg)
 
 ## Boundary Rule
 
@@ -138,6 +142,8 @@ Agent Computer separates its files into two layers:
 - user output layer: project folders, source files, reports, decks, QA, and staging areas
 
 Most users should start in `workspace/projects/`. See [Workspace Structure](computer/docs/workspace-structure.md) for the full folder model.
+
+![Agent Computer workflow](computer/docs/assets/agent-computer-flow.svg)
 
 ```text
 agent-computer/

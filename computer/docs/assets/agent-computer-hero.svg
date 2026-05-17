@@ -1,0 +1,105 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Agent Computer overview</title>
+  <desc id="desc">A visual overview showing chat-only agent work becoming organized Agent Computer project outputs.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1600" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0B1020"/>
+      <stop offset="0.48" stop-color="#101827"/>
+      <stop offset="1" stop-color="#08251F"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#172033"/>
+      <stop offset="1" stop-color="#101723"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="356" y1="154" x2="1248" y2="749" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8BD3FF"/>
+      <stop offset="0.5" stop-color="#A6F3C5"/>
+      <stop offset="1" stop-color="#FFD166"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="24" stdDeviation="24" flood-color="#000000" flood-opacity="0.35"/>
+    </filter>
+    <style>
+      .title { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 68px; font-weight: 800; letter-spacing: 0; fill: #F8FAFC; }
+      .subtitle { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 29px; font-weight: 500; letter-spacing: 0; fill: #B6C3D5; }
+      .label { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 26px; font-weight: 800; letter-spacing: 0; fill: #F8FAFC; }
+      .small { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 18px; font-weight: 600; letter-spacing: 0; fill: #C9D4E5; }
+      .mono { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; font-size: 17px; font-weight: 600; letter-spacing: 0; fill: #B8F1D2; }
+      .muted { fill: #6F7C91; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="900" rx="0" fill="url(#bg)"/>
+  <path d="M109 150C302 49 509 52 710 124C930 202 1067 82 1262 72C1398 66 1489 116 1554 182V900H0V251C30 209 66 172 109 150Z" fill="#FFFFFF" opacity="0.035"/>
+  <path d="M155 715C302 589 471 622 638 683C839 756 1018 782 1195 696C1341 626 1462 639 1600 712V900H0V829C47 799 91 760 155 715Z" fill="#A6F3C5" opacity="0.055"/>
+
+  <text x="100" y="120" class="title">Stop losing agent work in chat.</text>
+  <text x="100" y="168" class="subtitle">Boot a local computer where coding agents run like apps and save durable project outputs.</text>
+
+  <g filter="url(#shadow)">
+    <rect x="92" y="250" width="360" height="472" rx="26" fill="url(#panel)" stroke="#27334A"/>
+    <text x="128" y="304" class="label">Chat-only work</text>
+    <text x="128" y="340" class="small">Good answers, weak continuity</text>
+    <rect x="128" y="384" width="264" height="54" rx="14" fill="#222B3E"/>
+    <text x="152" y="418" class="small">PDF → PPT?</text>
+    <rect x="188" y="464" width="224" height="54" rx="14" fill="#182238" stroke="#35415B"/>
+    <text x="212" y="498" class="small">Sure, here is a draft...</text>
+    <rect x="128" y="544" width="250" height="54" rx="14" fill="#222B3E"/>
+    <text x="152" y="578" class="small">Where did it go?</text>
+    <path d="M156 645H383" stroke="#35415B" stroke-width="3" stroke-linecap="round" stroke-dasharray="10 12"/>
+    <text x="156" y="680" class="small muted">context fades</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="540" y="228" width="520" height="520" rx="34" fill="#101826" stroke="url(#accent)" stroke-width="2"/>
+    <rect x="584" y="276" width="432" height="80" rx="20" fill="#172033" stroke="#2E3A54"/>
+    <text x="624" y="326" class="label">Agent Computer</text>
+    <text x="624" y="352" class="small">a local file-based workspace</text>
+
+    <rect x="584" y="396" width="196" height="116" rx="18" fill="#122235" stroke="#335B82"/>
+    <text x="612" y="432" class="small">computer/</text>
+    <text x="612" y="462" class="mono">agents</text>
+    <text x="612" y="490" class="mono">tools</text>
+
+    <rect x="820" y="396" width="196" height="116" rx="18" fill="#10281F" stroke="#3A7C5B"/>
+    <text x="848" y="432" class="small">workspace/</text>
+    <text x="848" y="462" class="mono">projects</text>
+    <text x="848" y="490" class="mono">inbox</text>
+
+    <rect x="584" y="552" width="432" height="126" rx="20" fill="#161D2C" stroke="#2E3A54"/>
+    <text x="620" y="591" class="small">workspace-router → agent chain → QA</text>
+    <g transform="translate(620 618)">
+      <rect width="70" height="34" rx="10" fill="#25324B"/>
+      <text x="18" y="23" class="mono">PDF</text>
+      <path d="M82 17H126" stroke="#8BD3FF" stroke-width="4" stroke-linecap="round"/>
+      <rect x="138" width="96" height="34" rx="10" fill="#25324B"/>
+      <text x="154" y="23" class="mono">Report</text>
+      <path d="M246 17H290" stroke="#A6F3C5" stroke-width="4" stroke-linecap="round"/>
+      <rect x="302" width="82" height="34" rx="10" fill="#25324B"/>
+      <text x="321" y="23" class="mono">PPT</text>
+    </g>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="1148" y="250" width="360" height="472" rx="26" fill="url(#panel)" stroke="#27334A"/>
+    <text x="1184" y="304" class="label">Durable outputs</text>
+    <text x="1184" y="340" class="small">Files you can inspect and reuse</text>
+    <g transform="translate(1184 386)">
+      <rect width="268" height="62" rx="16" fill="#10281F" stroke="#3A7C5B"/>
+      <text x="24" y="39" class="mono">research/deep-research.md</text>
+      <rect y="82" width="268" height="62" rx="16" fill="#10281F" stroke="#3A7C5B"/>
+      <text x="24" y="121" class="mono">reports/final_report.md</text>
+      <rect y="164" width="268" height="62" rx="16" fill="#10281F" stroke="#3A7C5B"/>
+      <text x="24" y="203" class="mono">presentations/deck.pptx</text>
+      <rect y="246" width="268" height="62" rx="16" fill="#10281F" stroke="#3A7C5B"/>
+      <text x="24" y="285" class="mono">qa/result_qa.md</text>
+    </g>
+  </g>
+
+  <path d="M474 486H514" stroke="#8BD3FF" stroke-width="6" stroke-linecap="round"/>
+  <path d="M500 470L516 486L500 502" stroke="#8BD3FF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M1082 486H1122" stroke="#A6F3C5" stroke-width="6" stroke-linecap="round"/>
+  <path d="M1108 470L1124 486L1108 502" stroke="#A6F3C5" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <text x="100" y="820" class="subtitle">Agents as apps. Tools as capabilities. Work as project files.</text>
+</svg>
