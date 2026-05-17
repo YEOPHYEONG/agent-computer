@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <rect width="1200" height="675" fill="#F7F5F0"/>
+  <rect x="64" y="58" width="430" height="70" fill="#111827"/>
+  <text x="90" y="103" font-family="Arial" font-size="30" font-weight="700" fill="#FFFFFF">Executive thesis</text>
+  <rect x="64" y="164" width="316" height="192" fill="#FFFFFF" stroke="#D1D5DB"/>
+  <rect x="410" y="164" width="316" height="192" fill="#FFFFFF" stroke="#D1D5DB"/>
+  <rect x="756" y="164" width="316" height="192" fill="#FFFFFF" stroke="#D1D5DB"/>
+  <text x="90" y="213" font-family="Arial" font-size="24" font-weight="700" fill="#111827">Finding</text>
+  <text x="436" y="213" font-family="Arial" font-size="24" font-weight="700" fill="#111827">Evidence</text>
+  <text x="782" y="213" font-family="Arial" font-size="24" font-weight="700" fill="#111827">Implication</text>
+  <rect x="64" y="420" width="1008" height="120" fill="#E5E7EB"/>
+  <rect x="88" y="448" width="220" height="64" fill="#FFFFFF"/>
+  <rect x="336" y="448" width="220" height="64" fill="#FFFFFF"/>
+  <rect x="584" y="448" width="220" height="64" fill="#FFFFFF"/>
+  <rect x="832" y="448" width="220" height="64" fill="#FFFFFF"/>
+  <text x="64" y="610" font-family="Arial" font-size="18" fill="#4B5563">Grammar: thesis bar, three proof cards, action rail, restrained palette.</text>
+</svg>

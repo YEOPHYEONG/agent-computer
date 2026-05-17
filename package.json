@@ -1,0 +1,21 @@
+{
+  "name": "agent-computer",
+  "version": "0.0.0",
+  "private": false,
+  "type": "module",
+  "description": "A file-based computer for AI agents.",
+  "bin": {
+    "agent-computer": "computer/tools/agent-computer.mjs"
+  },
+  "scripts": {
+    "agent": "node computer/tools/agent-computer.mjs",
+    "demo": "node computer/tools/agent-computer.mjs demo",
+    "index": "node computer/tools/agent-computer.mjs index",
+    "qa": "node computer/tools/agent-computer.mjs qa",
+    "release:build": "node computer/tools/release/build-release.mjs",
+    "route": "node computer/tools/agent-computer.mjs route"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

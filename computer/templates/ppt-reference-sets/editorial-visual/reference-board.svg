@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <rect width="1200" height="675" fill="#FBF7EF"/>
+  <rect x="64" y="64" width="460" height="500" fill="#111827"/>
+  <text x="92" y="150" font-family="Georgia" font-size="48" font-weight="700" fill="#FFFFFF">A sharper story</text>
+  <text x="92" y="215" font-family="Arial" font-size="22" fill="#D1D5DB">Editorial pacing for insight-heavy decks</text>
+  <rect x="584" y="90" width="450" height="92" fill="#FFFFFF" stroke="#E5E7EB"/>
+  <rect x="584" y="220" width="450" height="92" fill="#FFFFFF" stroke="#E5E7EB"/>
+  <rect x="584" y="350" width="450" height="92" fill="#FFFFFF" stroke="#E5E7EB"/>
+  <circle cx="625" cy="136" r="16" fill="#E11D48"/>
+  <circle cx="625" cy="266" r="16" fill="#2563EB"/>
+  <circle cx="625" cy="396" r="16" fill="#059669"/>
+  <text x="670" y="145" font-family="Arial" font-size="24" font-weight="700" fill="#111827">Scene-setting</text>
+  <text x="670" y="275" font-family="Arial" font-size="24" font-weight="700" fill="#111827">Evidence reveal</text>
+  <text x="670" y="405" font-family="Arial" font-size="24" font-weight="700" fill="#111827">Practical turn</text>
+  <text x="64" y="620" font-family="Arial" font-size="18" fill="#4B5563">Grammar: large editorial opener, varied rhythm, strong quote/finding modules.</text>
+</svg>

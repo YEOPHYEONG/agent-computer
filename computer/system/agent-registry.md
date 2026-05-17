@@ -1,0 +1,29 @@
+# Agent Registry
+
+## System Agents
+
+| Agent | Path | Purpose |
+|---|---|---|
+| workspace-router | `computer/agents/system/workspace-router` | Route requests to agents |
+| agent-builder | `computer/agents/system/agent-builder` | Build executable agent apps |
+| document-ingestor | `computer/agents/system/document-ingestor` | Convert files to agent-readable Markdown |
+| file-organizer | `computer/agents/system/file-organizer` | Plan, move, log, and undo workspace file organization |
+| memory-curator | `computer/agents/system/memory-curator` | Maintain useful memory |
+| qa-verifier | `computer/agents/system/qa-verifier` | Verify output quality |
+
+## Work Agents
+
+| Agent | Path | Purpose |
+|---|---|---|
+| quick-researcher | `computer/agents/work/quick-researcher` | Fast focused research |
+| deep-dive-researcher | `computer/agents/work/deep-dive-researcher` | Deep research |
+| report-writer | `computer/agents/work/report-writer` | Reports and documents |
+| ppt-builder | `computer/agents/work/ppt-builder` | Editable PPT decks |
+| email-operator | `computer/agents/work/email-operator` | Email drafts and follow-ups |
+| instagram-growth-analyst | `computer/agents/work/instagram-growth-analyst` | Analyze local Instagram performance data and produce growth experiments without external account access |
+
+## Personal Agents
+
+| Agent | Path | Purpose |
+|---|---|---|
+| friend-counselor | `computer/agents/personal/friend-counselor` | Reflection and supportive conversation |

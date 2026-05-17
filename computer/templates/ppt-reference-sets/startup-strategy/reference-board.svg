@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <rect width="1200" height="675" fill="#101828"/>
+  <text x="70" y="98" font-family="Arial" font-size="44" font-weight="700" fill="#FFFFFF">From insight to launch</text>
+  <rect x="70" y="150" width="480" height="300" fill="#FFFFFF" opacity="0.95"/>
+  <text x="102" y="205" font-family="Arial" font-size="28" font-weight="700" fill="#101828">Sharp wedge</text>
+  <rect x="102" y="245" width="380" height="28" fill="#B7F7D0"/>
+  <rect x="102" y="295" width="320" height="28" fill="#A7C7FF"/>
+  <rect x="102" y="345" width="410" height="28" fill="#FDE68A"/>
+  <rect x="620" y="150" width="200" height="300" fill="#1D2939" stroke="#475467"/>
+  <rect x="850" y="150" width="200" height="300" fill="#1D2939" stroke="#475467"/>
+  <text x="650" y="210" font-family="Arial" font-size="26" font-weight="700" fill="#FFFFFF">Proof</text>
+  <text x="880" y="210" font-family="Arial" font-size="26" font-weight="700" fill="#FFFFFF">Next bet</text>
+  <rect x="70" y="515" width="980" height="42" fill="#B7F7D0"/>
+  <text x="88" y="543" font-family="Arial" font-size="20" font-weight="700" fill="#101828">Grammar: bold thesis, proof blocks, launch sequence, high-energy but evidence-bound.</text>
+</svg>

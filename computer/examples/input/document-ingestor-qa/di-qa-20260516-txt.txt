@@ -1,0 +1,9 @@
+Text QA Fixture
+
+Preserve this exact TXT sentence: batch traceability beta keeps 17 events.
+
+Checks:
+- Plain paragraphs should remain visible.
+- Line breaks should be readable after conversion.
+- The phrase operator handoff token should survive conversion.
+

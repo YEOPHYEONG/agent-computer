@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <rect width="1200" height="675" fill="#F8FAFC"/>
+  <text x="64" y="92" font-family="Arial" font-size="38" font-weight="700" fill="#0F172A">Research briefing</text>
+  <rect x="64" y="130" width="310" height="420" fill="#FFFFFF" stroke="#CBD5E1"/>
+  <rect x="414" y="130" width="310" height="420" fill="#FFFFFF" stroke="#CBD5E1"/>
+  <rect x="764" y="130" width="310" height="420" fill="#FFFFFF" stroke="#CBD5E1"/>
+  <text x="92" y="178" font-family="Arial" font-size="24" font-weight="700" fill="#1E293B">Question ledger</text>
+  <text x="442" y="178" font-family="Arial" font-size="24" font-weight="700" fill="#1E293B">Evidence map</text>
+  <text x="792" y="178" font-family="Arial" font-size="24" font-weight="700" fill="#1E293B">What changed</text>
+  <line x1="92" y1="220" x2="346" y2="220" stroke="#94A3B8" stroke-width="2"/>
+  <line x1="442" y1="220" x2="696" y2="220" stroke="#94A3B8" stroke-width="2"/>
+  <line x1="792" y1="220" x2="1046" y2="220" stroke="#94A3B8" stroke-width="2"/>
+  <circle cx="110" cy="278" r="10" fill="#2563EB"/>
+  <circle cx="110" cy="348" r="10" fill="#F59E0B"/>
+  <circle cx="110" cy="418" r="10" fill="#10B981"/>
+  <rect x="442" y="258" width="220" height="34" fill="#DBEAFE"/>
+  <rect x="442" y="328" width="180" height="34" fill="#FEF3C7"/>
+  <rect x="442" y="398" width="240" height="34" fill="#D1FAE5"/>
+  <path d="M810 450 C850 360 915 390 950 300 S1010 210 1040 250" fill="none" stroke="#2563EB" stroke-width="5"/>
+  <text x="64" y="610" font-family="Arial" font-size="18" fill="#475569">Grammar: questions drive layout, evidence confidence is visible, caveats are first-class.</text>
+</svg>
