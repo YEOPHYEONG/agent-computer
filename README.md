@@ -2,7 +2,7 @@
 
 Stop writing prompts. Boot an agent computer.
 
-![Agent Computer cover](computer/docs/assets/agent-computer-cover-v2.png)
+![Agent Computer cover](computer/docs/assets/agent-computer-cover-v3.png)
 
 Agent Computer is a file-based workspace where AI agents work like apps. They read files, use tools, remember context, create reports, build decks, organize outputs, and help you run knowledge work.
 
