@@ -25,8 +25,8 @@
 
 ## Project Decision Defaults
 
-- Usage/help requests such as "how do I use this?", "너 어떻게 써?", or "사용법 알려줘" are not project work. Answer from `START_HERE.md`, `README.md`, `AGENTS.md`, and `docs/workspace-structure.md` without creating a project unless the user asks to save the guide.
-- A good usage/help answer should tell the user to ask in natural language, put source files in `inbox/`, find final work in `projects/`, and expect outputs such as converted docs, research, reports, presentations, and QA logs under `projects/<project-slug>/`.
+- Usage/help requests such as "How do I use this workspace?", "너 어떻게 써?", or "사용법 알려줘" are not project work. Answer from `START_HERE.md`, `README.md`, `AGENTS.md`, and `computer/docs/workspace-structure.md` without creating a project unless the user asks to save the guide.
+- A good usage/help answer should tell the user to ask in natural language, put source files in `workspace/inbox/`, find final work in `workspace/projects/`, and expect outputs such as converted docs, research, reports, presentations, and QA logs under `workspace/projects/<project-slug>/`.
 - Do not frame `agents/`, `tools/`, `system/`, or `templates/` as user-facing result folders. They are the operating layer.
 - New work default: create a fresh `projects/<project-slug>/`.
 - Existing project reuse requires explicit user intent such as continue, update, improve, compare, or use previous outputs.

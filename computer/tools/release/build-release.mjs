@@ -258,10 +258,10 @@ function runSmokeChecks() {
     ['node', ['--check', 'computer/tools/lib/registry.mjs']],
     ['node', ['--check', 'computer/tools/lib/research.mjs']],
     ['node', ['--check', 'computer/tools/lib/deck.mjs']],
-    ['node', ['computer/tools/agent-computer.mjs', 'route', '너 어떻게 써?']],
-    ['node', ['computer/tools/agent-computer.mjs', 'route', '이 PDF 읽어서 보고서랑 PPT까지 만들어줘']],
-    ['node', ['computer/tools/agent-computer.mjs', 'route', '뉴스레터 성공사례를 딥하게 조사하고 성공 공식으로 정리해서 PPT로 만들어줘']],
-    ['node', ['computer/tools/agent-computer.mjs', 'route', 'person@example.com을 차니라는 연락처로 저장해줘']]
+    ['node', ['computer/tools/agent-computer.mjs', 'route', 'How do I use this workspace?']],
+    ['node', ['computer/tools/agent-computer.mjs', 'route', 'Convert this PDF into a report and PPT.']],
+    ['node', ['computer/tools/agent-computer.mjs', 'route', 'Research newsletter success cases deeply and turn the success formulas into a rich editable PPT.']],
+    ['node', ['computer/tools/agent-computer.mjs', 'route', 'Save person@example.com as a contact named Alex.']]
   ];
 
   return commands.map(([cmd, commandArgs]) => {

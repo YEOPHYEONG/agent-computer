@@ -47,7 +47,7 @@ You normally do not need to browse these folders to find your own work.
 Open this folder with your coding agent and ask:
 
 ```text
-너 어떻게 써?
+How do I use this workspace?
 ```
 
 The expected answer should explain Agent Computer usage, not generic Codex or Claude usage. It should point you to `workspace/inbox/` for source files and `workspace/projects/` for final results.
@@ -65,23 +65,23 @@ Agent Computer should create a fresh project, save outputs under `workspace/proj
 If you ask how to use Agent Computer, the answer should sound roughly like this:
 
 ```text
-그냥 자연어로 시키면 됩니다. 이 폴더는 Agent Computer라서 요청을 받으면 알맞은 에이전트 앱을 골라 작업하고 결과를 workspace/projects/ 아래에 프로젝트별로 남깁니다.
+Ask in normal language. This folder is an Agent Computer, so I route your request to the right agent app or agent chain, do the work in this workspace, and save durable results under workspace/projects/.
 
-주로 보면 되는 곳은 두 군데입니다.
+The two main folders to use are:
 
-- workspace/inbox/: 처리할 원본 자료를 넣는 곳
-- workspace/projects/: 보고서, PPT, 변환 문서, QA 결과가 프로젝트별로 쌓이는 곳
+- workspace/inbox/: put source files here when you want agents to process them
+- workspace/projects/: find reports, PPT decks, converted documents, drafts, and QA logs by project
 
-예를 들면 이렇게 말하면 됩니다.
+For example, you can ask:
 
-"이 PDF를 에이전트용 문서로 변환하고 보고서와 PPT까지 만들어줘."
-"뉴스레터 성공사례를 딥하게 조사해서 성공 공식으로 정리하고 풍부한 PPT로 만들어줘."
-"이 폴더를 프로젝트별로 정리해줘. 먼저 dry-run으로 보여줘."
-"차니에게 보낼 이메일 초안 작성해줘."
+"Convert this PDF into an agent-readable document, then create a report and PPT."
+"Research newsletter success cases deeply and turn the success formulas into a rich editable PPT."
+"Organize this workspace by project. Show me the dry-run first."
+"Draft an email to Alex about the Agent Computer preview."
 
-결과는 보통 workspace/projects/{project-name}/ 안의 converted, research, reports, presentations, qa 폴더에서 찾으면 됩니다.
+Results usually live under workspace/projects/{project-name}/ in converted, research, reports, presentations, and qa folders.
 
-이메일 발송, 외부 계정, macOS 앱, 삭제, 실제 파일 이동 같은 행동은 명시적으로 승인받기 전에는 하지 않습니다.
+I do not send email, access external accounts, operate host apps, delete files, or actually move files unless you explicitly approve that action.
 ```
 
 ## Folder Model

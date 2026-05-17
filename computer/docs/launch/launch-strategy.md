@@ -49,7 +49,7 @@ Natural request -> agent chain -> project folder -> report/PPT/QA outputs
 Recommended demo:
 
 ```text
-뉴스레터 성공사례를 딥하게 조사하고, 성공 공식으로 정리해서 내용이 풍부한 PPT로 만들어줘
+Research newsletter success cases deeply, extract the repeatable growth formulas, and turn the findings into a rich editable PPT.
 ```
 
 What to show:

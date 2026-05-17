@@ -1,12 +1,12 @@
 # Release Manifest
 
-Generated: 2026-05-17T10:07:15.400Z
-Version: v0-preview
-Target: `dist/agent-computer-v0-preview`
+Generated: 2026-05-17T12:37:20.850Z
+Version: english-quickstart-check
+Target: `dist/agent-computer-english-quickstart-check`
 
 ## Summary
 
-- Files copied: 161
+- Files copied: 164
 - Scan errors: 0
 - Scan warnings: 0
 - Smoke checks: 7/7 passed
@@ -33,7 +33,7 @@ Target: `dist/agent-computer-v0-preview`
 
 - Status: pass
 
-### node computer/tools/agent-computer.mjs route 너 어떻게 써?
+### node computer/tools/agent-computer.mjs route How do I use this workspace?
 
 - Status: pass
 
@@ -42,7 +42,7 @@ Target: `dist/agent-computer-v0-preview`
 
 ## Request
 
-너 어떻게 써?
+How do I use this workspace?
 
 ## Agent Chain
 
@@ -78,7 +78,7 @@ Target: `dist/agent-computer-v0-preview`
 - Actual sending, publishing, deletion, payment, account changes, host-app automation, or file moves require explicit approval before execution.
 ```
 
-### node computer/tools/agent-computer.mjs route 이 PDF 읽어서 보고서랑 PPT까지 만들어줘
+### node computer/tools/agent-computer.mjs route Convert this PDF into a report and PPT.
 
 - Status: pass
 
@@ -87,7 +87,7 @@ Target: `dist/agent-computer-v0-preview`
 
 ## Request
 
-이 PDF 읽어서 보고서랑 PPT까지 만들어줘
+Convert this PDF into a report and PPT.
 
 ## Agent Chain
 
@@ -101,7 +101,7 @@ Target: `dist/agent-computer-v0-preview`
 - New request or continuation: new request by default.
 - Existing related project found: mention as optional context only if discovered.
 - Default action: create a fresh project and keep prior project artifacts out of the evidence/source chain.
-- New project slug: `workspace/projects/이-pdf-읽어서-보고서랑-ppt까지-만들어줘/` unless a clearer slug is chosen from the source title.
+- New project slug: `workspace/projects/convert-this-pdf-into-a-report-and-ppt/` unless a clearer slug is chosen from the source title.
 - Existing project reuse allowed: no.
 - Reuse approval needed: yes.
 
@@ -125,11 +125,11 @@ Target: `dist/agent-computer-v0-preview`
 
 - Workspace-native path used first: yes.
 - External app/account needed by default: no.
-- Approval needed before external action: yes, if the task later requires host apps, external accounts, sending, publishing, deletion, p
+- Approval needed before external action: yes, if the task later requires host apps, external accounts, sendi
 ... truncated ...
 ```
 
-### node computer/tools/agent-computer.mjs route 뉴스레터 성공사례를 딥하게 조사하고 성공 공식으로 정리해서 PPT로 만들어줘
+### node computer/tools/agent-computer.mjs route Research newsletter success cases deeply and turn the success formulas into a rich editable PPT.
 
 - Status: pass
 
@@ -138,7 +138,7 @@ Target: `dist/agent-computer-v0-preview`
 
 ## Request
 
-뉴스레터 성공사례를 딥하게 조사하고 성공 공식으로 정리해서 PPT로 만들어줘
+Research newsletter success cases deeply and turn the success formulas into a rich editable PPT.
 
 ## Agent Chain
 
@@ -152,7 +152,7 @@ Target: `dist/agent-computer-v0-preview`
 - New request or continuation: new request by default.
 - Existing related project found: mention as optional context only if discovered.
 - Default action: create a fresh project and keep prior project artifacts out of the evidence/source chain.
-- New project slug: `workspace/projects/뉴스레터-성공사례를-딥하게-조사하고-성공-공식으로-정리해서-ppt로/` unless a clearer slug is chosen from the source title.
+- New project slug: `workspace/projects/research-newsletter-success-cases-deeply-and-turn-the/` unless a clearer slug is chosen from the source title.
 - Existing project reuse allowed: no.
 - Reuse approval needed: yes.
 
@@ -176,14 +176,11 @@ Target: `dist/agent-computer-v0-preview`
 - External app/account needed by default: no.
 - Approval needed before external action: yes, if the task later requires host apps, external accounts, sending, publishing, deletion, payments, account changes, or actual file moves.
 
-## Notes
-
-- If the user explicitly named an agent, use it first.
-- Add pr
+## 
 ... truncated ...
 ```
 
-### node computer/tools/agent-computer.mjs route person@example.com을 차니라는 연락처로 저장해줘
+### node computer/tools/agent-computer.mjs route Save person@example.com as a contact named Alex.
 
 - Status: pass
 
@@ -192,7 +189,7 @@ Target: `dist/agent-computer-v0-preview`
 
 ## Request
 
-person@example.com을 차니라는 연락처로 저장해줘
+Save person@example.com as a contact named Alex.
 
 ## Agent Chain
 

@@ -18,7 +18,7 @@ export function routeRequest(root, request) {
   const add = (agent) => {
     if (!chain.includes(agent)) chain.push(agent);
   };
-  const reuseRequested = /(continue|update|improve|revise|modify|edit|compare|existing|previous|reuse|based on|이어|이어서|계속|수정|고쳐|개선|비교|기존|이전|전에|전에 만든|기반)/.test(text);
+  const reuseRequested = /\b(continue|update|improve|revise|modify|edit|compare|existing|previous|reuse)\b|\bbased on\b|이어|이어서|계속|수정|고쳐|개선|비교|기존|이전|전에|전에 만든|기반/.test(text);
   const helpRequest = isHowToUseRequest(request);
 
   const explicit = [
@@ -180,7 +180,7 @@ function isContactOnlyRequest(request) {
 
 function isHowToUseRequest(request) {
   const text = request.toLowerCase().trim();
-  return /^(how do i use|how to use|what is this|what can you do|help|usage|start|getting started)\??$/.test(text)
+  return /^(how do i use(?: this| this workspace| this repo| this repository| agent computer)?|how to use(?: this| this workspace| this repo| this repository| agent computer)?|how do i get started|how should i start|what is this|what can you do|help|usage|start|getting started)\??$/.test(text)
     || /(어떻게\s*써|어떻게\s*사용|사용법|뭐부터\s*하면|뭘\s*할\s*수|무엇을\s*할\s*수|처음.*시작|시작.*방법|도움말)/.test(text);
 }
 

@@ -55,17 +55,17 @@ For usage help, do not create a project folder unless the user asks to save the 
 Recommended shape:
 
 ```text
-그냥 자연어로 시키면 됩니다. 이 폴더는 Agent Computer라서 요청을 받으면 알맞은 에이전트 앱을 골라 작업하고, 결과를 workspace/projects/ 아래에 프로젝트별로 남깁니다.
+Ask in normal language. This folder is an Agent Computer, so I route your request to the right agent app or agent chain, do the work in this workspace, and save durable results under workspace/projects/.
 
-주로 보면 되는 곳은 workspace/inbox/와 workspace/projects/입니다.
+The two main folders to use are workspace/inbox/ and workspace/projects/.
 
-예:
-- 이 PDF를 에이전트용 문서로 변환하고 보고서와 PPT까지 만들어줘.
-- 뉴스레터 성공사례를 딥하게 조사해서 성공 공식으로 정리하고 풍부한 PPT로 만들어줘.
-- 이 폴더를 프로젝트별로 정리해줘. 먼저 dry-run으로 보여줘.
-- 차니에게 보낼 이메일 초안 작성해줘.
+Examples:
+- Convert this PDF into an agent-readable document, then create a report and PPT.
+- Research newsletter success cases deeply and turn the success formulas into a rich editable PPT.
+- Organize this workspace by project. Show me the dry-run first.
+- Draft an email to Alex about the Agent Computer preview.
 
-결과는 보통 workspace/projects/{project-name}/ 안의 converted, research, reports, presentations, qa에서 찾으면 됩니다.
+Results usually live under workspace/projects/{project-name}/ in converted, research, reports, presentations, and qa folders.
 ```
 
 ## New Request Isolation Rule

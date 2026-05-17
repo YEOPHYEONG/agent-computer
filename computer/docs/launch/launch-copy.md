@@ -63,14 +63,14 @@ Natural request
 Recommended request:
 
 ```text
-뉴스레터 성공사례를 딥하게 조사해서 성공 공식으로 정리하고 풍부한 PPT로 만들어줘
+Research newsletter success cases deeply, extract the repeatable growth formulas, and turn the findings into a rich editable PPT.
 ```
 
 Screen beats:
 
 1. Open the folder in Codex or Claude Code.
 2. Show `START_HERE.md`.
-3. Ask `너 어떻게 써?`.
+3. Ask `How do I use this workspace?`.
 4. Ask the newsletter research-to-PPT prompt.
 5. Show the route: `deep-dive-researcher -> report-writer -> ppt-builder -> qa-verifier`.
 6. Show the generated project folder.
@@ -223,7 +223,7 @@ Scenes:
 
 1. Open repo folder.
 2. Show `START_HERE.md`.
-3. Ask `너 어떻게 써?`.
+3. Ask `How do I use this workspace?`.
 4. Ask one real workflow.
 5. Show routing output.
 6. Show `workspace/projects/{project-slug}/` result folders.

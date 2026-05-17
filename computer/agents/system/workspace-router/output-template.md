@@ -24,7 +24,7 @@
 - Existing project reuse allowed:
 - Reuse approval needed:
 
-For usage/help requests, mark the project as not applicable and answer from `START_HERE.md`, `README.md`, `AGENTS.md`, and `docs/workspace-structure.md`.
+For usage/help requests, mark the project as not applicable and answer from `START_HERE.md`, `README.md`, `AGENTS.md`, and `computer/docs/workspace-structure.md`.
 
 ## Expected Outputs
 

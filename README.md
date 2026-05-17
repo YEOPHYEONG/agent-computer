@@ -54,13 +54,13 @@ External apps and accounts are peripherals. They are used only when the user exp
 4. Ask for work in normal language:
 
 ```text
-뉴스레터 성공사례를 딥하게 조사하고, 성공 공식으로 정리해서 풍부한 PPT로 만들어줘.
+Research newsletter success cases deeply, extract the repeatable growth formulas, and turn the findings into a rich editable PPT.
 ```
 
 Or:
 
 ```text
-이 PDF를 에이전트용 문서로 변환하고, 보고서와 발표자료까지 만들어줘.
+Convert this PDF into an agent-readable document, then create a report and presentation from it.
 ```
 
 Agent Computer should route the request to installed agents, create a project folder, save durable outputs under `workspace/projects/{project-slug}/`, and QA the result when appropriate.
