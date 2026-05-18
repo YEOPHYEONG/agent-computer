@@ -1,4 +1,4 @@
-# Agent Hub Plan
+# Agent Hub
 
 ## Concept
 

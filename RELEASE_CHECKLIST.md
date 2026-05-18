@@ -2,12 +2,6 @@
 
 Use this before publishing Agent Computer V0 preview.
 
-Canonical launch docs live under:
-
-```text
-computer/docs/launch/
-```
-
 ## Identity
 
 - [ ] Project name is consistently `Agent Computer`.

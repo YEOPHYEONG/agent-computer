@@ -227,7 +227,7 @@ Each V0 default agent should include:
 
 Agent Hub is the planned sharing place for installable Agent Computer apps. In V0, it is only a community/catalog concept, not a paid marketplace.
 
-Community agents should be inspectable folders with docs, workflows, templates, tools, tests, and a manifest. See [Agent Hub Plan](computer/docs/launch/agent-hub-plan.md).
+Community agents should be inspectable folders with docs, workflows, templates, tools, tests, and a manifest. See [Agent Hub](computer/docs/agent-hub.md).
 
 ## Project Docs
 
@@ -235,9 +235,6 @@ Community agents should be inspectable folders with docs, workflows, templates, 
 - [Security](SECURITY.md)
 - [Changelog](CHANGELOG.md)
 - [Release Checklist](RELEASE_CHECKLIST.md)
-- [Launch Readiness Sprint](computer/docs/launch/launch-readiness-sprint.md)
-- [Release Copy Spec](computer/docs/launch/release-copy-spec.md)
-- [Launch Strategy](computer/docs/launch/launch-strategy.md)
 
 ## Public Safety
 

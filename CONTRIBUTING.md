@@ -127,14 +127,13 @@ For proposed community agents, include:
 - example input/output
 - safety notes
 
-See [docs/launch/agent-hub-plan.md](docs/launch/agent-hub-plan.md).
+See [Agent Hub](computer/docs/agent-hub.md).
 
 ## Sources
 
 This contribution guide is based on:
 
 - [AGENTS.md](AGENTS.md)
-- [docs/engineering-principles.md](docs/engineering-principles.md)
-- [docs/launch/release-copy-spec.md](docs/launch/release-copy-spec.md)
-- [docs/launch/agent-hub-plan.md](docs/launch/agent-hub-plan.md)
+- [Engineering Principles](computer/docs/engineering-principles.md)
+- [Agent Hub](computer/docs/agent-hub.md)
 - [RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md)

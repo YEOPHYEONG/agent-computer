@@ -42,7 +42,7 @@ Initial experimental preview.
 - Release builder:
   - `tools/release/build-release.mjs`
   - `npm run release:build`
-- Launch documentation under `docs/launch/`.
+- Public release checklist and Agent Hub documentation.
 - Agent Hub plan for a future free/community sharing platform.
 
 ### Safety
