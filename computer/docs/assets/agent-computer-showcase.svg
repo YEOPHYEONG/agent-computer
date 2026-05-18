@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 560" role="img" aria-labelledby="title desc">
+  <title id="title">Agent Computer showcase workflow</title>
+  <desc id="desc">A natural language request is routed through specialist agent apps into a project folder with research, report, presentation, and QA outputs.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1220"/>
+      <stop offset="58%" stop-color="#101827"/>
+      <stop offset="100%" stop-color="#0a111c"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#182338"/>
+      <stop offset="100%" stop-color="#101827"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#22d3ee"/>
+      <stop offset="50%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#fbbf24"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#000814" flood-opacity="0.4"/>
+    </filter>
+    <style>
+      .label{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#e5edf7}
+      .muted{fill:#9fb0c6}
+      .tiny{font-size:18px}
+      .small{font-size:22px}
+      .body{font-size:25px}
+      .title{font-size:34px;font-weight:750}
+      .mono{font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace}
+      .card{fill:url(#card);stroke:#29374f;stroke-width:1.4}
+      .line{stroke:url(#accent);stroke-width:5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+      .thin{stroke:#2d3e59;stroke-width:1.2}
+    </style>
+  </defs>
+
+  <rect width="1280" height="560" rx="32" fill="url(#bg)"/>
+  <path d="M60 464 C230 382 256 180 438 238 C571 280 614 151 750 170 C914 194 944 364 1220 272" stroke="#1f304b" stroke-width="2" fill="none" opacity="0.55"/>
+  <path d="M68 88 H1212" stroke="#1f304b" stroke-width="1"/>
+
+  <text x="58" y="58" class="label title">One request becomes durable project work</text>
+  <text x="58" y="88" class="label muted small">Research, reports, decks, drafts, memory, and QA are saved as inspectable files.</text>
+
+  <g filter="url(#shadow)">
+    <rect x="58" y="138" width="286" height="286" rx="24" class="card"/>
+    <rect x="82" y="166" width="238" height="48" rx="14" fill="#0f1728" stroke="#33445f"/>
+    <circle cx="105" cy="190" r="6" fill="#22d3ee"/>
+    <circle cx="127" cy="190" r="6" fill="#34d399"/>
+    <circle cx="149" cy="190" r="6" fill="#fbbf24"/>
+    <text x="82" y="250" class="label small">Natural language</text>
+    <text x="82" y="288" class="label body">"Research newsletter</text>
+    <text x="82" y="322" class="label body">success cases and</text>
+    <text x="82" y="356" class="label body">make a rich PPT."</text>
+    <text x="82" y="392" class="label muted tiny">No workflow wiring required.</text>
+  </g>
+
+  <path d="M356 282 C395 282 398 282 438 282" class="line"/>
+  <polygon points="438,282 418,270 418,294" fill="#34d399"/>
+
+  <g filter="url(#shadow)">
+    <rect x="450" y="120" width="362" height="330" rx="28" fill="#111b2d" stroke="#34435d" stroke-width="1.4"/>
+    <rect x="484" y="154" width="294" height="72" rx="18" fill="#12243a" stroke="#22d3ee" stroke-opacity="0.55"/>
+    <text x="510" y="198" class="label title" font-size="30">Agent apps route the work</text>
+
+    <g>
+      <rect x="486" y="252" width="132" height="52" rx="14" fill="#17263b" stroke="#2e405d"/>
+      <text x="506" y="285" class="label tiny">deep research</text>
+      <circle cx="596" cy="279" r="8" fill="#22d3ee"/>
+    </g>
+    <g>
+      <rect x="646" y="252" width="132" height="52" rx="14" fill="#17263b" stroke="#2e405d"/>
+      <text x="669" y="285" class="label tiny">report writer</text>
+      <circle cx="756" cy="279" r="8" fill="#34d399"/>
+    </g>
+    <g>
+      <rect x="486" y="326" width="132" height="52" rx="14" fill="#17263b" stroke="#2e405d"/>
+      <text x="511" y="359" class="label tiny">ppt builder</text>
+      <circle cx="596" cy="353" r="8" fill="#fbbf24"/>
+    </g>
+    <g>
+      <rect x="646" y="326" width="132" height="52" rx="14" fill="#17263b" stroke="#2e405d"/>
+      <text x="682" y="359" class="label tiny">qa verifier</text>
+      <circle cx="756" cy="353" r="8" fill="#34d399"/>
+    </g>
+
+    <path d="M552 304 V326" class="thin"/>
+    <path d="M618 278 H646" class="thin"/>
+    <path d="M618 352 H646" class="thin"/>
+    <text x="488" y="414" class="label muted tiny">roles + workflows + tools + templates + QA</text>
+  </g>
+
+  <path d="M824 282 C866 282 870 282 914 282" class="line"/>
+  <polygon points="914,282 894,270 894,294" fill="#34d399"/>
+
+  <g filter="url(#shadow)">
+    <rect x="928" y="126" width="294" height="342" rx="28" class="card"/>
+    <text x="960" y="176" class="label title" font-size="30">workspace/projects/</text>
+    <text x="960" y="214" class="label muted small mono">newsletter-success-formula/</text>
+
+    <rect x="958" y="244" width="226" height="42" rx="12" fill="#14243a" stroke="#32435f"/>
+    <rect x="976" y="256" width="26" height="18" rx="4" fill="#22d3ee"/>
+    <text x="1018" y="271" class="label tiny mono">research/</text>
+
+    <rect x="958" y="298" width="226" height="42" rx="12" fill="#14243a" stroke="#32435f"/>
+    <rect x="976" y="310" width="26" height="18" rx="4" fill="#34d399"/>
+    <text x="1018" y="325" class="label tiny mono">reports/</text>
+
+    <rect x="958" y="352" width="226" height="42" rx="12" fill="#14243a" stroke="#32435f"/>
+    <rect x="976" y="364" width="26" height="18" rx="4" fill="#fbbf24"/>
+    <text x="1018" y="379" class="label tiny mono">presentations/</text>
+
+    <rect x="958" y="406" width="226" height="42" rx="12" fill="#14243a" stroke="#32435f"/>
+    <rect x="976" y="418" width="26" height="18" rx="4" fill="#86efac"/>
+    <text x="1018" y="433" class="label tiny mono">qa/</text>
+  </g>
+</svg>

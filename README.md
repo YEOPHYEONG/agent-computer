@@ -1,10 +1,10 @@
 # Agent Computer
 
-Stop writing prompts. Boot an agent computer.
+Stop losing agent work in chat history. Boot an Agent Computer.
 
 ![Agent Computer cover](computer/docs/assets/agent-computer-cover-v3.png)
 
-Agent Computer is a file-based workspace where AI agents work like apps. They read files, use tools, remember context, create reports, build decks, organize outputs, and help you run knowledge work.
+Agent Computer is a local, file-based workspace where Codex, Claude Code, and similar coding agents run agents like apps. A single request can become a routed workflow, project folder, research brief, report, editable deck, draft, converted document, and QA log.
 
 It is designed to be opened with coding agents such as Codex, Claude Code, or any assistant that can read and write files.
 
@@ -31,6 +31,48 @@ Most agent work disappears inside chat history. Agent Computer gives agents a du
 The goal is to make AI work feel less like one-off prompting and more like using a computer built for agents.
 
 ![Before and after Agent Computer](computer/docs/assets/agent-computer-before-after.svg)
+
+## Why Not Just Use Codex Directly?
+
+You can. Agent Computer is for the moment when you want coding-agent work to become durable, inspectable project artifacts instead of one-off chat output.
+
+```text
+plain coding agent
+-> helpful answer in chat
+
+Agent Computer
+-> routed agent workflow
+-> workspace/projects/{project-slug}/
+-> research, reports, decks, drafts, converted docs, memory, and QA logs
+```
+
+## Showcase Workflow
+
+Try one high-signal workflow:
+
+```text
+Research newsletter success cases deeply, extract the repeatable growth formulas, and turn the findings into a rich editable PPT.
+```
+
+Expected route:
+
+```text
+deep-dive-researcher -> report-writer -> ppt-builder -> qa-verifier
+```
+
+Expected output shape:
+
+![Agent Computer showcase workflow](computer/docs/assets/agent-computer-showcase.svg)
+
+```text
+workspace/projects/newsletter-success-formula/
+  research/
+  reports/
+  presentations/
+  qa/
+```
+
+The important part is not the example topic. It is the pattern: natural-language work becomes a project folder with artifacts you can inspect, edit, continue, and share.
 
 ## Boundary Rule
 
@@ -228,6 +270,17 @@ Each V0 default agent should include:
 Agent Hub is the planned sharing place for installable Agent Computer apps. In V0, it is only a community/catalog concept, not a paid marketplace.
 
 Community agents should be inspectable folders with docs, workflows, templates, tools, tests, and a manifest. See [Agent Hub](computer/docs/agent-hub.md).
+
+## Known Limitations
+
+Agent Computer is an experimental V0 preview.
+
+- It is designed for coding-agent power users, not nontechnical one-click onboarding yet.
+- Output quality depends on the coding agent runtime, available tools, and the task prompt.
+- Some document and PPT visual QA depends on local renderers such as PDFJS, LibreOffice, Poppler, or other available tooling.
+- Agent Hub is a package concept and community direction, not a hosted platform yet.
+- Community agent signing, verification, ratings, and paid distribution are not implemented.
+- External accounts, real email sending, public posting, deletion, payments, and host-app automation require explicit user approval.
 
 ## Project Docs
 
