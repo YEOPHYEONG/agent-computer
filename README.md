@@ -62,7 +62,7 @@ deep-dive-researcher -> report-writer -> ppt-builder -> qa-verifier
 
 Expected output shape:
 
-![Agent Computer showcase workflow](computer/docs/assets/agent-computer-showcase.svg)
+![Agent Computer showcase workflow](computer/docs/assets/agent-computer-showcase.png)
 
 ```text
 workspace/projects/newsletter-success-formula/

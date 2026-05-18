@@ -5,7 +5,7 @@ All notable changes to Agent Computer will be documented here.
 ## Unreleased
 
 - Public README polish.
-- README showcase workflow and known limitations section.
+- README raster showcase workflow and known limitations section.
 - Release copy automation.
 - Fresh-user launch rehearsal.
 
