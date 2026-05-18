@@ -4,7 +4,7 @@ Use this when publishing Agent Computer V0 preview.
 
 ## GitHub Repo Description
 
-File-based computer for Codex and Claude Code agents. Agents run like apps, save work under `workspace/projects`, and produce reports, decks, drafts, conversions, and QA.
+A local workspace where Codex and Claude Code agents run like apps, turning messy requests into organized project folders, reports, decks, drafts, and QA logs.
 
 ## GitHub Topics
 

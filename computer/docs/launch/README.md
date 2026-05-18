@@ -11,6 +11,7 @@ Agent Computer should be released as an experimental open-source preview, not as
 - `release-checklist.md`: pre-GitHub checklist for V0 preview.
 - `launch-strategy.md`: star-oriented launch strategy, positioning, demo, and channel plan.
 - `launch-copy.md`: GitHub description, launch posts, Show HN body, demo script, and preview DM copy.
+- `github-first-impression.md`: GitHub repo description, topics, social preview, README first-screen checklist, and starter issues.
 - `agent-hub-plan.md`: the Agent Hub concept for sharing installable agent apps.
 
 ## Launch Principles
