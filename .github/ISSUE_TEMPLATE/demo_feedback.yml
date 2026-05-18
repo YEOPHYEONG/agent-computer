@@ -1,0 +1,36 @@
+name: Demo feedback
+description: Share what happened when you tried a real Agent Computer workflow.
+title: "[Demo Feedback]: "
+labels: ["demo", "feedback"]
+body:
+  - type: textarea
+    id: task
+    attributes:
+      label: What task did you try?
+      placeholder: Research newsletter success cases deeply and turn the findings into a rich editable PPT.
+    validations:
+      required: true
+  - type: input
+    id: runtime
+    attributes:
+      label: Runtime
+      placeholder: Codex / Claude Code / other
+  - type: textarea
+    id: result
+    attributes:
+      label: What worked?
+      description: What felt useful, clear, or surprisingly good?
+  - type: textarea
+    id: confusion
+    attributes:
+      label: What was confusing?
+      description: Mention README, folder structure, routing, output location, npm commands, or agent behavior.
+  - type: textarea
+    id: output-quality
+    attributes:
+      label: Output quality
+      description: Did the generated research, report, PPT, draft, conversion, or QA feel useful?
+  - type: textarea
+    id: next
+    attributes:
+      label: What would make this better?

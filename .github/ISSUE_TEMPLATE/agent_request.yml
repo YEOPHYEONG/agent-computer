@@ -1,0 +1,41 @@
+name: Agent request
+description: Suggest a new default or community agent app.
+title: "[Agent Request]: "
+labels: ["agent request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Agent Computer agents should be inspectable app folders, not just prompt snippets.
+  - type: input
+    id: agent-name
+    attributes:
+      label: Agent name
+      placeholder: newsletter-strategist
+    validations:
+      required: true
+  - type: textarea
+    id: job
+    attributes:
+      label: What job should this agent do?
+      description: Describe the real user workflow it should handle.
+    validations:
+      required: true
+  - type: textarea
+    id: inputs-outputs
+    attributes:
+      label: Inputs and outputs
+      description: What should it read, create, update, or verify?
+      placeholder: |
+        Inputs:
+        Outputs:
+  - type: textarea
+    id: tools
+    attributes:
+      label: Tools or skills needed
+      description: List any scripts, templates, file converters, APIs, or QA checks this agent needs.
+  - type: textarea
+    id: safety
+    attributes:
+      label: Safety and permission notes
+      description: Mention external accounts, sending/publishing, deletion, network access, or private data risks.

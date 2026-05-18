@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Agent Hub direction
+    url: https://github.com/YEOPHYEONG/agent-computer/blob/main/computer/docs/agent-hub.md
+    about: Read the Agent Hub package concept before proposing community agent ideas.

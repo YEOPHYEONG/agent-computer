@@ -1,0 +1,42 @@
+name: Bug report
+description: Report something that is broken, confusing, or unsafe.
+title: "[Bug]: "
+labels: ["bug", "qa"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for testing Agent Computer. Please avoid posting private files, credentials, personal data, or private workspace outputs.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Describe the bug or confusing behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+  - type: input
+    id: runtime
+    attributes:
+      label: Runtime
+      description: Codex, Claude Code, another coding agent, or CLI-only.
+      placeholder: Codex
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Include the prompt or command if it is safe to share.
+      placeholder: |
+        1. Opened the repo with ...
+        2. Asked ...
+        3. Saw ...
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Add screenshots, logs, or links if public-safe.

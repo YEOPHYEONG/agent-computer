@@ -1,0 +1,27 @@
+# Reference labels for the Agent Computer repo.
+# If using GitHub CLI later, create these with `gh label create` or sync them with a label tool.
+
+- name: good first issue
+  color: "7057ff"
+  description: Good for first-time contributors.
+- name: agent request
+  color: "0e8a16"
+  description: Proposal for a new default or community agent app.
+- name: docs
+  color: "0075ca"
+  description: Documentation, README, examples, or guides.
+- name: demo
+  color: "fbca04"
+  description: Demo workflows, screenshots, examples, or launch showcases.
+- name: qa
+  color: "d93f0b"
+  description: Verification, tests, smoke checks, or quality gates.
+- name: agent-hub
+  color: "5319e7"
+  description: Agent Hub package, catalog, or community agent work.
+- name: feedback
+  color: "cfd3d7"
+  description: User feedback from preview testing.
+- name: bug
+  color: "d73a4a"
+  description: Something broken, confusing, or unsafe.
