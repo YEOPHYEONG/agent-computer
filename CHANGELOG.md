@@ -4,6 +4,7 @@ All notable changes to Agent Computer will be documented here.
 
 ## Unreleased
 
+- V0.1.1 improvement plan for always-on routing, human-in-the-loop checkpoints, deep research, web page builder, and subagent playbooks.
 - Public README polish.
 - README raster showcase workflow and known limitations section.
 - Release copy automation.

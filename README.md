@@ -264,6 +264,7 @@ Each V0 default agent should include:
 - [Claude Code](computer/docs/runtimes/claude-code.md)
 - [Engineering Principles](computer/docs/engineering-principles.md)
 - [Workspace Structure](computer/docs/workspace-structure.md)
+- [V0.1.1 Improvement Plan](computer/docs/v0.1.1-improvement-plan.md)
 
 ## Agent Hub
 
