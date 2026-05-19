@@ -10,6 +10,7 @@ Use this workspace with Codex by opening the `agent-computer` folder and asking 
 4. Route user requests through `workspace-router` unless the user explicitly names an agent.
 5. Use installed agent apps as the default way to work.
 6. For new work, create a fresh project unless the user explicitly asks to continue, update, improve, compare, or use existing work.
+7. Apply `computer/docs/human-in-the-loop.md` for intent-sensitive work.
 
 ## Rules
 
@@ -20,6 +21,8 @@ Use this workspace with Codex by opening the `agent-computer` folder and asking 
 - Preserve important source content unless the user asks for summarization.
 - For file organization, use dry-run before bulk moves.
 - Mention related existing projects as optional context only; do not reuse them without approval.
+- If you ask a question that can change the output, stop and wait for the user's answer.
+- Confirm inferred hidden intent before acting on it.
 
 ## Example
 

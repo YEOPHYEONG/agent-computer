@@ -1,7 +1,7 @@
 # Workflow
 
 1. Check whether `system/organization-policy.md` exists.
-2. If no policy exists, ask the user to choose a policy and folder-structure preference.
+2. If no policy exists, ask the user to choose a policy and folder-structure preference, then stop and wait for the answer.
 3. Recommend project-first unless the user chooses otherwise: `projects/<project-slug>/<work-type>/`.
 4. Save the selected policy, preferred layout, and safety rules.
 5. Scan the workspace.

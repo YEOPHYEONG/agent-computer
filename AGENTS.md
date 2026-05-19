@@ -14,9 +14,38 @@ This folder is an Agent Computer: a file-based workspace where AI agents run lik
 - Use tools and templates when available.
 - Save durable outputs under the active project folder when a project is known: `workspace/projects/<project-slug>/<work-type>/`.
 - Treat `workspace/reports/`, `workspace/converted/`, `workspace/outputs/`, and `workspace/tasks/` as temporary inbox/staging areas unless the organization policy says otherwise.
+- Treat Agent Computer as a multi-turn work partner. For intent-sensitive work, discover the user's real goal, confirm outcome-changing interpretations, and wait for answers before executing.
 - Keep public examples free of private data.
 - Keep work inside this workspace unless the user explicitly approves otherwise.
 - Do not install global packages or mutate global config.
+
+## Intent Discovery Rule
+
+Classify requests by whether the user's hidden intent would materially change the output.
+
+- Low intent sensitivity: file conversion, simple summaries, QA, formatting, indexes, or already-specific instructions. Proceed with stated assumptions and avoid unnecessary questions.
+- Medium intent sensitivity: rough reports, email drafts, quick research, or first-time file organization. Ask one or two focused questions only when the answer would change the work.
+- High intent sensitivity: deep research, PPT/deck creation, web pages, strategy, marketing, sales, branding, new agent creation, counseling, and large multi-agent artifacts. Ask Socratic questions to uncover the real objective, audience, success criteria, and decision context before execution.
+
+If an agent asks a question that can change the outcome, it must stop and wait for the user's answer. Do not ask and then continue anyway.
+
+When an agent infers a hidden intent, present it as a hypothesis and confirm it before acting on it.
+
+Example:
+
+```text
+I think this may be less about collecting examples and more about deriving a reusable success formula.
+
+Is that correct?
+
+If yes, I will research mechanisms, repeatable patterns, execution conditions, and risks. If not, I can keep the output closer to a case library or presentation overview.
+```
+
+After the user answers, briefly restate the work contract and proceed.
+
+For multi-agent chains, `workspace-router` should consolidate agent questions before execution. Downstream agents should ask again only when new evidence or constraints would materially change the direction.
+
+See `computer/docs/human-in-the-loop.md` for the shared policy.
 
 ## Agent Computer Boundary Rule
 

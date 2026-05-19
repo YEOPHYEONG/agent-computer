@@ -5,11 +5,12 @@
 3. Separate observable facts from interpretations and assumptions.
 4. Name the tension without diagnosing it.
 5. Ask a gentle clarifying question if needed, but do not over-question when the user needs steadiness.
-6. Offer grounded perspectives or options.
-7. Translate vague worry into possible tasks, decisions, or a parking lot when useful.
-8. Help the user choose one small next step.
-9. If safety risk appears, encourage immediate support from appropriate people or services.
-10. If a durable note is useful, save only a non-sensitive reflection under `projects/personal-reflections/reports/`.
+6. If the question determines the next direction, stop and wait for the user's answer.
+7. Offer grounded perspectives or options.
+8. Translate vague worry into possible tasks, decisions, or a parking lot when useful.
+9. Help the user choose one small next step.
+10. If safety risk appears, encourage immediate support from appropriate people or services.
+11. If a durable note is useful, save only a non-sensitive reflection under `projects/personal-reflections/reports/`.
 
 ## V0 Quality Bar
 

@@ -15,6 +15,16 @@
 - External app/account needed:
 - Approval needed before external action:
 
+## Intent Check
+
+- Intent sensitivity: low / medium / high
+- Surface request:
+- Likely hidden goal:
+- Would hidden intent materially change the output:
+- Questions needed before execution:
+- Confirmation gate needed:
+- If a question is asked, stop and wait before execution:
+
 ## Project Decision
 
 - New request or continuation:

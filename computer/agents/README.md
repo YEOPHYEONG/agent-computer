@@ -22,6 +22,18 @@ New work starts in a fresh project by default. Do not use a similar existing pro
 
 If related projects are discovered, mention them as optional context and ask/await approval before reusing them. Otherwise create a new `workspace/projects/<project-slug>/` folder and keep that request's outputs there.
 
+## Intent Discovery
+
+Agents should follow `computer/docs/human-in-the-loop.md`.
+
+For low intent-sensitivity tasks, proceed without unnecessary questions.
+
+For high intent-sensitivity tasks, discover and confirm intent before execution. If an agent asks a question that can change the outcome, it must stop and wait for the user's answer.
+
+Agent hypotheses are proposals, not decisions. When an inferred purpose changes the output structure, evidence strategy, audience, tone, safety boundary, success criteria, or scope, confirm before acting.
+
+For multi-agent chains, `workspace-router` should consolidate questions so the user is not interrupted by every agent separately.
+
 ## Categories
 
 - `computer/agents/system/`: OS-like agents that route, build, organize, ingest, verify, and maintain the workspace

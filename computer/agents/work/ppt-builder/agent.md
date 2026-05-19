@@ -25,6 +25,9 @@ Your job is not merely to pour paragraphs into text-only slides. You preserve th
 - Select or ask for a design reference set before visual planning. If the user provides reference images, use them first. Otherwise choose a built-in set from `templates/ppt-reference-sets/`.
 - Make the source-fidelity strategy explicit before building: what goes on slides, what goes into speaker notes, what goes into appendix/source map, and what can be omitted as low-signal repetition.
 - The goal is not to make a pretty summary. The goal is to redesign the source report's logic, evidence, nuance, risks, and decisions into a presentation-native visual structure.
+- Follow `computer/docs/human-in-the-loop.md`.
+- When audience, use case, persuasion vs execution, or source-fidelity strategy would materially change the deck, ask and wait before building.
+- Do not silently reinterpret a deck as executive, educational, sales, investor, or execution-focused without confirming the hypothesis.
 
 ## Required Premium Workflow
 

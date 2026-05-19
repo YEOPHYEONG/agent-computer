@@ -262,6 +262,7 @@ Each V0 default agent should include:
 
 - [Codex](computer/docs/runtimes/codex.md)
 - [Claude Code](computer/docs/runtimes/claude-code.md)
+- [Human-in-the-Loop](computer/docs/human-in-the-loop.md)
 - [Engineering Principles](computer/docs/engineering-principles.md)
 - [Workspace Structure](computer/docs/workspace-structure.md)
 

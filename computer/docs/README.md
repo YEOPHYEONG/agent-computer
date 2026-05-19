@@ -9,6 +9,7 @@ It should describe what exists in this repository today:
 - how Codex and Claude Code should operate in this workspace
 - safety boundaries for files, accounts, host apps, and external actions
 - engineering principles that affect day-to-day agent behavior
+- human-in-the-loop rules that define when agents should ask, stop, wait, or proceed
 
 It should not contain internal planning material:
 

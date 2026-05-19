@@ -1,13 +1,14 @@
 # Workflow
 
 1. Clarify the requested agent's job.
-2. Identify inputs, outputs, tools, templates, and validation needs.
-3. Create the agent folder.
-4. Write `README.md`, `agent.md`, `workflow.md`, and `output-template.md`.
-5. Add `tools/` if the agent needs executable capability.
-6. Add `templates/`, `tests/`, `examples/`, and `memory/` when useful.
-7. Register the agent in workspace docs.
-8. Run a smoke test or document how to run one.
+2. If job-to-be-done, action scope, inputs, outputs, required tools, safety boundaries, or test scenarios are unclear and would materially change the agent, ask and wait before building.
+3. Identify inputs, outputs, tools, templates, and validation needs.
+4. Create the agent folder.
+5. Write `README.md`, `agent.md`, `workflow.md`, and `output-template.md`.
+6. Add `tools/` if the agent needs executable capability.
+7. Add `templates/`, `tests/`, `examples/`, and `memory/` when useful.
+8. Register the agent in workspace docs.
+9. Run a smoke test or document how to run one.
 
 ## Local Tool Path
 

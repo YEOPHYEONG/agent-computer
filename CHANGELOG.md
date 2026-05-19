@@ -4,6 +4,7 @@ All notable changes to Agent Computer will be documented here.
 
 ## Unreleased
 
+- Human-in-the-loop runtime policy for intent-sensitive work, confirmation gates, and multi-turn agent workflows.
 - Public documentation boundary cleanup so runtime docs stay separate from internal planning docs.
 - Public README polish.
 - README raster showcase workflow and known limitations section.

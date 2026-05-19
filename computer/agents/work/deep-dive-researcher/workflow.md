@@ -15,16 +15,17 @@
    - Which next question would change the output?
    - Should the agent ask the user, or continue under a stated assumption?
 8. If user input is needed and the choice materially affects usefulness, ask a concise directional question.
-9. If user input is not necessary or not available, state the working assumption and continue.
-10. Run another research pass focused on the highest-usefulness unanswered questions.
-11. Repeat steps 6-10 as many times as useful. This is an N-pass loop, not a fixed two-pass process.
-12. Run source trust review for important source clusters.
-13. Organize the synthesis into Data, Information, Knowledge, and Insight when the research supports a planning decision.
-14. Analyze causes, mechanisms, patterns, constraints, counterevidence, and practical implications.
-15. Record why the loop stopped.
-16. Produce findings, implications, next research actions, and the next best user question if further depth would help.
-17. Save a durable research report under `projects/<project-slug>/research/`.
-18. Suggest memory updates for reusable, evidence-backed patterns.
+9. If you ask a directional question, stop and wait for the user's answer.
+10. If user input is not necessary, state the working assumption and continue.
+11. Run another research pass focused on the highest-usefulness unanswered questions.
+12. Repeat steps 6-11 as many times as useful. This is an N-pass loop, not a fixed two-pass process.
+13. Run source trust review for important source clusters.
+14. Organize the synthesis into Data, Information, Knowledge, and Insight when the research supports a planning decision.
+15. Analyze causes, mechanisms, patterns, constraints, counterevidence, and practical implications.
+16. Record why the loop stopped.
+17. Produce findings, implications, next research actions, and the next best user question if further depth would help.
+18. Save a durable research report under `projects/<project-slug>/research/`.
+19. Suggest memory updates for reusable, evidence-backed patterns.
 
 ## Local Tool Path
 

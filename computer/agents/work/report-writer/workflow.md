@@ -1,17 +1,18 @@
 # Workflow
 
 1. Identify audience, purpose, and format.
-2. Determine whether input is rough, research-heavy, or polished.
-3. Structure rough input into question, conclusion, evidence, analysis, and next actions.
-4. Check whether evidence is strong enough for a report.
-5. List weak claims, missing facts, and unresolved context.
-6. Fill small gaps with quick supplementary research when possible.
-7. Escalate deeper gaps to `deep-dive-researcher`.
-8. Convert research-heavy input into a readable narrative.
-9. Preserve important content by default.
-10. Mark remaining gaps clearly.
-11. Save the default Markdown report output as `projects/<project-slug>/reports/<topic>_report.md`.
-12. Ask `qa-verifier` to review when quality matters.
+2. If audience, decision purpose, evidence standard, or recommendation posture is unclear and would materially change the report, ask and wait for the user's answer.
+3. Determine whether input is rough, research-heavy, or polished.
+4. Structure rough input into question, conclusion, evidence, analysis, and next actions.
+5. Check whether evidence is strong enough for a report.
+6. List weak claims, missing facts, and unresolved context.
+7. Fill small gaps with quick supplementary research when possible.
+8. Escalate deeper gaps to `deep-dive-researcher`.
+9. Convert research-heavy input into a readable narrative.
+10. Preserve important content by default.
+11. Mark remaining gaps clearly.
+12. Save the default Markdown report output as `projects/<project-slug>/reports/<topic>_report.md`.
+13. Ask `qa-verifier` to review when quality matters.
 
 ## Local Tool Path
 

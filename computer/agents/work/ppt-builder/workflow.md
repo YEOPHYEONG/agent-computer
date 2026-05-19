@@ -10,7 +10,9 @@ High-quality PPTX work does not start by generating a PPTX file. First plan the 
 4. If the input is rough, create a structured brief before slide planning.
 5. Mark evidence gaps, weak claims, and uncertain facts.
 6. Review workspace memory for presentation preferences, especially source preservation, density, and QA expectations.
-7. Decide whether user input is needed before continuing. If the user has not specified audience, reference style, or compression level, proceed with explicit assumptions unless the choice would materially change the deck.
+7. Decide whether user input is needed before continuing.
+8. If audience, reference style, compression level, or presentation purpose would materially change the deck, ask a concise confirmation question and stop until the user answers.
+9. If user input is not needed, proceed with explicit assumptions.
 
 ## 1.5 Reference Set And Source-Fidelity Strategy
 
@@ -40,6 +42,8 @@ Source-fidelity strategy must define:
 - claims that need caveats, softer wording, or external verification
 
 Do not treat source fidelity as verbatim completeness. Preserve logic, evidence, nuance, caveats, examples, decisions, and actionability.
+
+If the source-fidelity strategy depends on an inferred hidden intent, confirm that intent before writing the content outline.
 
 ## 2. Content Outline
 

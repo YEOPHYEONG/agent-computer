@@ -8,13 +8,14 @@
 6. For "send/write to this alias" requests, resolve the alias from the private contact book before drafting.
 7. If the alias is missing or ambiguous, ask for the email address or which contact to use.
 8. Identify recipient relationship, purpose, tone, and desired next action.
-9. Draft subject options.
-10. Draft the email.
-11. Provide alternate tone or shorter version when useful.
-12. Add a follow-up draft if relevant.
-13. Add assumptions, unknowns, recipient resolution, risk/safety notes, connector status, and send checklist.
-14. State clearly that the email was not sent.
-15. Save durable packages under `projects/<project-slug>/reports/`.
+9. If those choices are unclear and would materially change the draft, ask and wait before drafting.
+10. Draft subject options.
+11. Draft the email.
+12. Provide alternate tone or shorter version when useful.
+13. Add a follow-up draft if relevant.
+14. Add assumptions, unknowns, recipient resolution, risk/safety notes, connector status, and send checklist.
+15. State clearly that the email was not sent.
+16. Save durable packages under `projects/<project-slug>/reports/`.
 
 ## Local Tool Path
 

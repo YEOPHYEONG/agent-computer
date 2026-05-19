@@ -1,14 +1,15 @@
 # Workflow
 
 1. Identify the exact question.
-2. Break it into sub-questions.
-3. Check relevant workspace files if provided.
-4. Gather a small set of high-signal sources when needed.
-5. Cross-check agreement and disagreement between sources.
-6. Extract the answer, evidence, interpretation, and uncertainty.
-7. Produce a concise but judgment-ready brief.
-8. Recommend whether a deep dive is warranted.
-9. Save durable outputs under `projects/<project-slug>/research/` when requested.
+2. If the question is broad and the user's decision context would materially change the answer, ask one concise question and wait.
+3. Break it into sub-questions.
+4. Check relevant workspace files if provided.
+5. Gather a small set of high-signal sources when needed.
+6. Cross-check agreement and disagreement between sources.
+7. Extract the answer, evidence, interpretation, and uncertainty.
+8. Produce a concise but judgment-ready brief.
+9. Recommend whether a deep dive is warranted.
+10. Save durable outputs under `projects/<project-slug>/research/` when requested.
 
 ## Local Tool Path
 

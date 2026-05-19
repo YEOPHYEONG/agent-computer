@@ -18,7 +18,7 @@ export function routeRequest(root, request) {
   const add = (agent) => {
     if (!chain.includes(agent)) chain.push(agent);
   };
-  const reuseRequested = /\b(continue|update|improve|revise|modify|edit|compare|existing|previous|reuse)\b|\bbased on\b|이어|이어서|계속|수정|고쳐|개선|비교|기존|이전|전에|전에 만든|기반/.test(text);
+  const reuseRequested = /\b(continue|update|improve|revise|modify|edit|compare|existing|previous|reuse)\b|\bbased on\b|이어|이어서|계속|수정|고쳐|개선|비교|기존|(?:^|\s)(?:이전|전에|전에 만든|기반)/.test(text);
   const helpRequest = isHowToUseRequest(request);
 
   const explicit = [
@@ -52,6 +52,7 @@ export function routeRequest(root, request) {
   if (chain.length > 1 && !chain.includes('qa-verifier') && /(report|ppt|deck|research|조사|보고서|발표)/.test(text)) add('qa-verifier');
   if (chain.includes('agent-builder') && !chain.includes('qa-verifier')) add('qa-verifier');
   sortChain(chain);
+  const intent = intentDecision(request, chain, helpRequest);
 
   return `# Routing Plan
 
@@ -62,6 +63,10 @@ ${request}
 ## Agent Chain
 
 ${chain.map((agent, index) => `${index + 1}. \`${agent}\``).join('\n')}
+
+## Intent Check
+
+${renderIntentCheck(intent)}
 
 ## Project Decision
 
@@ -84,6 +89,161 @@ ${expectedOutputs(chain, request, helpRequest)}
 - Agent Computer is the primary computer; host OS apps and external accounts are peripherals, not defaults.
 - New requests get a fresh project by default; similar existing projects are optional context only unless the user explicitly asks to reuse them.
 - Actual sending, publishing, deletion, payment, account changes, host-app automation, or file moves require explicit approval before execution.`;
+}
+
+function intentDecision(request, chain, helpRequest) {
+  const text = request.toLowerCase();
+  if (helpRequest) {
+    return {
+      sensitivity: 'low',
+      surface: 'Usage/help request.',
+      hiddenGoal: 'Understand how to use Agent Computer.',
+      materialChange: 'no',
+      questions: ['No clarification needed. Answer as Agent Computer.'],
+      confirmationGate: 'no',
+      stopIfAsked: 'yes'
+    };
+  }
+  if (chain.length === 1 && chain.includes('document-ingestor')) {
+    return {
+      sensitivity: 'low',
+      surface: 'Convert or ingest a document into agent-readable form.',
+      hiddenGoal: 'Make source material usable by agents.',
+      materialChange: 'no, unless the source file or output project is ambiguous',
+      questions: ['No broad intent questions needed. Ask only if the source file or project target is missing.'],
+      confirmationGate: 'no',
+      stopIfAsked: 'yes'
+    };
+  }
+  if (chain.includes('ppt-builder') || chain.includes('deep-dive-researcher') || chain.includes('agent-builder') || chain.includes('friend-counselor')) {
+    return {
+      sensitivity: 'high',
+      surface: describeSurfaceRequest(chain),
+      hiddenGoal: inferHiddenGoal(text, chain),
+      materialChange: 'yes',
+      questions: intentQuestions(text, chain),
+      confirmationGate: 'yes',
+      stopIfAsked: 'yes'
+    };
+  }
+  if (chain.includes('report-writer') || chain.includes('email-operator') || chain.includes('quick-researcher') || chain.includes('file-organizer')) {
+    return {
+      sensitivity: 'medium',
+      surface: describeSurfaceRequest(chain),
+      hiddenGoal: inferHiddenGoal(text, chain),
+      materialChange: 'maybe',
+      questions: intentQuestions(text, chain),
+      confirmationGate: 'if the agent proposes a direction that changes the output',
+      stopIfAsked: 'yes'
+    };
+  }
+  return {
+    sensitivity: 'low',
+    surface: describeSurfaceRequest(chain),
+    hiddenGoal: 'No hidden goal detected that changes routing.',
+    materialChange: 'no',
+    questions: ['No clarification needed before routing.'],
+    confirmationGate: 'no',
+    stopIfAsked: 'yes'
+  };
+}
+
+function renderIntentCheck(intent) {
+  return [
+    `- Intent sensitivity: ${intent.sensitivity}`,
+    `- Surface request: ${intent.surface}`,
+    `- Likely hidden goal: ${intent.hiddenGoal}`,
+    `- Would hidden intent materially change the output: ${intent.materialChange}`,
+    '- Questions needed before execution:',
+    ...intent.questions.map((question) => `  - ${question}`),
+    `- Confirmation gate needed: ${intent.confirmationGate}`,
+    `- If a question is asked, stop and wait before execution: ${intent.stopIfAsked}`
+  ].join('\n');
+}
+
+function describeSurfaceRequest(chain) {
+  if (chain.includes('ppt-builder') && chain.includes('deep-dive-researcher')) return 'Research a topic deeply and turn it into a presentation.';
+  if (chain.includes('ppt-builder')) return 'Create a presentation deck.';
+  if (chain.includes('deep-dive-researcher')) return 'Research a topic deeply.';
+  if (chain.includes('quick-researcher')) return 'Research a focused question quickly.';
+  if (chain.includes('report-writer')) return 'Write a report or structured document.';
+  if (chain.includes('email-operator')) return 'Draft or manage an email/contact workflow.';
+  if (chain.includes('file-organizer')) return 'Organize workspace files.';
+  if (chain.includes('agent-builder')) return 'Build a new executable agent app.';
+  if (chain.includes('friend-counselor')) return 'Support reflective conversation.';
+  return 'Route the request to an Agent Computer action.';
+}
+
+function inferHiddenGoal(text, chain) {
+  if (chain.includes('ppt-builder') && /(사례|case|examples?)/.test(text) && /(공식|formula|성공|success|전략|strategy)/.test(text)) {
+    return 'Possibly derive a reusable success formula, not just collect examples.';
+  }
+  if (chain.includes('ppt-builder')) return 'Possibly persuade, teach, decide, or create an execution plan; confirm which one matters.';
+  if (chain.includes('deep-dive-researcher')) return 'Possibly support a decision or next action, not only gather information.';
+  if (chain.includes('report-writer')) return 'Possibly turn rough material into decision-ready evidence and recommendations.';
+  if (chain.includes('email-operator')) return 'Possibly achieve a specific relationship outcome, not only write text.';
+  if (chain.includes('file-organizer')) return 'Possibly establish a durable folder preference, not only clean this once.';
+  if (chain.includes('agent-builder')) return 'Possibly create a working app with tools and tests, not only instructions.';
+  if (chain.includes('friend-counselor')) return 'Possibly clarify the real tension before choosing advice or next action.';
+  return 'No strong hidden goal detected.';
+}
+
+function intentQuestions(text, chain) {
+  if (chain.includes('ppt-builder') && chain.includes('deep-dive-researcher')) {
+    if (/(사례|case|examples?)/.test(text) && /(공식|formula|성공|success)/.test(text)) {
+      return [
+        'Is the goal to derive a reusable success formula rather than collect cases?',
+        'Who is the deck for, and what should they decide or do after seeing it?',
+        'Should weak evidence trigger more research, or be marked as a limitation?'
+      ];
+    }
+    return [
+      'Who is the deck for, and what should they decide or do after seeing it?',
+      'Should the output optimize for persuasion, teaching, execution, or auditability?',
+      'How much source detail should stay visible on slides versus notes or appendix?'
+    ];
+  }
+  if (chain.includes('deep-dive-researcher')) {
+    return [
+      'What decision or next action should this research support?',
+      'Which uncertainty matters most: market, customer, message, channel, operation, evidence, or risk?'
+    ];
+  }
+  if (chain.includes('ppt-builder')) {
+    return [
+      'Who is the audience, and what should they believe or do afterward?',
+      'Should the deck be persuasive, educational, executive, or execution-focused?'
+    ];
+  }
+  if (chain.includes('report-writer')) {
+    return [
+      'Who is the report for, and what decision should it support?',
+      'Should unsupported claims be researched further or marked as gaps?'
+    ];
+  }
+  if (chain.includes('email-operator')) {
+    return [
+      'What relationship and outcome should this email optimize for?',
+      'Should the tone be warm, direct, formal, or casual?'
+    ];
+  }
+  if (chain.includes('file-organizer')) {
+    return [
+      'Which folder policy should be durable: project-first, function-based, output-type-based, date-based, or hybrid?'
+    ];
+  }
+  if (chain.includes('agent-builder')) {
+    return [
+      'What job should this agent actually perform, and what tools or tests are required?',
+      'What actions are in scope, and what safety boundaries should it enforce?'
+    ];
+  }
+  if (chain.includes('friend-counselor')) {
+    return [
+      'Do you want reflection, practical next steps, or help naming the real tension first?'
+    ];
+  }
+  return ['No pre-execution question needed.'];
 }
 
 function sortChain(chain) {
