@@ -264,13 +264,6 @@ Each V0 default agent should include:
 - [Claude Code](computer/docs/runtimes/claude-code.md)
 - [Engineering Principles](computer/docs/engineering-principles.md)
 - [Workspace Structure](computer/docs/workspace-structure.md)
-- [V0.1.1 Improvement Plan](computer/docs/v0.1.1-improvement-plan.md)
-
-## Agent Hub
-
-Agent Hub is the planned sharing place for installable Agent Computer apps. In V0, it is only a community/catalog concept, not a paid marketplace.
-
-Community agents should be inspectable folders with docs, workflows, templates, tools, tests, and a manifest. See [Agent Hub](computer/docs/agent-hub.md).
 
 ## Known Limitations
 
@@ -279,8 +272,6 @@ Agent Computer is an experimental V0 preview.
 - It is designed for coding-agent power users, not nontechnical one-click onboarding yet.
 - Output quality depends on the coding agent runtime, available tools, and the task prompt.
 - Some document and PPT visual QA depends on local renderers such as PDFJS, LibreOffice, Poppler, or other available tooling.
-- Agent Hub is a package concept and community direction, not a hosted platform yet.
-- Community agent signing, verification, ratings, and paid distribution are not implemented.
 - External accounts, real email sending, public posting, deletion, payments, and host-app automation require explicit user approval.
 
 ## Project Docs

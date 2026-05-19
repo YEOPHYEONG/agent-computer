@@ -4,7 +4,7 @@ All notable changes to Agent Computer will be documented here.
 
 ## Unreleased
 
-- V0.1.1 improvement plan for always-on routing, human-in-the-loop checkpoints, deep research, web page builder, and subagent playbooks.
+- Public documentation boundary cleanup so runtime docs stay separate from internal planning docs.
 - Public README polish.
 - README raster showcase workflow and known limitations section.
 - Release copy automation.
@@ -44,8 +44,7 @@ Initial experimental preview.
 - Release builder:
   - `tools/release/build-release.mjs`
   - `npm run release:build`
-- Public release checklist and Agent Hub documentation.
-- Agent Hub plan for a future free/community sharing platform.
+- Public release checklist.
 
 ### Safety
 
@@ -59,5 +58,3 @@ Initial experimental preview.
 - V0 is experimental and intended for coding-agent power users.
 - Local CLI research scaffolds do not browse the web by themselves; runtime agents must gather external evidence when needed.
 - PPTX visual rendering QA depends on local renderers such as LibreOffice/Poppler or other available tooling.
-- Agent Hub is a plan and package concept, not a hosted marketplace yet.
-- Community agent signing, verification, ratings, and paid distribution are not implemented.
