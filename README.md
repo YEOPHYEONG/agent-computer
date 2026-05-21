@@ -264,6 +264,7 @@ Each V0 default agent should include:
 - [Claude Code](computer/docs/runtimes/claude-code.md)
 - [Always-On Routing](computer/docs/always-on-routing.md)
 - [Human-in-the-Loop](computer/docs/human-in-the-loop.md)
+- [Chain Checkpoints](computer/docs/chain-checkpoints.md)
 - [Engineering Principles](computer/docs/engineering-principles.md)
 - [Workspace Structure](computer/docs/workspace-structure.md)
 

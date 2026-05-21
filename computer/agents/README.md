@@ -46,6 +46,14 @@ Agent hypotheses are proposals, not decisions. When an inferred purpose changes 
 
 For multi-agent chains, `workspace-router` should consolidate questions so the user is not interrupted by every agent separately.
 
+## Chain Checkpoints
+
+Agents should follow `computer/docs/chain-checkpoints.md`.
+
+For multi-agent workflows, the router should define the chain contract, pre-flight checkpoint, handoff artifacts, direction-change checkpoint, internal quality gates, and final QA criteria.
+
+Each agent should hand off durable artifacts, assumptions, unresolved questions, and limitations. Downstream agents should use the handoff instead of silently inventing a new direction.
+
 ## Categories
 
 - `computer/agents/system/`: OS-like agents that route, build, organize, ingest, verify, and maintain the workspace

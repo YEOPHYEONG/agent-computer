@@ -21,16 +21,18 @@
 12. For high intent-sensitivity work, identify the surface request and likely hidden goals. Ask concise Socratic questions when the answers would materially change the output.
 13. If you ask an outcome-changing question, stop and wait for the user's answer. Do not continue execution in the same turn.
 14. If you infer hidden intent, present it as a hypothesis and ask for confirmation before acting on it.
-15. For multi-agent chains, consolidate required questions into one checkpoint before execution.
-16. Match the request to an installed agent.
-17. If needed, build an agent chain.
-18. Check whether the request includes high-risk actions such as external sending, publishing, deletion, file movement, payments, account changes, or irreversible edits.
-19. Mark actions that need explicit approval before execution. Email/message drafts are allowed; actual sending requires approval and an available connector.
-20. For report, deck, research, new-agent, or multi-step workflows, add `qa-verifier` at the end unless the user explicitly asks for planning only.
-21. After required user answers arrive, restate the work contract briefly and execute or hand off in order.
-22. Load each selected agent's instructions.
-23. Save durable outputs in the right folders, following `system/organization-policy.md`.
-24. Prefer project-first paths: `projects/<project-slug>/<work-type>/`.
+15. Match the request to an installed agent.
+16. If needed, build an agent chain.
+17. Apply Chain Checkpoints from `computer/docs/chain-checkpoints.md`.
+18. For multi-agent chains, consolidate required questions into one pre-flight checkpoint before execution.
+19. Define the chain contract, handoff artifacts, direction-change checkpoint, internal quality gates, and final QA criteria.
+20. Check whether the request includes high-risk actions such as external sending, publishing, deletion, file movement, payments, account changes, or irreversible edits.
+21. Mark actions that need explicit approval before execution. Email/message drafts are allowed; actual sending requires approval and an available connector.
+22. For report, deck, research, new-agent, or multi-step workflows, add `qa-verifier` at the end unless the user explicitly asks for planning only.
+23. After required user answers arrive, restate the work contract briefly and execute or hand off in order.
+24. Load each selected agent's instructions.
+25. Save durable outputs in the right folders, following `system/organization-policy.md`.
+26. Prefer project-first paths: `projects/<project-slug>/<work-type>/`.
 
 ## Boundary Defaults
 
@@ -80,6 +82,16 @@
 - Email drafts or outreach sequences: `email-operator`; do not send without explicit approval.
 - New executable agent: `agent-builder` -> `qa-verifier`.
 - Research that must be current or externally factual: `quick-researcher` or `deep-dive-researcher` -> `qa-verifier`.
+
+## Chain Checkpoint Defaults
+
+- Single-agent routes: no full chain map required; use the agent's own workflow and QA guidance.
+- Multi-agent routes: include a `Chain Checkpoints` section in routing or handoff output.
+- Pre-flight checkpoint: consolidate user questions that affect multiple agents before execution.
+- Handoff checkpoints: list the durable artifacts each agent produces for the next agent.
+- Direction-change checkpoint: if an agent discovers a material reason to change direction, ask and wait.
+- Internal quality gates: check whether each artifact is good enough before a more expensive downstream artifact is built.
+- Final QA: `qa-verifier` checks original request satisfaction, chain contract, handoff completeness, source fidelity, evidence gaps, output validity, approval boundaries, and known limitations.
 
 ## Always-On Routing Examples
 
@@ -142,3 +154,38 @@ Low-intent request:
 ```
 
 Proceed with `document-ingestor` and do not ask broad intent questions unless the file/source is missing.
+
+## Chain Checkpoint Examples
+
+PDF to report and PPT:
+
+```text
+이 PDF 읽고 보고서랑 PPT까지 만들어줘.
+```
+
+Chain:
+
+```text
+document-ingestor -> report-writer -> ppt-builder -> qa-verifier
+```
+
+Checkpoints:
+
+- Pre-flight: ask audience/use case only if it materially changes report or deck.
+- Handoff 1: converted Markdown, visual review, and conversion log to report-writer.
+- Quality gate: report is structured and evidence-aware enough for deck creation.
+- Handoff 2: report, evidence map, must-preserve content, and caveats to ppt-builder.
+- Final QA: source fidelity, report quality, PPT editability, visual/render limits, and original request satisfaction.
+
+Research to PPT:
+
+```text
+뉴스레터 성공사례를 깊게 조사해서 성공 공식으로 정리하고 PPT로 만들어줘.
+```
+
+Checkpoints:
+
+- Pre-flight: confirm formula vs case library, audience, and evidence standard.
+- Direction-change: ask if evidence suggests changing the core mechanism.
+- Handoff: research report, source map, claim map, and question ledger to report-writer.
+- Final QA: content fidelity, evidence limitations, editable PPT, and chain contract satisfaction.

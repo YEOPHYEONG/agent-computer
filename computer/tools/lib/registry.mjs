@@ -20,6 +20,7 @@ export function routeRequest(root, request) {
   };
   const reuseRequested = /\b(continue|update|improve|revise|modify|edit|compare|existing|previous|reuse)\b|\bbased on\b|이어|이어서|계속|수정|고쳐|개선|비교|기존|(?:^|\s)(?:이전|전에|전에 만든|기반)/.test(text);
   const helpRequest = isHowToUseRequest(request);
+  const wantsAgentBuild = /(agent|에이전트|앱).*(build|create|만들|생성)|(?:build|create|만들|생성|새로운|새).*(agent|에이전트|앱)/.test(text);
 
   const explicit = [
     'workspace-router', 'agent-builder', 'document-ingestor', 'file-organizer',
@@ -30,9 +31,9 @@ export function routeRequest(root, request) {
   if (explicit) add(explicit);
 
   if (/(pdf|pptx|docx|image|convert|ingest|markdown)/.test(text)) add('document-ingestor');
-  if (/(instagram|insta|인스타|인스타그램|reel|reels|릴스).*(growth|grow|analysis|analytics|audit|성장|분석|진단|감사)|(?:growth|grow|analysis|analytics|audit|성장|분석|진단).*(instagram|insta|인스타|인스타그램|reel|reels|릴스)/.test(text)) add('instagram-growth-analyst');
-  if (/(quick|fast|brief|간단|빠른)/.test(text) && /(research|조사|find|look up)/.test(text)) add('quick-researcher');
-  if (!chain.includes('instagram-growth-analyst') && /(deep|dive|research|조사|분석|investigate)/.test(text)) add(text.includes('quick') ? 'quick-researcher' : 'deep-dive-researcher');
+  if (!wantsAgentBuild && /(instagram|insta|인스타|인스타그램|reel|reels|릴스).*(growth|grow|analysis|analytics|audit|성장|분석|진단|감사)|(?:growth|grow|analysis|analytics|audit|성장|분석|진단).*(instagram|insta|인스타|인스타그램|reel|reels|릴스)/.test(text)) add('instagram-growth-analyst');
+  if (!wantsAgentBuild && /(quick|fast|brief|간단|빠른)/.test(text) && /(research|조사|find|look up)/.test(text)) add('quick-researcher');
+  if (!wantsAgentBuild && !chain.includes('instagram-growth-analyst') && /(deep|dive|research|조사|분석|investigate)/.test(text)) add(text.includes('quick') ? 'quick-researcher' : 'deep-dive-researcher');
   if (/(report|보고서|docx|memo|write up)/.test(text)) add('report-writer');
   if (/(ppt|deck|slides|presentation|발표|슬라이드)/.test(text)) add('ppt-builder');
   if (/(email|mail|메일|reply|follow-up|outreach|contact|연락처|주소록)/.test(text)) add('email-operator');
@@ -40,7 +41,7 @@ export function routeRequest(root, request) {
   if (/(organize|cleanup|clean up|folder|index|archive|files?|workspace|폴더|파일|워크스페이스|구조|인덱스|아카이브).*(정리|정돈|분류|organize|cleanup|index|archive)|(?:정리|정돈|분류).*(폴더|파일|워크스페이스|구조|인덱스|산출물)/.test(text)) add('file-organizer');
   if (/(memory|remember|기억|preference)/.test(text)) add('memory-curator');
   if (/(qa|verify|검수|check|review)/.test(text)) add('qa-verifier');
-  if (/(agent|에이전트|앱).*(build|create|만들|생성)|(?:build|create|만들|생성|새로운|새).*(agent|에이전트|앱)/.test(text)) add('agent-builder');
+  if (wantsAgentBuild) add('agent-builder');
   if (/(고민|상담|friend|counsel|reflect)/.test(text)) add('friend-counselor');
 
   if (chain.includes('ppt-builder') && !chain.includes('report-writer') && (chain.includes('deep-dive-researcher') || chain.includes('quick-researcher') || chain.includes('document-ingestor'))) {
@@ -59,6 +60,7 @@ export function routeRequest(root, request) {
   sortChain(chain);
   const routing = routingDecision(request, chain, helpRequest, reuseRequested);
   const intent = intentDecision(request, chain, helpRequest);
+  const checkpoints = chainCheckpoints(chain, intent, routing, request);
 
   return `# Routing Plan
 
@@ -77,6 +79,10 @@ ${renderRoutingMode(routing)}
 ## Intent Check
 
 ${renderIntentCheck(intent)}
+
+## Chain Checkpoints
+
+${renderChainCheckpoints(checkpoints)}
 
 ## Project Decision
 
@@ -98,6 +104,7 @@ ${expectedOutputs(chain, request, helpRequest, routing)}
 - Add prerequisite agents when the task needs conversion, reporting, deck building, or QA.
 - Agent Computer is the primary computer; host OS apps and external accounts are peripherals, not defaults.
 - Always-on routing applies to meaningful work requests even mid-conversation.
+- Multi-agent chains should include handoff artifacts, quality gates, and final QA criteria.
 - New requests get a fresh project by default; similar existing projects are optional context only unless the user explicitly asks to reuse them.
 - Actual sending, publishing, deletion, payment, account changes, host-app automation, or file moves require explicit approval before execution.`;
 }
@@ -264,6 +271,169 @@ function renderIntentCheck(intent) {
     `- Confirmation gate needed: ${intent.confirmationGate}`,
     `- If a question is asked, stop and wait before execution: ${intent.stopIfAsked}`
   ].join('\n');
+}
+
+function chainCheckpoints(chain, intent, routing, request) {
+  if (routing.mode === 'question-only') {
+    return {
+      type: 'not applicable: question-only route',
+      preflight: 'not applicable',
+      confirmation: 'no',
+      handoffs: ['not applicable'],
+      directionChange: 'not applicable',
+      qualityGates: ['not applicable'],
+      finalQa: 'not required'
+    };
+  }
+  const materialAgents = chain.filter((agent) => agent !== 'workspace-router' && agent !== 'qa-verifier');
+  const hasFinalQa = chain.includes('qa-verifier');
+  if (materialAgents.length <= 1 && !hasFinalQa) {
+    return {
+      type: 'single-agent route',
+      preflight: 'not required unless the selected agent needs missing source/context',
+      confirmation: intent.confirmationGate === 'yes' ? 'yes, if the agent asks an outcome-changing question' : 'no by default',
+      handoffs: ['not applicable'],
+      directionChange: 'handled inside the selected agent if evidence or context changes the work',
+      qualityGates: ['selected agent self-checks only'],
+      finalQa: 'not required unless requested'
+    };
+  }
+  if (materialAgents.length <= 1 && hasFinalQa) {
+    return {
+      type: 'single-agent route with QA',
+      preflight: preflightCheckpoint(chain, intent, routing, request),
+      confirmation: confirmationRequirement(intent, routing),
+      handoffs: handoffMap(chain),
+      directionChange: 'ask and wait if the selected agent discovers a material direction change',
+      qualityGates: [`${materialAgents[0] || 'selected agent'} self-check before qa-verifier`],
+      finalQa: finalQaCriteria(chain)
+    };
+  }
+  return {
+    type: classifyChainType(chain),
+    preflight: preflightCheckpoint(chain, intent, routing, request),
+    confirmation: confirmationRequirement(intent, routing),
+    handoffs: handoffMap(chain),
+    directionChange: directionChangeCheckpoint(chain),
+    qualityGates: qualityGates(chain),
+    finalQa: finalQaCriteria(chain)
+  };
+}
+
+function renderChainCheckpoints(checkpoints) {
+  return [
+    `- Chain type: ${checkpoints.type}`,
+    `- Pre-flight checkpoint: ${checkpoints.preflight}`,
+    `- User confirmation required before execution: ${checkpoints.confirmation}`,
+    '- Handoff checkpoints:',
+    ...checkpoints.handoffs.map((handoff) => `  - ${handoff}`),
+    `- Direction-change checkpoint: ${checkpoints.directionChange}`,
+    '- Internal QA gates:',
+    ...checkpoints.qualityGates.map((gate) => `  - ${gate}`),
+    `- Final QA: ${checkpoints.finalQa}`
+  ].join('\n');
+}
+
+function classifyChainType(chain) {
+  if (chain.includes('document-ingestor') && chain.includes('report-writer') && chain.includes('ppt-builder')) return 'document-to-report-to-presentation';
+  if (chain.includes('deep-dive-researcher') && chain.includes('report-writer') && chain.includes('ppt-builder')) return 'deep-research-to-report-to-presentation';
+  if ((chain.includes('deep-dive-researcher') || chain.includes('quick-researcher')) && chain.includes('email-operator')) return 'research-to-email';
+  if (chain.includes('agent-builder')) return 'agent-build-and-verify';
+  if ((chain.includes('deep-dive-researcher') || chain.includes('quick-researcher')) && chain.includes('report-writer')) return 'research-to-report';
+  if (chain.includes('report-writer') && chain.includes('ppt-builder')) return 'report-to-presentation';
+  return 'multi-agent workflow';
+}
+
+function preflightCheckpoint(chain, intent, routing, request) {
+  if (routing.mode === 'question-only') return 'not applicable';
+  if (chain.includes('document-ingestor') && chain.includes('report-writer') && chain.includes('ppt-builder')) {
+    return 'Confirm audience/use case only if it materially changes the report or deck; otherwise ingest first and use the source as primary evidence.';
+  }
+  if (chain.includes('ppt-builder') && (chain.includes('deep-dive-researcher') || chain.includes('quick-researcher'))) {
+    return `Consolidate before execution: ${intent.questions.join(' / ')}`;
+  }
+  if ((chain.includes('deep-dive-researcher') || chain.includes('quick-researcher')) && chain.includes('email-operator')) {
+    return 'Confirm target customer, relationship, desired action, and claim-safety standard before research-driven drafting.';
+  }
+  if (chain.includes('agent-builder')) {
+    return 'Confirm job-to-be-done, required tools, inputs/outputs, safety boundaries, and smoke tests before building.';
+  }
+  if (intent.sensitivity === 'high' || intent.sensitivity === 'medium') {
+    return `Use the Intent Check questions before execution: ${intent.questions.join(' / ')}`;
+  }
+  return 'No broad pre-flight question needed; proceed with stated assumptions unless source/context is missing.';
+}
+
+function confirmationRequirement(intent, routing) {
+  if (routing.mode === 'question-only') return 'no';
+  if (intent.confirmationGate === 'yes') return 'yes; ask and stop before execution if the answer changes scope, audience, evidence strategy, or narrative';
+  if (intent.confirmationGate.startsWith('if')) return intent.confirmationGate;
+  return 'no by default; still ask and wait if a checkpoint question would change the outcome';
+}
+
+function handoffMap(chain) {
+  const handoffs = [];
+  const add = (from, to, description) => {
+    if (chain.includes(from) && chain.includes(to)) handoffs.push(`${from} -> ${to}: ${description}`);
+  };
+  add('document-ingestor', 'report-writer', '`converted/source.agent.md`, `visual-review.md` when available, `conversion-log.md`, and extraction limitations');
+  if (chain.includes('document-ingestor') && chain.includes('ppt-builder') && !chain.includes('report-writer')) {
+    handoffs.push('document-ingestor -> ppt-builder: converted source, visual review, conversion log, and source-fidelity limits');
+  }
+  add('quick-researcher', 'report-writer', 'quick brief, source links, agreement/disagreement notes, uncertainty, and deep-dive recommendation');
+  add('deep-dive-researcher', 'report-writer', 'research report, source map, claim verification map, question ledger, unresolved evidence gaps, and recommended stance');
+  add('quick-researcher', 'email-operator', 'source-backed facts, unsupported claims to avoid, target notes, and recommended message angle');
+  add('deep-dive-researcher', 'email-operator', 'research evidence, target/customer insight, supported claims, risky claims, and recommended message angle');
+  add('report-writer', 'ppt-builder', 'report, evidence map, core narrative, audience/use case, must-preserve content, and visible caveats');
+  add('ppt-builder', 'qa-verifier', 'PPTX, content spec, design spec, build plan, prototype/preview paths, PPT QA, and render limitations');
+  add('report-writer', 'qa-verifier', 'report, evidence map, assumptions, unresolved gaps, and source/reference notes');
+  add('agent-builder', 'qa-verifier', 'agent folder, tools, templates, tests, examples, registry/doc updates, and smoke-test result or instructions');
+  add('email-operator', 'qa-verifier', 'draft package, recipient resolution, assumptions, claim risks, send checklist, and connector/send status');
+  if (handoffs.length === 0 && chain.includes('qa-verifier')) {
+    const prior = chain.find((agent) => agent !== 'qa-verifier' && agent !== 'workspace-router') || 'selected agent';
+    handoffs.push(`${prior} -> qa-verifier: final artifact, assumptions, limitations, and validation notes`);
+  }
+  return handoffs.length ? handoffs : ['not applicable'];
+}
+
+function directionChangeCheckpoint(chain) {
+  if (chain.includes('deep-dive-researcher') || chain.includes('quick-researcher')) {
+    return 'ask and wait if evidence changes the core mechanism, target audience, recommendation, or message angle';
+  }
+  if (chain.includes('report-writer') && chain.includes('ppt-builder')) {
+    return 'ask and wait if the deck narrative must materially diverge from the report narrative';
+  }
+  if (chain.includes('document-ingestor')) {
+    return 'ask and wait if extraction/rendering limitations make the requested downstream report or deck unreliable';
+  }
+  if (chain.includes('agent-builder')) {
+    return 'ask and wait if the requested agent needs broader permissions, external accounts, or tools beyond the agreed scope';
+  }
+  return 'ask and wait whenever a downstream agent would change the agreed chain contract';
+}
+
+function qualityGates(chain) {
+  const gates = [];
+  if (chain.includes('document-ingestor')) gates.push('converted source and visual-review limitations are clear before downstream writing');
+  if (chain.includes('deep-dive-researcher') || chain.includes('quick-researcher')) gates.push('research evidence and uncertainty are strong enough for downstream claims');
+  if (chain.includes('report-writer')) gates.push('report has a clear narrative, evidence map, caveats, and must-preserve content before downstream deck/email work');
+  if (chain.includes('ppt-builder')) gates.push('content spec, design spec, build plan, prototype/preview, and editable PPTX checks run before final QA');
+  if (chain.includes('email-operator')) gates.push('draft package includes recipient resolution, assumptions, unsupported-claim warnings, and send checklist');
+  if (chain.includes('agent-builder')) gates.push('new agent includes docs, workflow, tools/scaffolds when needed, examples, tests, and registry updates');
+  if (chain.includes('qa-verifier')) gates.push('qa-verifier checks the original request and chain contract, not only file format');
+  return gates.length ? gates : ['selected agent self-check'];
+}
+
+function finalQaCriteria(chain) {
+  if (!chain.includes('qa-verifier')) return 'not required unless requested or the workflow becomes high-impact';
+  const criteria = ['original request satisfaction', 'chain contract satisfaction', 'handoff completeness'];
+  if (chain.includes('document-ingestor')) criteria.push('source fidelity and extraction/render limitations');
+  if (chain.includes('deep-dive-researcher') || chain.includes('quick-researcher')) criteria.push('evidence gaps and uncertainty');
+  if (chain.includes('report-writer')) criteria.push('report structure, supported claims, and caveats');
+  if (chain.includes('ppt-builder')) criteria.push('editable PPTX, no full-slide screenshot fallback, text/visual QA, and render limitations');
+  if (chain.includes('email-operator')) criteria.push('claim safety, tone, next action, connector status, and no accidental send');
+  if (chain.includes('agent-builder')) criteria.push('agent app completeness, executable capability, tests, and registry/docs updates');
+  return criteria.join('; ');
 }
 
 function describeSurfaceRequest(chain) {

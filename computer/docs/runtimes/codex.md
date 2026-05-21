@@ -12,6 +12,7 @@ Use this workspace with Codex by opening the `agent-computer` folder and asking 
 6. For new work, create a fresh project unless the user explicitly asks to continue, update, improve, compare, or use existing work.
 7. Apply `computer/docs/always-on-routing.md` for every meaningful work request, even mid-conversation.
 8. Apply `computer/docs/human-in-the-loop.md` for intent-sensitive work.
+9. Apply `computer/docs/chain-checkpoints.md` for multi-agent chains.
 
 ## Rules
 
@@ -26,6 +27,7 @@ Use this workspace with Codex by opening the `agent-computer` folder and asking 
 - Do not create projects for ordinary conversation or question-only discussion.
 - If you ask a question that can change the output, stop and wait for the user's answer.
 - Confirm inferred hidden intent before acting on it.
+- For multi-agent chains, define handoff artifacts, quality gates, and final QA criteria before execution.
 
 ## Example
 

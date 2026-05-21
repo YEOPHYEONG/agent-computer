@@ -76,6 +76,25 @@ For multi-agent chains, `workspace-router` should consolidate agent questions be
 
 See `computer/docs/human-in-the-loop.md` for the shared policy.
 
+## Chain Checkpoint Rule
+
+Multi-agent chains should have explicit checkpoints. Do not treat a chain as only a list of agents.
+
+For any workflow where multiple agents materially contribute to the result, `workspace-router` should define:
+
+- chain contract
+- pre-flight checkpoint
+- handoff artifacts
+- direction-change checkpoint
+- internal quality gates
+- final QA criteria
+
+Each agent should hand off durable artifacts, assumptions, unresolved questions, and limitations to the next agent. `qa-verifier` should check the original request and chain contract, not only file/package validity.
+
+If a checkpoint asks an outcome-changing question, stop and wait for the user's answer.
+
+See `computer/docs/chain-checkpoints.md` for the shared chain policy.
+
 ## Agent Computer Boundary Rule
 
 Agent Computer concepts map to workspace-native files and tools by default.

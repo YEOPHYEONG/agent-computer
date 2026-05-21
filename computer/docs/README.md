@@ -11,6 +11,7 @@ It should describe what exists in this repository today:
 - always-on routing rules that keep Agent Computer active throughout a conversation
 - engineering principles that affect day-to-day agent behavior
 - human-in-the-loop rules that define when agents should ask, stop, wait, or proceed
+- chain checkpoint rules for multi-agent handoffs, quality gates, and final QA
 
 It should not contain internal planning material:
 

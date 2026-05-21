@@ -34,6 +34,16 @@
 - Confirmation gate needed:
 - If a question is asked, stop and wait before execution:
 
+## Chain Checkpoints
+
+- Chain type:
+- Pre-flight checkpoint:
+- User confirmation required before execution:
+- Handoff checkpoints:
+- Direction-change checkpoint:
+- Internal QA gates:
+- Final QA:
+
 ## Project Decision
 
 - New request or continuation:
