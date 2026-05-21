@@ -1,27 +1,36 @@
 # Workflow
 
 1. Read the user request.
-2. Apply the Agent Computer Boundary Rule: handle the request inside this workspace first unless the user explicitly asks for an external app/account.
-3. Apply the New Request Isolation Rule: new requests create fresh projects by default.
-4. Apply the Human-in-the-Loop policy from `computer/docs/human-in-the-loop.md`.
-5. Identify the desired output.
-6. Classify intent sensitivity:
+2. Apply Always-On Routing from `computer/docs/always-on-routing.md`.
+3. Classify routing mode:
+   - New work: a new task, artifact, topic, or project.
+   - Continuation work: transform, revise, extend, or build from current context.
+   - Correction: update a prior assumption, audience, goal, scope, or work contract.
+   - Question-only: explain or discuss without creating work artifacts.
+4. If the message is question-only or ordinary conversation, answer in chat and do not create a project unless the user asks to save something.
+5. If the message contains casual language plus an action request, route the action request.
+6. Apply the Agent Computer Boundary Rule: handle the request inside this workspace first unless the user explicitly asks for an external app/account.
+7. Apply the New Request Isolation Rule: new requests create fresh projects by default.
+8. For continuation work, use active conversation context only when the referent is clear. If "this", "that", "이거", or "그거" is ambiguous, ask which source or project to use and wait.
+9. Apply the Human-in-the-Loop policy from `computer/docs/human-in-the-loop.md`.
+10. Identify the desired output.
+11. Classify intent sensitivity:
    - Low: conversion, simple summary, QA, formatting, indexing, or already-specific instructions.
    - Medium: rough report, email draft, quick research, or first-time organization.
    - High: deep research, PPT/deck, web page, strategy, marketing, sales, branding, counseling, new agent, or large multi-agent artifact.
-7. For high intent-sensitivity work, identify the surface request and likely hidden goals. Ask concise Socratic questions when the answers would materially change the output.
-8. If you ask an outcome-changing question, stop and wait for the user's answer. Do not continue execution in the same turn.
-9. If you infer hidden intent, present it as a hypothesis and ask for confirmation before acting on it.
-10. For multi-agent chains, consolidate required questions into one checkpoint before execution.
-11. Match the request to an installed agent.
-12. If needed, build an agent chain.
-13. Check whether the request includes high-risk actions such as external sending, publishing, deletion, file movement, payments, account changes, or irreversible edits.
-14. Mark actions that need explicit approval before execution. Email/message drafts are allowed; actual sending requires approval and an available connector.
-15. For report, deck, research, new-agent, or multi-step workflows, add `qa-verifier` at the end unless the user explicitly asks for planning only.
-16. After required user answers arrive, restate the work contract briefly and execute or hand off in order.
-17. Load each selected agent's instructions.
-18. Save durable outputs in the right folders, following `system/organization-policy.md`.
-19. Prefer project-first paths: `projects/<project-slug>/<work-type>/`.
+12. For high intent-sensitivity work, identify the surface request and likely hidden goals. Ask concise Socratic questions when the answers would materially change the output.
+13. If you ask an outcome-changing question, stop and wait for the user's answer. Do not continue execution in the same turn.
+14. If you infer hidden intent, present it as a hypothesis and ask for confirmation before acting on it.
+15. For multi-agent chains, consolidate required questions into one checkpoint before execution.
+16. Match the request to an installed agent.
+17. If needed, build an agent chain.
+18. Check whether the request includes high-risk actions such as external sending, publishing, deletion, file movement, payments, account changes, or irreversible edits.
+19. Mark actions that need explicit approval before execution. Email/message drafts are allowed; actual sending requires approval and an available connector.
+20. For report, deck, research, new-agent, or multi-step workflows, add `qa-verifier` at the end unless the user explicitly asks for planning only.
+21. After required user answers arrive, restate the work contract briefly and execute or hand off in order.
+22. Load each selected agent's instructions.
+23. Save durable outputs in the right folders, following `system/organization-policy.md`.
+24. Prefer project-first paths: `projects/<project-slug>/<work-type>/`.
 
 ## Boundary Defaults
 
@@ -43,6 +52,15 @@
 - If the user corrects the project decision, immediately switch and keep the old project untouched.
 - Include a `Project Decision` section in routing or handoff output.
 
+## Routing Mode Defaults
+
+- New work: create a fresh project unless the user clearly says to use an existing one.
+- Continuation work: use active conversation context when clear; otherwise ask which source/project to use.
+- Correction: update the current work contract. Do not create a new project unless the user asks for a new artifact or revision.
+- Question-only: answer in chat. Do not create files or projects.
+- Mixed message: route the action part and ignore casual filler.
+- Include a `Routing Mode` section in routing or handoff output.
+
 ## Intent Decision Defaults
 
 - Low intent-sensitivity tasks should proceed without Socratic questioning.
@@ -62,6 +80,40 @@
 - Email drafts or outreach sequences: `email-operator`; do not send without explicit approval.
 - New executable agent: `agent-builder` -> `qa-verifier`.
 - Research that must be current or externally factual: `quick-researcher` or `deep-dive-researcher` -> `qa-verifier`.
+
+## Always-On Routing Examples
+
+Continuation work:
+
+```text
+좋아. 그럼 이걸 PPT로 만들어줘.
+```
+
+Route to `ppt-builder`. If "이걸" is unclear, ask which source to use and wait.
+
+Email continuation:
+
+```text
+오케이. 차니한테 보낼 메일 초안 써줘.
+```
+
+Route to `email-operator`. Resolve the contact alias if saved. Draft only by default.
+
+Correction:
+
+```text
+아니, 투자자용이 아니라 내부 팀 실행용이야.
+```
+
+Treat as a correction to the work contract. Ask whether to revise the current artifact if no explicit deliverable is named.
+
+Question-only:
+
+```text
+왜 이게 그냥 Codex 쓰는 것보다 나아?
+```
+
+Answer in chat. Do not create project files unless requested.
 
 ## Confirmation Gate Examples
 

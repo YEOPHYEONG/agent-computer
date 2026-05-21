@@ -49,9 +49,15 @@ export function routeRequest(root, request) {
 
   if (helpRequest && chain.length === 0) add('workspace-router');
   if (chain.length === 0) add('workspace-router');
-  if (chain.length > 1 && !chain.includes('qa-verifier') && /(report|ppt|deck|research|조사|보고서|발표)/.test(text)) add('qa-verifier');
+  if (!chain.includes('qa-verifier') && (
+    chain.includes('report-writer')
+    || chain.includes('ppt-builder')
+    || chain.includes('deep-dive-researcher')
+    || chain.includes('quick-researcher')
+  )) add('qa-verifier');
   if (chain.includes('agent-builder') && !chain.includes('qa-verifier')) add('qa-verifier');
   sortChain(chain);
+  const routing = routingDecision(request, chain, helpRequest, reuseRequested);
   const intent = intentDecision(request, chain, helpRequest);
 
   return `# Routing Plan
@@ -64,17 +70,21 @@ ${request}
 
 ${chain.map((agent, index) => `${index + 1}. \`${agent}\``).join('\n')}
 
+## Routing Mode
+
+${renderRoutingMode(routing)}
+
 ## Intent Check
 
 ${renderIntentCheck(intent)}
 
 ## Project Decision
 
-${projectDecision(request, reuseRequested, chain, helpRequest)}
+${projectDecision(request, reuseRequested, chain, helpRequest, routing)}
 
 ## Expected Outputs
 
-${expectedOutputs(chain, request, helpRequest)}
+${expectedOutputs(chain, request, helpRequest, routing)}
 
 ## Boundary Check
 
@@ -87,8 +97,103 @@ ${expectedOutputs(chain, request, helpRequest)}
 - If the user explicitly named an agent, use it first.
 - Add prerequisite agents when the task needs conversion, reporting, deck building, or QA.
 - Agent Computer is the primary computer; host OS apps and external accounts are peripherals, not defaults.
+- Always-on routing applies to meaningful work requests even mid-conversation.
 - New requests get a fresh project by default; similar existing projects are optional context only unless the user explicitly asks to reuse them.
 - Actual sending, publishing, deletion, payment, account changes, host-app automation, or file moves require explicit approval before execution.`;
+}
+
+function routingDecision(request, chain, helpRequest, reuseRequested) {
+  const text = request.toLowerCase().trim();
+  const correction = isCorrectionRequest(text);
+  const contextRef = hasContextReference(text);
+  const continuationMarker = hasContinuationMarker(text) || reuseRequested;
+  const meaningfulWork = hasMeaningfulWorkRequest(text, chain, helpRequest);
+  const activeContextRequired = correction || (meaningfulWork && (contextRef || continuationMarker));
+  const activeContextClear = activeContextRequired
+    ? 'unknown in static routing; use current thread context, and ask if the source/project is ambiguous'
+    : 'not required';
+
+  if (helpRequest || (!meaningfulWork && !correction)) {
+    return {
+      mode: 'question-only',
+      meaningfulWork,
+      activeContextRequired: 'no',
+      activeContextClear: 'not applicable',
+      priorProjectReuseAllowed: 'not applicable',
+      ambiguousContextAction: 'no project or agent chain needed unless the user asks to save work'
+    };
+  }
+
+  if (correction && !meaningfulWork) {
+    return {
+      mode: 'correction',
+      meaningfulWork: false,
+      activeContextRequired: 'yes',
+      activeContextClear,
+      priorProjectReuseAllowed: 'current work contract only; do not create a new project unless the user asks for a revision artifact',
+      ambiguousContextAction: 'ask which assumption, artifact, or project should be corrected, then wait'
+    };
+  }
+
+  if (correction) {
+    return {
+      mode: 'correction',
+      meaningfulWork: true,
+      activeContextRequired: 'yes',
+      activeContextClear,
+      priorProjectReuseAllowed: 'only the active work being corrected; ask before reading unrelated prior projects',
+      ambiguousContextAction: 'ask which artifact or project should be revised if unclear, then wait'
+    };
+  }
+
+  if (activeContextRequired) {
+    return {
+      mode: 'continuation work',
+      meaningfulWork: true,
+      activeContextRequired: 'yes',
+      activeContextClear,
+      priorProjectReuseAllowed: 'only when the user clearly continues the active thread/project; otherwise ask',
+      ambiguousContextAction: 'ask which source, artifact, or project to use, then wait'
+    };
+  }
+
+  return {
+    mode: 'new work',
+    meaningfulWork: true,
+    activeContextRequired: 'no',
+    activeContextClear: 'not required',
+    priorProjectReuseAllowed: 'no; create a fresh project unless the user explicitly asks to reuse prior work',
+    ambiguousContextAction: 'not applicable'
+  };
+}
+
+function renderRoutingMode(routing) {
+  return [
+    `- Mode: ${routing.mode}`,
+    `- Meaningful work request detected: ${routing.meaningfulWork ? 'yes' : 'no'}`,
+    `- Active context required: ${routing.activeContextRequired}`,
+    `- Active context clear: ${routing.activeContextClear}`,
+    `- Prior project reuse allowed: ${routing.priorProjectReuseAllowed}`,
+    `- If context is ambiguous, ask and wait: ${routing.ambiguousContextAction}`
+  ].join('\n');
+}
+
+function hasMeaningfulWorkRequest(text, chain, helpRequest) {
+  if (helpRequest) return false;
+  if (chain.some((agent) => agent !== 'workspace-router')) return true;
+  return /(create|make|build|write|draft|turn|convert|inspect|organize|send|research|verify|remember|improve|revise|summarize|analyze|read|check|qa|report|ppt|deck|slides|email|agent|webpage|website|markdown|docx|pdf|만들|작성|초안|바꿔|변환|읽|정리|보내|발송|조사|검수|기억|개선|수정|요약|분석|보고서|발표|웹페이지|문서)/.test(text);
+}
+
+function hasContextReference(text) {
+  return /\b(this|that|it|above|previous|current|same|those|these)\b|이거|이걸|그거|그걸|그것|방금|위에|앞에서|앞서|그 자료|그 결과|그 내용|방금.*것|이 내용|그 내용/.test(text);
+}
+
+function hasContinuationMarker(text) {
+  return /^(좋아|좋다|오케이|그래|응|ㅇㅋ|okay|ok|good|great|then|now)\b|그럼|그러면|이어서|계속|바탕으로|기반으로|based on|from that|turn this|now make|now turn/.test(text);
+}
+
+function isCorrectionRequest(text) {
+  return /^(아니|아냐|그건 아니|no,|not\b)|아니라|말고|대신|정정|수정하면|틀렸|wrong|correction|revise the assumption/.test(text);
 }
 
 function intentDecision(request, chain, helpRequest) {
@@ -269,7 +374,7 @@ function sortChain(chain) {
   });
 }
 
-function projectDecision(request, reuseRequested, chain, helpRequest = false) {
+function projectDecision(request, reuseRequested, chain, helpRequest = false, routing = null) {
   if (helpRequest && chain.length === 1 && chain.includes('workspace-router')) {
     return [
       '- New request or continuation: usage/help request.',
@@ -278,6 +383,26 @@ function projectDecision(request, reuseRequested, chain, helpRequest = false) {
       '- New project slug: not applicable for usage help.',
       '- Existing project reuse allowed: not applicable.',
       '- Reuse approval needed: no.'
+    ].join('\n');
+  }
+  if (routing?.mode === 'question-only') {
+    return [
+      '- New request or continuation: question-only or conversation.',
+      '- Existing related project found: not applicable.',
+      '- Default action: answer in chat without creating files or projects.',
+      '- New project slug: not applicable.',
+      '- Existing project reuse allowed: not applicable.',
+      '- Reuse approval needed: no.'
+    ].join('\n');
+  }
+  if (routing?.mode === 'correction' && !routing.meaningfulWork) {
+    return [
+      '- New request or continuation: correction to active context.',
+      '- Existing related project found: use only the active work contract if clear.',
+      '- Default action: update the current assumption, audience, goal, or scope; ask before revising files.',
+      '- New project slug: not applicable unless the user asks for a new revision artifact.',
+      '- Existing project reuse allowed: only the active artifact/project being corrected.',
+      '- Reuse approval needed: yes if the affected artifact/project is unclear.'
     ].join('\n');
   }
   if (isContactOnlyRequest(request) && chain.length === 1 && chain.includes('email-operator')) {
@@ -298,6 +423,26 @@ function projectDecision(request, reuseRequested, chain, helpRequest = false) {
       '- New project slug: not applicable for workspace-wide organization.',
       '- Existing project reuse allowed: not applicable.',
       '- Reuse approval needed: no; actual file moves still need explicit approval or `--yes`.'
+    ].join('\n');
+  }
+  if (routing?.mode === 'continuation work') {
+    return [
+      '- New request or continuation: continuation work.',
+      '- Existing related project found: use the active conversation project only if the reference is clear.',
+      '- Default action: continue, transform, or extend the active artifact; ask if the source/project is ambiguous.',
+      '- New project slug: use only if the user is actually starting a new topic or no active context is available.',
+      '- Existing project reuse allowed: only for the active thread/project the user is continuing.',
+      '- Reuse approval needed: yes if the reference could point to multiple prior artifacts or projects.'
+    ].join('\n');
+  }
+  if (routing?.mode === 'correction') {
+    return [
+      '- New request or continuation: correction plus work request.',
+      '- Existing related project found: use the active artifact/project being corrected when clear.',
+      '- Default action: revise the work contract, then route the requested revision.',
+      '- New project slug: only if the correction becomes a new work item.',
+      '- Existing project reuse allowed: only the active artifact/project being corrected.',
+      '- Reuse approval needed: yes if the affected artifact/project is unclear.'
     ].join('\n');
   }
   const slug = slugifyProject(request);
@@ -344,12 +489,24 @@ function isHowToUseRequest(request) {
     || /(어떻게\s*써|어떻게\s*사용|사용법|뭐부터\s*하면|뭘\s*할\s*수|무엇을\s*할\s*수|처음.*시작|시작.*방법|도움말)/.test(text);
 }
 
-function expectedOutputs(chain, request = '', helpRequest = false) {
+function expectedOutputs(chain, request = '', helpRequest = false, routing = null) {
   if (helpRequest && chain.length === 1 && chain.includes('workspace-router')) {
     return [
       '- Chat answer explaining how to use Agent Computer.',
       '- Reference `START_HERE.md`, `README.md`, `AGENTS.md`, and `computer/docs/workspace-structure.md`.',
       '- No project folder is needed unless the user asks to save the guidance.'
+    ].join('\n');
+  }
+  if (routing?.mode === 'question-only') {
+    return [
+      '- Chat answer only.',
+      '- No project folder or durable output unless the user asks to save it.'
+    ].join('\n');
+  }
+  if (routing?.mode === 'correction' && !routing.meaningfulWork) {
+    return [
+      '- Updated work contract or clarification in chat.',
+      '- No file edits unless the user asks to revise an existing artifact.'
     ].join('\n');
   }
   const outputs = [];

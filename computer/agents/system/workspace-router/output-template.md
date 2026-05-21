@@ -9,6 +9,15 @@
 ## Reason
 
 
+## Routing Mode
+
+- Mode: new work / continuation work / correction / question-only
+- Meaningful work request detected:
+- Active context required:
+- Active context clear:
+- Prior project reuse allowed:
+- If context is ambiguous, ask and wait:
+
 ## Boundary Check
 
 - Workspace-native path used first:

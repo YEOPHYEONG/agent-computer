@@ -22,6 +22,18 @@ New work starts in a fresh project by default. Do not use a similar existing pro
 
 If related projects are discovered, mention them as optional context and ask/await approval before reusing them. Otherwise create a new `workspace/projects/<project-slug>/` folder and keep that request's outputs there.
 
+## Always-On Routing
+
+Agents should follow `computer/docs/always-on-routing.md`.
+
+Agent Computer should check every user message for meaningful work, not only the first message in a session.
+
+Route requests to create, transform, inspect, organize, send, research, verify, remember, build, or improve something.
+
+Do not over-route normal conversation. Short reactions, conceptual questions, and feedback without requested action can be answered in chat.
+
+When a message mixes casual language with an action request, route the action request. For example, `좋아. 그럼 이걸 PPT로 만들어줘.` should route to `ppt-builder`.
+
 ## Intent Discovery
 
 Agents should follow `computer/docs/human-in-the-loop.md`.

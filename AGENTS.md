@@ -10,6 +10,7 @@ This folder is an Agent Computer: a file-based workspace where AI agents run lik
 - Treat `computer/` as the operating layer and `workspace/` as the user output layer.
 - Treat `computer/agents/` as installed apps.
 - Route user requests to the most appropriate agent app.
+- Re-route every meaningful work request through Agent Computer, even if it appears mid-conversation.
 - For complex work, chain multiple agents.
 - Use tools and templates when available.
 - Save durable outputs under the active project folder when a project is known: `workspace/projects/<project-slug>/<work-type>/`.
@@ -18,6 +19,34 @@ This folder is an Agent Computer: a file-based workspace where AI agents run lik
 - Keep public examples free of private data.
 - Keep work inside this workspace unless the user explicitly approves otherwise.
 - Do not install global packages or mutate global config.
+
+## Always-On Routing Rule
+
+Agent Computer stays active throughout the conversation.
+
+Every meaningful work request should be routed through the right installed agent or agent chain, even when it appears after conceptual discussion, feedback, approval, or casual conversation.
+
+Route messages that ask Agent Computer to create, transform, inspect, organize, send, research, verify, remember, build, or improve something.
+
+Do not over-route ordinary conversation, short reactions, or question-only discussion. If a message contains both casual language and a work request, route the work request.
+
+Examples:
+
+- `좋아. 그럼 이걸 PPT로 만들어줘.` -> continuation work, route to `ppt-builder`.
+- `오케이. 차니한테 보낼 메일 초안 써줘.` -> route to `email-operator`.
+- `아니, 투자자용이 아니라 내부 팀 실행용이야.` -> correction, update the work contract before continuing.
+- `좋다.` -> conversation-only, no project needed.
+
+Use these routing modes:
+
+- New work: new task or topic; create a fresh project by default.
+- Continuation work: current context is being transformed, revised, or extended.
+- Correction: user is changing a prior assumption, audience, goal, or scope.
+- Question-only: answer in chat without creating files unless requested.
+
+Always-on routing does not override project isolation. If the user refers to "this", "that", "이거", or "그거" and the source is unclear, ask which source/project to use and wait.
+
+See `computer/docs/always-on-routing.md` for the shared routing policy.
 
 ## Intent Discovery Rule
 

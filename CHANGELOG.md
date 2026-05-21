@@ -4,6 +4,7 @@ All notable changes to Agent Computer will be documented here.
 
 ## Unreleased
 
+- Always-on routing rules so meaningful work requests route through Agent Computer even mid-conversation.
 - Human-in-the-loop runtime policy for intent-sensitive work, confirmation gates, and multi-turn agent workflows.
 - Public documentation boundary cleanup so runtime docs stay separate from internal planning docs.
 - Public README polish.

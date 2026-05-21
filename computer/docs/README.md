@@ -8,6 +8,7 @@ It should describe what exists in this repository today:
 - how the workspace is structured
 - how Codex and Claude Code should operate in this workspace
 - safety boundaries for files, accounts, host apps, and external actions
+- always-on routing rules that keep Agent Computer active throughout a conversation
 - engineering principles that affect day-to-day agent behavior
 - human-in-the-loop rules that define when agents should ask, stop, wait, or proceed
 
