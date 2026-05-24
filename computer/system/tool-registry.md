@@ -15,3 +15,4 @@ Shared tools should be registered here.
 | build_editable_premium_ppt | `computer/tools/lib/deck.mjs`, `computer/tools/lib/pptx-writer.mjs` | ppt-builder | Run full workflow and build editable PPTX with package/text QA | v0 required |
 | premium_ppt_workflow | `computer/agents/work/ppt-builder/workflow.md` | ppt-builder | Define content outline -> design outline -> build plan -> prototype/render QA -> editable PPTX reconstruction | v0 required |
 | analyze_instagram_growth | `computer/agents/work/instagram-growth-analyst/tools/analyze-instagram-growth.mjs` | instagram-growth-analyst | Analyze local Instagram performance data and produce growth experiments without external account access | v0 required |
+| initialize_planning_workspace | `computer/tools/lib/planning.mjs` | planning-partner | Create project-first planning state, questions, assumptions, blindspot review, research-needed list, planning brief, and next actions | v0 required |

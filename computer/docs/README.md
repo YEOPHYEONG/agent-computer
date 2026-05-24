@@ -12,6 +12,8 @@ It should describe what exists in this repository today:
 - engineering principles that affect day-to-day agent behavior
 - human-in-the-loop rules that define when agents should ask, stop, wait, or proceed
 - chain checkpoint rules for multi-agent handoffs, quality gates, and final QA
+- research mode rules for Deep, Wide, and Hybrid research workflows
+- research architecture rules that shape deep research into strategy, GTM, growth, market, technical, source-heavy, or benchmark-synthesis work
 
 It should not contain internal planning material:
 
@@ -24,3 +26,9 @@ It should not contain internal planning material:
 - internal product decisions
 
 Keep those documents outside the public release copy. Runtime agents may read public docs while working, so this folder must avoid speculative guidance that could be mistaken for current behavior.
+
+## Runtime Docs
+
+- [Research Modes](research-modes.md): Deep, Wide, and Hybrid execution patterns.
+- [Research Architectures](research-architectures.md): task-specific reasoning shapes for deep research.
+- [Chain Checkpoints](chain-checkpoints.md): handoffs and QA gates for multi-agent work.

@@ -9,6 +9,12 @@
 ## Context
 
 
+## Claim-Evidence-Confidence-Caveat Matrix
+
+| Claim | Evidence | Confidence | Caveat | Decision Use |
+|---|---|---|---|---|
+
+
 ## Evidence Gaps Checked
 
 
@@ -16,6 +22,15 @@
 
 
 ## Remaining Gaps
+
+
+## Questions That Changed The Recommendation
+
+
+## Assumptions Being Carried
+
+
+## Evidence Confidence
 
 
 ## Findings
@@ -31,4 +46,3 @@
 
 
 ## Evidence Notes
-

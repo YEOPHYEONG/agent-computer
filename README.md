@@ -4,7 +4,7 @@ Stop losing agent work in chat history. Boot an Agent Computer.
 
 ![Agent Computer cover](computer/docs/assets/agent-computer-cover-v3.png)
 
-Agent Computer is a local, file-based workspace where Codex, Claude Code, and similar coding agents run agents like apps. A single request can become a routed workflow, project folder, research brief, report, editable deck, draft, converted document, and QA log.
+Agent Computer is a local, file-based workspace where Codex, Claude Code, and similar coding agents run agents like apps. A single request can become a routed workflow, project folder, research brief, MI-grade report, editable deck, local web page, draft, converted document, and QA log.
 
 It is designed to be opened with coding agents such as Codex, Claude Code, or any assistant that can read and write files.
 
@@ -20,7 +20,7 @@ Most agent work disappears inside chat history. Agent Computer gives agents a du
 
 - agents are apps
 - tools are executable capabilities
-- reports, decks, drafts, and converted files are outputs
+- reports, decks, web pages, drafts, and converted files are outputs
 - memory is stored as Markdown
 - tasks and indexes make work recoverable
 - the operating layer lives under `computer/`
@@ -43,7 +43,7 @@ plain coding agent
 Agent Computer
 -> routed agent workflow
 -> workspace/projects/{project-slug}/
--> research, reports, decks, drafts, converted docs, memory, and QA logs
+-> research, reports, decks, web pages, drafts, converted docs, memory, and QA logs
 ```
 
 ## Showcase Workflow
@@ -60,6 +60,12 @@ Expected route:
 deep-dive-researcher -> report-writer -> ppt-builder -> qa-verifier
 ```
 
+For HTML or interactive web reports, deep research still produces its own full Markdown report first. The web artifact is built separately:
+
+```text
+deep-dive-researcher -> report-writer -> web-builder -> qa-verifier
+```
+
 Expected output shape:
 
 ![Agent Computer showcase workflow](computer/docs/assets/agent-computer-showcase.png)
@@ -69,6 +75,7 @@ workspace/projects/newsletter-success-formula/
   research/
   reports/
   presentations/
+  web/
   qa/
 ```
 
@@ -107,6 +114,12 @@ Convert this PDF into an agent-readable document, then create a report and prese
 
 Agent Computer should route the request to installed agents, create a project folder, save durable outputs under `workspace/projects/{project-slug}/`, and QA the result when appropriate.
 
+### Codex Native Subagents
+
+Agent Computer includes project-scoped Codex custom agents under `.codex/agents/ac-*.toml` for deep research. These map to the canonical deep-dive specialist roles, such as `ac-intent-analyst`, `ac-research-architect`, `ac-market-mapper`, `ac-evidence-verifier`, `ac-research-quality-controller`, and `ac-report-composer`.
+
+Codex does not spawn subagents automatically. For serious research, Agent Computer should ask for explicit approval before using native subagents. If approved, subagent findings should be saved or summarized under `workspace/projects/{project-slug}/research/subagent-results/ac-*.md` before the final report is composed.
+
 ### Optional Local CLI
 
 The npm commands are developer and smoke-test helpers. They are not the primary user experience.
@@ -130,6 +143,7 @@ Or run an agent task directly:
 ```bash
 npm run agent -- ingest path/to/source.pdf
 npm run agent -- report workspace/projects/source/converted/source.agent.md
+npm run agent -- web workspace/projects/source/reports/source_report.md --title "Source Web Report"
 npm run agent -- ppt workspace/projects/source/reports/source_report.md --title "Source Report"
 npm run agent -- ppt workspace/projects/source/reports/source_report.md --title "Source Report" --plan-only
 npm run agent -- organize --policy project-based --dry-run
@@ -170,8 +184,10 @@ If a related project exists, the agent may mention it as optional context, but s
 
 - `quick-researcher`: fast, focused research with sources
 - `deep-dive-researcher`: deep research with evidence and causality
+- `planning-partner`: multi-turn planning partner for ideas, services, content, brands, campaigns, communities, and projects
 - `report-writer`: structured reports and documents
 - `ppt-builder`: high-quality PPT workflow with content/design specs, prototype QA, and editable reconstruction gates
+- `web-builder`: local static HTML pages and interactive web reports from approved source material
 - `email-operator`: emails, replies, and follow-ups
 
 ### Personal Agents
@@ -219,6 +235,7 @@ agent-computer/
         research/
         reports/
         presentations/
+        web/
         qa/
         assets/
         tasks/

@@ -54,6 +54,18 @@ For multi-agent workflows, the router should define the chain contract, pre-flig
 
 Each agent should hand off durable artifacts, assumptions, unresolved questions, and limitations. Downstream agents should use the handoff instead of silently inventing a new direction.
 
+## Research Modes
+
+Research agents should follow `computer/docs/research-modes.md`.
+
+`deep-dive-researcher` should choose Deep, Wide, or Hybrid mode, preserve a research contract, keep source/evidence/claim artifacts, and ask before changing an outcome-defining research direction.
+
+## Research Architectures
+
+Deep research should also follow `computer/docs/research-architectures.md`.
+
+Research mode controls breadth. Research architecture controls synthesis shape. `deep-dive-researcher` should preserve `architecture-decision.md`, `hypothesis-map.md`, `red-team-critique.md`, and `synthesis-plan.md` so downstream report and PPT agents do not flatten strategy, GTM, growth, market, technical, source-heavy, or benchmark-synthesis work into a generic report.
+
 ## Categories
 
 - `computer/agents/system/`: OS-like agents that route, build, organize, ingest, verify, and maintain the workspace
@@ -96,7 +108,9 @@ Work:
 
 - `quick-researcher`
 - `deep-dive-researcher`
+- `planning-partner`
 - `report-writer`
+- `web-builder`
 - `ppt-builder`
 - `email-operator`
 - `instagram-growth-analyst`

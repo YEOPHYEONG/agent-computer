@@ -20,6 +20,7 @@ workspace/
       research/
       reports/
       presentations/
+      web/
       qa/
       assets/
       tasks/
@@ -77,7 +78,7 @@ When a user asks for work, Agent Computer should:
 
 1. Route the request to the right installed agent or agent chain.
 2. Create a fresh `workspace/projects/{project-slug}/` folder for new work unless the user explicitly asks to continue an old project.
-3. Keep source, converted files, research, reports, presentations, assets, and QA inside that project folder.
+3. Keep source, converted files, research, reports, presentations, web pages, assets, and QA inside that project folder.
 4. Use the operating layer only to run the work, not as the place where user-facing results are buried.
 
 ## External Systems
@@ -91,6 +92,7 @@ Workspace-native actions should be tried first:
 - file organization: dry-run and move manifest
 - memory: Markdown files under `computer/memory/`
 - decks: project presentation artifacts
+- web pages: project web artifacts under `workspace/projects/{project-slug}/web/`
 - document conversion: project converted artifacts
 
 Host OS apps, browser profiles, email accounts, calendars, publishing tools, and payment systems require explicit user approval.

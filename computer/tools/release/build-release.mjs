@@ -257,10 +257,15 @@ function runSmokeChecks() {
   const commands = [
     ['node', ['--check', 'computer/tools/lib/registry.mjs']],
     ['node', ['--check', 'computer/tools/lib/research.mjs']],
+    ['node', ['--check', 'computer/tools/lib/subagents.mjs']],
+    ['node', ['--check', 'computer/tools/lib/qa.mjs']],
     ['node', ['--check', 'computer/tools/lib/deck.mjs']],
+    ['node', ['--check', 'computer/tools/release/copy-clean-test.mjs']],
     ['node', ['computer/tools/agent-computer.mjs', 'route', 'How do I use this workspace?']],
     ['node', ['computer/tools/agent-computer.mjs', 'route', 'Convert this PDF into a report and PPT.']],
     ['node', ['computer/tools/agent-computer.mjs', 'route', 'Research newsletter success cases deeply and turn the success formulas into a rich editable PPT.']],
+    ['node', ['computer/tools/agent-computer.mjs', 'route', 'I have an idea for a daily concept-learning app. Help me plan it.']],
+    ['node', ['computer/tools/agent-computer.mjs', 'route', 'Compare 30 AI research agents with the same rubric.']],
     ['node', ['computer/tools/agent-computer.mjs', 'route', 'Save person@example.com as a contact named Alex.']]
   ];
 

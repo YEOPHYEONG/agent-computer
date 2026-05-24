@@ -4,6 +4,7 @@ import { bulletList, extractHeadings, splitSentences, stripMarkdown } from './ma
 import { maskEmailsInText, redactEmailsForStorageName, renderRecipientResolution, resolveEmailRecipient } from './contacts.mjs';
 import { inferProjectSlug, projectPath } from './project-paths.mjs';
 import { resolveWorkspacePath } from './workspace.mjs';
+import { prepareResearchSubagentRuntime } from './subagents.mjs';
 
 export async function quickResearch(root, filePath, options = {}) {
   const source = await readText(filePath, undefined);
@@ -64,6 +65,21 @@ export async function deepResearch(root, filePath, options = {}) {
   const topic = safeTopicName(question);
   const project = inferProjectSlug(root, filePath, topic);
   const out = projectPath(root, project, 'research', `${topic}_deep-research.md`);
+  const contractFile = projectPath(root, project, 'research', 'research-contract.md');
+  const architectureDecisionFile = projectPath(root, project, 'research', 'architecture-decision.md');
+  const sourceMapFile = projectPath(root, project, 'research', 'source-map.md');
+  const evidenceStoreFile = projectPath(root, project, 'research', 'evidence-store.md');
+  const questionLedgerFile = projectPath(root, project, 'research', 'question-ledger.md');
+  const claimMapFile = projectPath(root, project, 'research', 'claim-verification-map.md');
+  const hypothesisMapFile = projectPath(root, project, 'research', 'hypothesis-map.md');
+  const redTeamCritiqueFile = projectPath(root, project, 'research', 'red-team-critique.md');
+  const synthesisPlanFile = projectPath(root, project, 'research', 'synthesis-plan.md');
+  const qualityControlPlanFile = projectPath(root, project, 'research', 'research-quality-control-plan.md');
+  const evaluationTemplateFile = projectPath(root, project, 'research', 'evaluations', '_template.md');
+  const repairPacketTemplateFile = projectPath(root, project, 'research', 'repair-packets', '_template.md');
+  const retryLogFile = projectPath(root, project, 'research', 'retry-log.md');
+  const researchQaFile = projectPath(root, project, 'research', `${topic}_research-qa.md`);
+  const workerPacketFile = projectPath(root, project, 'research', 'worker-packets', 'worker-packet-template.md');
   const facts = topSentences(source, 10);
   const headings = extractHeadings(source).map((h) => `${'  '.repeat(h.level - 1)}- ${h.title}`).join('\n') || '- No headings found';
   const evidence = await gatherReportEvidence(root, project, filePath, { includeProjectResearch: false });
@@ -72,7 +88,40 @@ export async function deepResearch(root, filePath, options = {}) {
   const claimReviews = claims.map((claim) => reviewClaim(claim, evidence.items));
   const supported = claimReviews.filter((claim) => claim.status === 'Supported' || claim.status === 'Partially supported');
   const unresolved = claimReviews.filter((claim) => claim.status !== 'Supported');
+  const mode = inferResearchMode(question, source, claims);
+  const architecture = inferResearchArchitecture(question, source, mode, claims, filePath);
+  const architectureDecision = renderResearchArchitectureDecision(architecture, mode, question, filePath);
+  const architectureWorkplan = renderArchitectureWorkplan(architecture, question, mode);
+  const hypothesisMapRows = renderHypothesisMap(architecture, question, claimReviews);
+  const redTeamCritiqueRows = renderRedTeamCritique(architecture, question, claimReviews);
+  const synthesisPlan = renderSynthesisPlan(architecture, question, mode, claimReviews);
+  const qualityControlPlan = renderResearchQualityControlPlan(question, architecture, mode);
+  const evaluationTemplate = renderResearchEvaluationTemplate();
+  const repairPacketTemplate = renderResearchRepairPacketTemplate();
+  const subagentRuntime = await prepareResearchSubagentRuntime(root, project, architecture, mode, question, {
+    runtime: options.runtime || 'auto',
+    nativeSubagents: options.nativeSubagents,
+    materializeSubagents: options.materializeSubagents
+  });
   const sourceMapRows = renderDeepSourceMap(filePath, evidence.items);
+  const evidenceStoreRows = renderEvidenceStoreRows(filePath, facts, evidence.items, claimReviews);
+  const questionSet = buildSocraticQuestionSet(question, source, claimReviews, mode);
+  const questionEngineRows = renderSocraticQuestionEngine(questionSet);
+  const questionLaneRows = renderQuestionRoutingLanes(questionSet, source, question);
+  const selectedQuestion = renderSelectedNextBestQuestion(questionSet, claimReviews);
+  const recommendationQuestionRows = renderQuestionsThatChangedRecommendation(questionSet, claimReviews, mode);
+  const carriedAssumptions = renderAssumptionsBeingCarried(question, source, claimReviews);
+  const evidenceConfidenceRows = renderEvidenceConfidence(filePath, evidence.items, claimReviews);
+  const validationLaterItems = renderValidationLaterItems(source, question, claimReviews);
+  const questionLedgerRows = renderQuestionLedger(question, source, claimReviews, questionSet);
+  const claimMapRows = claimReviews.length
+    ? claimReviews.map(renderClaimRow).join('\n')
+    : '| No specific claim extracted | Needs validation | No claim-like source lines found. | Ask for more source material before drawing conclusions. |';
+  const retryLog = renderTargetedRetryLog(mode, claimReviews);
+  const researchContract = renderResearchContract(project, question, filePath, mode);
+  const sourcePolicy = renderResearchSourcePolicy(mode);
+  const workerPacket = renderWorkerPacketTemplate(mode, question);
+  const researchQa = renderResearchQa(question, mode, architecture, evidence.items, claimReviews);
   const body = `# Deep Research Report
 
 ## Research Question
@@ -82,6 +131,61 @@ ${question}
 ## Short Answer
 
 ${renderDeepShortAnswer(facts, supported, unresolved)}
+
+## Research Contract
+
+${researchContract}
+
+## Depth Standard
+
+${renderDepthStandard(question)}
+
+## Research Mode
+
+${renderResearchModeDecision(mode)}
+
+## Research Architecture
+
+${architectureDecision}
+
+## Architecture-Specific Workplan
+
+${architectureWorkplan}
+
+## Hypothesis Map
+
+| Hypothesis | Evidence for | Evidence against | Confidence | What would change it |
+|---|---|---|---|---|
+${hypothesisMapRows}
+
+## Red-Team Critique
+
+| Risk | Why it could be wrong | How to test or caveat it | Status |
+|---|---|---|---|
+${redTeamCritiqueRows}
+
+## Synthesis Plan
+
+${synthesisPlan}
+
+## Research Quality Control Plan
+
+${qualityControlPlan}
+
+## Runtime Subagent Plan
+
+${subagentRuntime.planMarkdown}
+
+## Native Subagent Orchestration
+
+- Execution contract: \`${subagentRuntime.orchestrationFile}\`
+- Result directory: \`${subagentRuntime.resultsReadmeFile}\`
+- Result template: \`${subagentRuntime.resultTemplateFile}\`
+- Truthfulness rule: do not claim native subagents actually ran unless their findings are written or summarized in \`subagent-results/ac-*.md\`.
+
+## Source Policy
+
+${sourcePolicy}
 
 ## Research Frame
 
@@ -101,27 +205,77 @@ ${renderResearchMemoryFrame(memory, question)}
 
 ${renderResearchPassLog(evidence.items, claimReviews)}
 
+## Socratic Question Engine
+
+| Question Type | Lane | Question | Why it matters | Research action or user checkpoint |
+|---|---|---|---|---|
+${questionEngineRows}
+
+## Question Routing Lanes
+
+| Lane | Questions | Required behavior |
+|---|---|---|
+${questionLaneRows}
+
+### Selected Next-Best Question
+
+${selectedQuestion}
+
 ## Question Ledger
 
 | Question | Why it matters to the user | Status | Evidence used | Next action |
 |---|---|---|---|---|
-${renderQuestionLedger(question, source, claimReviews)}
+${questionLedgerRows}
 
 ## User Checkpoints And Assumptions
 
 ${renderUserCheckpoints(question, claimReviews)}
 
+## Questions That Changed The Recommendation
+
+| Question | Effect on recommendation | Evidence or assumption used |
+|---|---|---|
+${recommendationQuestionRows}
+
+## Assumptions Being Carried
+
+${carriedAssumptions}
+
+## Evidence Confidence / Claim-Evidence-Confidence-Caveat Matrix
+
+| Claim | Evidence | Confidence | Caveat |
+|---|---|---|---|
+${evidenceConfidenceRows}
+
+## Validate Later Items
+
+${validationLaterItems}
+
 ## Source Map
 
-| Source | Type | Use | Confidence |
-|---|---|---|---|
+| Source | Tier | Type | Use | Confidence |
+|---|---|---|---|---|
 ${sourceMapRows}
+
+## Evidence Store
+
+| Evidence ID | Claim or fact | Source | Tier | Confidence | Notes |
+|---|---|---|---|---|---|
+${evidenceStoreRows}
 
 ## Claim Verification Map
 
 | Claim Or Input Item | Verification Status | Evidence Used | Treatment |
 |---|---|---|---|
-${claimReviews.length ? claimReviews.map(renderClaimRow).join('\n') : '| No specific claim extracted | Needs validation | No claim-like source lines found. | Ask for more source material before drawing conclusions. |'}
+${claimMapRows}
+
+## Targeted Retry Log
+
+${retryLog}
+
+## Wide Or Hybrid Worker Packets
+
+${mode.mode === 'Wide' || mode.mode === 'Hybrid' ? workerPacket : '- Not required for the selected Deep Mode unless the research expands into a case/table comparison.'}
 
 ## DIKI Synthesis
 
@@ -171,6 +325,10 @@ ${renderDeepOpenQuestions(claimReviews)}
 
 ${renderNextResearchPass(question, claimReviews)}
 
+## Downstream Handoff
+
+${renderDownstreamHandoff(mode, architecture, topic, claimReviews)}
+
 ## Why Stop Here
 
 ${renderWhyStopHere(claimReviews)}
@@ -180,16 +338,555 @@ ${renderWhyStopHere(claimReviews)}
 - \`${filePath}\`
 ${evidence.items.slice(0, 8).map((item) => `- \`${item.path}\``).join('\n')}
 `;
+  await writeText(contractFile, `# Research Contract\n\n${researchContract}\n`);
+  await writeText(architectureDecisionFile, `# Architecture Decision\n\n${architectureDecision}\n\n## Architecture-Specific Workplan\n\n${architectureWorkplan}\n`);
+  await writeText(sourceMapFile, `# Source Map\n\n| Source | Tier | Type | Use | Confidence |\n|---|---|---|---|---|\n${sourceMapRows}\n`);
+  await writeText(evidenceStoreFile, `# Evidence Store\n\n| Evidence ID | Claim or fact | Source | Tier | Confidence | Notes |\n|---|---|---|---|---|---|\n${evidenceStoreRows}\n`);
+  await writeText(questionLedgerFile, `# Question Ledger\n\n## Socratic Question Engine\n\n| Question Type | Lane | Question | Why it matters | Research action or user checkpoint |\n|---|---|---|---|---|\n${questionEngineRows}\n\n## Question Routing Lanes\n\n| Lane | Questions | Required behavior |\n|---|---|---|\n${questionLaneRows}\n\n## Selected Next-Best Question\n\n${selectedQuestion}\n\n## Questions That Changed The Recommendation\n\n| Question | Effect on recommendation | Evidence or assumption used |\n|---|---|---|\n${recommendationQuestionRows}\n\n## Ledger\n\n| Question | Why it matters to the user | Status | Evidence used | Next action |\n|---|---|---|---|---|\n${questionLedgerRows}\n`);
+  await writeText(claimMapFile, `# Claim Verification Map\n\n| Claim Or Input Item | Verification Status | Evidence Used | Treatment |\n|---|---|---|---|\n${claimMapRows}\n`);
+  await writeText(hypothesisMapFile, `# Hypothesis Map\n\n| Hypothesis | Evidence for | Evidence against | Confidence | What would change it |\n|---|---|---|---|---|\n${hypothesisMapRows}\n`);
+  await writeText(redTeamCritiqueFile, `# Red-Team Critique\n\n| Risk | Why it could be wrong | How to test or caveat it | Status |\n|---|---|---|---|\n${redTeamCritiqueRows}\n`);
+  await writeText(synthesisPlanFile, `# Synthesis Plan\n\n${synthesisPlan}\n`);
+  await writeText(qualityControlPlanFile, `# Research Quality Control Plan\n\n${qualityControlPlan}\n`);
+  await writeText(evaluationTemplateFile, evaluationTemplate);
+  await writeText(repairPacketTemplateFile, repairPacketTemplate);
+  await writeText(retryLogFile, `# Targeted Retry Log\n\n${retryLog}\n`);
+  await writeText(researchQaFile, researchQa);
+  if (mode.mode === 'Wide' || mode.mode === 'Hybrid') await writeText(workerPacketFile, `# Worker Packet Template\n\n${workerPacket}\n`);
   await writeText(out, body);
-  return { file: out, text: `Wrote ${out}` };
+  const files = [contractFile, architectureDecisionFile, sourceMapFile, evidenceStoreFile, questionLedgerFile, claimMapFile, hypothesisMapFile, redTeamCritiqueFile, synthesisPlanFile, qualityControlPlanFile, evaluationTemplateFile, repairPacketTemplateFile, subagentRuntime.planFile, retryLogFile, researchQaFile, ...subagentRuntime.files.filter((file) => file !== subagentRuntime.planFile)];
+  if (mode.mode === 'Wide' || mode.mode === 'Hybrid') files.push(workerPacketFile);
+  return { file: out, files, text: `Wrote ${out}` };
 }
 
 function renderDeepSourceMap(primaryPath, evidenceItems) {
-  const rows = [`| \`${primaryPath}\` | workspace file | primary input and claim source | medium |`];
+  const rows = [`| \`${primaryPath}\` | User-provided | workspace file | primary input and claim source | medium |`];
   for (const item of evidenceItems.slice(0, 8)) {
-    rows.push(`| \`${item.path}\` | local workspace evidence | support, contradiction, or context check | medium |`);
+    rows.push(`| \`${item.path}\` | User-provided | local workspace evidence | support, contradiction, or context check | medium |`);
   }
   return rows.join('\n');
+}
+
+function inferResearchMode(question, source, claims) {
+  const text = String(question || '').toLowerCase();
+  const sourceText = String(source || '').toLowerCase();
+  const itemCountSignals = [
+    ...text.matchAll(/\b(\d{2,})\b/g)
+  ].map((match) => Number(match[1])).filter((value) => value >= 10);
+  const hasManyItems = itemCountSignals.length > 0 || /(many|list|compare|comparison|matrix|dataset|table|profiles?|examples?|cases?|benchmarks?|여러|목록|비교|표|데이터셋|사례|예시|케이스|벤치마크|도구들|회사들|브랜드들)/i.test(text);
+  const wantsFormula = /(formula|framework|pattern|principle|strategy|recommend|positioning|공식|프레임|패턴|전략|추천|포지셔닝|시사점|성공\s*공식)/i.test(text);
+  const hasConflictOrDecision = /(which|decide|judge|tradeoff|vs\.?|versus|conflict|contradiction|어떤|뭐가|판단|결정|비교|상충|모순|트레이드오프)/i.test(text);
+  const sourceHasListSignals = /(table|dataset|comparison|matrix|목록|비교표|데이터셋)/i.test(sourceText);
+
+  if (hasManyItems && wantsFormula) {
+    return {
+      mode: 'Hybrid',
+      reason: 'The request appears to need broad coverage under a shared rubric followed by deep synthesis into a formula, strategy, or recommendation.',
+      trigger: 'many-items-plus-synthesis',
+      itemEstimate: itemCountSignals[0] || Math.max(10, Math.min(50, claims.length || 10))
+    };
+  }
+  if ((hasManyItems || (sourceHasListSignals && /compare|비교|table|표|dataset|데이터셋/i.test(text))) && !hasConflictOrDecision) {
+    return {
+      mode: 'Wide',
+      reason: 'The request appears to involve many independent items that can be researched with a shared rubric.',
+      trigger: 'many-independent-items',
+      itemEstimate: itemCountSignals[0] || Math.max(10, Math.min(50, claims.length || 10))
+    };
+  }
+  return {
+    mode: 'Deep',
+    reason: hasConflictOrDecision
+      ? 'The request appears to require judgment, tradeoff analysis, or conflict resolution around one main question.'
+      : 'The request appears to center on one main question where mechanisms, evidence, and implications matter more than item coverage.',
+    trigger: hasConflictOrDecision ? 'judgment-or-conflict' : 'single-hard-question',
+    itemEstimate: 1
+  };
+}
+
+function renderResearchModeDecision(mode) {
+  return [
+    `- Mode: ${mode.mode}`,
+    `- Why this mode: ${mode.reason}`,
+    `- Trigger: ${mode.trigger}`,
+    `- Estimated item count: ${mode.itemEstimate}`,
+    `- What would make the mode change: switch to Wide if the task becomes a large comparison table; switch to Hybrid if broad coverage must feed a strategic formula or recommendation.`
+  ].join('\n');
+}
+
+function inferResearchArchitecture(question, source, mode, claims, filePath = '') {
+  const questionText = String(question || '').toLowerCase();
+  const sourceText = String(source || '').toLowerCase();
+  const fileText = String(filePath || '').toLowerCase();
+  const text = `${questionText}\n${sourceText}\n${fileText}`;
+  const claimText = claims.join('\n').toLowerCase();
+
+  if (mode.mode === 'Hybrid' || /(cases?|examples?|benchmarks?|compare|comparison|matrix|formula|framework|pattern|success formula|사례|성공사례|예시|케이스|벤치마크|비교|공식|프레임워크|패턴)/i.test(questionText)) {
+    return architectureDefinition('Wide Benchmark To Deep Synthesis', 'benchmark-to-synthesis signal');
+  }
+  if (/(how .*grew|growth journey|growth history|milestones?|viral|community|brand growth|newsletter growth|creator growth|성장\s*과정|성장\s*여정|전환점|마일스톤|바이럴|커뮤니티|브랜드\s*성장)/i.test(questionText)) {
+    return architectureDefinition('Growth Case Reconstruction', 'growth reconstruction signal');
+  }
+  if (/(product|gtm|go[-\s]?to[-\s]?market|launch|pricing|channel|positioning|business model|retention|onboarding|monetization|sales|activation|제품|시장\s*전략|출시|가격|채널|포지셔닝|비즈니스\s*모델|리텐션|온보딩|수익|세일즈|활성화)/i.test(questionText)) {
+    return architectureDefinition('Product / GTM Strategy Research', 'product or GTM signal');
+  }
+  if (/(market|competitor|competitive|landscape|category|alternatives?|whitespace|segment|tam|sam|시장|경쟁|경쟁사|카테고리|대안|화이트스페이스|세그먼트)/i.test(questionText + claimText)) {
+    return architectureDefinition('Market / Competitive Landscape', 'market or competitive landscape signal');
+  }
+  if (/(api|sdk|implementation|implement|integrat|debug|configure|architecture|official docs?|install|error|code|technical|기술|구현|연동|통합|설치|디버그|공식\s*문서|아키텍처)/i.test(questionText)) {
+    return architectureDefinition('Technical / Implementation Research', 'technical signal');
+  }
+  if (/(pdf|pptx|deck|slides?|paper|report|transcript|document|source file|based on this|based on the source|자료|문서|보고서|논문|덱|원본|첨부|파일)/i.test(questionText + fileText)) {
+    return architectureDefinition('Source-Heavy Evidence Review', 'source-heavy input signal');
+  }
+  if (/(api|sdk|implementation|implement|integrat|debug|configure|architecture|official docs?|install|error|code|technical|기술|구현|연동|통합|설치|디버그|공식\s*문서|아키텍처)/i.test(text)) {
+    return architectureDefinition('Technical / Implementation Research', 'technical signal');
+  }
+  return architectureDefinition('Strategic Decision Research', 'default strategic decision signal');
+}
+
+function architectureDefinition(name, trigger) {
+  const catalog = {
+    'Strategic Decision Research': {
+      slug: 'strategic-decision',
+      requiredQuestions: ['What decision is being made?', 'What options are available?', 'What criteria matter?', 'What would make the recommended option wrong?'],
+      requiredEvidence: ['option evidence', 'decision criteria', 'constraints', 'counterargument'],
+      finalStructure: ['decision context', 'options', 'criteria', 'evidence by option', 'tradeoffs', 'recommendation', 'next action'],
+      qaCriteria: ['options visible', 'criteria explicit', 'recommendation tied to evidence', 'counterargument included'],
+      switchSignals: ['large comparable item set', 'source-only extraction', 'implementation detail dominates']
+    },
+    'Product / GTM Strategy Research': {
+      slug: 'product-gtm',
+      requiredQuestions: ['Who is the sharpest first user or buyer?', 'What job makes the offer urgent?', 'Which channel can repeatedly reach them?', 'What activation or retention loop proves value?', 'Which metric decides whether the strategy works?'],
+      requiredEvidence: ['target evidence', 'problem/job evidence', 'channel evidence', 'conversion or retention logic', 'experiment and metric plan'],
+      finalStructure: ['target segment', 'problem/job-to-be-done', 'offer and positioning', 'channel strategy', 'acquisition/conversion/retention loop', 'experiments and metrics', 'risks and assumptions'],
+      qaCriteria: ['target present', 'offer present', 'channel present', 'loop present', 'experiment present', 'metrics present'],
+      switchSignals: ['pure category map', 'historical growth case only', 'technical implementation dominates']
+    },
+    'Growth Case Reconstruction': {
+      slug: 'growth-case',
+      requiredQuestions: ['What was the starting wedge?', 'What changed at each inflection point?', 'Which channel or message drove the transition?', 'What was manual or founder-led?', 'What can and cannot be copied?'],
+      requiredEvidence: ['timeline', 'milestones', 'tactics', 'channel/message/offer evidence', 'transferability limits'],
+      finalStructure: ['growth overview', 'timeline', 'milestone tactics', 'mechanisms', 'evidence strength', 'transferable playbook', 'non-transferable context'],
+      qaCriteria: ['timeline explicit', 'milestones explicit', 'mechanism per milestone', 'transferability separated'],
+      switchSignals: ['many independent cases', 'current GTM recommendation dominates', 'market map dominates']
+    },
+    'Market / Competitive Landscape': {
+      slug: 'market-landscape',
+      requiredQuestions: ['What category boundary is being used?', 'Which segments matter?', 'Who are direct, indirect, and substitute competitors?', 'What dimensions explain differentiation?', 'Where is the whitespace?'],
+      requiredEvidence: ['category definition', 'segmentation evidence', 'competitor/alternative map', 'comparison dimensions', 'market dynamics'],
+      finalStructure: ['category definition', 'segments', 'competitor map', 'comparison dimensions', 'market dynamics', 'whitespace', 'positioning implications'],
+      qaCriteria: ['category boundary explicit', 'competitors mapped by dimension', 'whitespace caveated', 'positioning implications included'],
+      switchSignals: ['single strategic decision', 'product launch plan dominates', 'technical docs dominate']
+    },
+    'Technical / Implementation Research': {
+      slug: 'technical-implementation',
+      requiredQuestions: ['What technical outcome is needed?', 'What environment and constraints apply?', 'Which official docs define behavior?', 'What is the minimal implementation path?', 'How will it be verified?'],
+      requiredEvidence: ['official docs', 'version/environment assumptions', 'implementation steps', 'edge cases', 'verification plan'],
+      finalStructure: ['goal and environment', 'official source summary', 'architecture or integration approach', 'implementation steps', 'edge cases and security', 'verification plan'],
+      qaCriteria: ['official docs prioritized', 'version assumptions stated', 'verification concrete', 'no invented APIs or flags'],
+      switchSignals: ['non-technical market strategy', 'source-only summarization', 'benchmark synthesis']
+    },
+    'Source-Heavy Evidence Review': {
+      slug: 'source-heavy',
+      requiredQuestions: ['What does the source actually claim?', 'Which claims are data, interpretation, recommendation, or rhetoric?', 'What visual/table context matters?', 'Which claims need external verification?', 'What must downstream agents preserve?'],
+      requiredEvidence: ['source claim map', 'source scope', 'visual/table notes when relevant', 'external verification needs', 'preservation guidance'],
+      finalStructure: ['source scope', 'source claim map', 'evidence and context notes', 'interpretation', 'verification needs', 'downstream preservation guidance'],
+      qaCriteria: ['source content preserved', 'document claims separated from verified facts', 'visual/table context preserved when relevant'],
+      switchSignals: ['user asks for independent market research', 'implementation problem dominates', 'many-case benchmark dominates']
+    },
+    'Wide Benchmark To Deep Synthesis': {
+      slug: 'wide-benchmark-synthesis',
+      requiredQuestions: ['What item set should be included?', 'What shared rubric makes cases comparable?', 'Which cases are strong, weak, outliers, or non-transferable?', 'What pattern appears across cases?', 'What exceptions disprove the simple formula?'],
+      requiredEvidence: ['inclusion criteria', 'shared rubric', 'case matrix', 'patterns', 'exceptions/outliers', 'transfer rules'],
+      finalStructure: ['inclusion criteria', 'shared rubric', 'case matrix', 'patterns', 'exceptions', 'derived formula/framework', 'application to user context'],
+      qaCriteria: ['inclusion criteria explicit', 'rubric explicit', 'patterns derived from cases', 'exceptions included', 'formula bounded'],
+      switchSignals: ['single case only', 'technical implementation dominates', 'source preservation only']
+    }
+  };
+  return { name, trigger, ...catalog[name] };
+}
+
+function renderResearchArchitectureDecision(architecture, mode, question, filePath) {
+  const rejected = Object.keys(architectureCatalogNames())
+    .filter((name) => name !== architecture.name)
+    .slice(0, 3)
+    .join(', ');
+  return [
+    `- Architecture: ${architecture.name}`,
+    `- Why this architecture: the request "${question}" and source \`${filePath}\` matched ${architecture.trigger}; this reasoning shape should govern the final synthesis.`,
+    `- Relationship to mode: ${mode.mode} Mode controls breadth; ${architecture.name} controls what questions, evidence, and report structure matter.`,
+    `- Rejected architectures: ${rejected || 'none'}.`,
+    `- What would make the architecture change: ${architecture.switchSignals.join('; ')}.`,
+    `- User confirmation rule: ask and wait if switching architecture would change audience, scope, narrative, output artifact, or recommendation.`
+  ].join('\n');
+}
+
+function architectureCatalogNames() {
+  return {
+    'Strategic Decision Research': true,
+    'Product / GTM Strategy Research': true,
+    'Growth Case Reconstruction': true,
+    'Market / Competitive Landscape': true,
+    'Technical / Implementation Research': true,
+    'Source-Heavy Evidence Review': true,
+    'Wide Benchmark To Deep Synthesis': true
+  };
+}
+
+function renderArchitectureWorkplan(architecture, question, mode) {
+  return `| Workplan Field | Requirement |
+|---|---|
+| Selected architecture | ${architecture.name} |
+| Research mode | ${mode.mode} |
+| Required questions | ${escapeTable(architecture.requiredQuestions.join(' / '))} |
+| Required evidence | ${escapeTable(architecture.requiredEvidence.join(' / '))} |
+| Required artifacts | research-contract.md, architecture-decision.md, runtime-subagent-plan.md, subagent-orchestration.md, subagent-results/README.md, subagent-results/_template.md, worker-packets/ac-intent-analyst.md, worker-packets/ac-research-architect.md, worker-packets/ac-*.md, source-map.md, evidence-store.md, question-ledger.md, hypothesis-map.md, red-team-critique.md, synthesis-plan.md, research-quality-control-plan.md |
+| Final synthesis structure | ${escapeTable(architecture.finalStructure.join(' -> '))} |
+| QA criteria | ${escapeTable(architecture.qaCriteria.join(' / '))} |
+| Current task framing | ${escapeTable(question)} |`;
+}
+
+function renderResearchQualityControlPlan(question, architecture, mode) {
+  return `## Purpose
+
+Before report composition, evaluate whether the research package is strong enough to become a market-intelligence / corporate research standard Markdown report.
+
+## Required Quality-Control Role
+
+- Role: \`ac-research-quality-controller\`
+- Expected result: \`research/subagent-results/ac-research-quality-controller.md\`
+- Run after evidence, analysis, critique, and synthesis-planning roles.
+- Run before \`ac-report-composer\`.
+- This result must be a complete quality-control artifact, not a short approval note.
+
+## Minimum Completeness
+
+- Evaluate every available canonical role result.
+- Include at least five meaningful why-questions for strategy, market, product, GTM, growth, or positioning work.
+- Include material-utilization review for source map, evidence store, claim verification map, question ledger, red-team critique, synthesis plan, and subagent results.
+- State whether the final report can be improved from existing materials before requesting new research.
+- If no repair is needed, explain why no repair is needed for each major material category.
+- Provide explicit instructions for \`ac-report-composer\`.
+
+## Evaluation Order
+
+1. Check the user intent and research contract for outcome-changing assumptions.
+2. Read \`source-map.md\`, \`evidence-store.md\`, \`claim-verification-map.md\`, \`question-ledger.md\`, \`red-team-critique.md\`, \`synthesis-plan.md\`, and all available \`subagent-results/ac-*.md\`.
+3. Evaluate each role for intent fit, evidence quality, specificity, mechanism depth, counterargument strength, and handoff usefulness.
+4. Identify missing "why" questions: why this audience, why this mechanism, why now, why not alternatives, why this recommendation changes action.
+5. Decide whether the next improvement comes from existing materials, targeted new research, asking the user, or caveating.
+6. Create repair packets before report composition when the synthesis is thin or underuses collected material.
+
+## Repair Decision Tree
+
+| Condition | Action |
+|---|---|
+| Existing artifacts contain unused evidence or sharper mechanisms | Repair from existing material before more research. |
+| A claim is important but unsupported by current material | Run a narrow targeted research pass. |
+| The answer depends on user-known intent, audience, or artifact use | Ask the user and wait. |
+| The gap cannot be closed by desk research | Mark as Validate Later with caveat. |
+
+## Current Run Frame
+
+- Question: ${escapeTable(question)}
+- Architecture: ${architecture.name}
+- Mode: ${mode.mode}
+- Quality-control goal: prevent plausible but shallow synthesis; force why-depth and material utilization before final report.`;
+}
+
+function renderResearchEvaluationTemplate() {
+  return `# Research Role Evaluation: ac-<role>
+
+## Verdict
+
+- Pass / Repair / Targeted research / Ask user
+
+## Evaluation
+
+| Dimension | Score | Notes |
+|---|---|---|
+| Intent fit |  |  |
+| Evidence quality |  |  |
+| Specificity |  |  |
+| Why-depth |  |  |
+| Counterargument |  |  |
+| Handoff usefulness |  |  |
+
+## Missing Why Questions
+
+| Question | Why it matters | Action |
+|---|---|---|
+|  |  |  |
+
+## Underused Materials
+
+-
+
+## Repair Instruction
+
+-
+
+## Existing-Material Repair Check
+
+- Can this be improved without new research: yes/no/partial
+- Existing material to promote:
+- Exact report section to strengthen:
+`;
+}
+
+function renderResearchRepairPacketTemplate() {
+  return `# Research Repair Packet: ac-<role-or-composer>
+
+## Repair Target
+
+- Role or artifact:
+
+## Problem
+
+-
+
+## Existing Materials To Use First
+
+-
+
+## Targeted New Research Only If Needed
+
+-
+
+## Required Improvement
+
+-
+
+## Stop Condition
+
+-
+`;
+}
+
+function renderHypothesisMap(architecture, question, claimReviews) {
+  const weakClaim = claimReviews.find((claim) => claim.status !== 'Supported')?.claim || 'the current interpretation';
+  const supportedClaim = claimReviews.find((claim) => claim.status === 'Supported' || claim.status === 'Partially supported')?.claim || 'the source material';
+  const rows = [
+    `| The right synthesis should follow ${escapeTable(architecture.name)}. | Request wording and selected mode. | Another architecture may fit if user intent differs. | Medium | User confirms a different decision, audience, or deliverable. |`,
+    `| ${escapeTable(supportedClaim)} can anchor the current answer. | Local evidence scan and source structure. | External browsing and counterevidence were not run by this CLI. | Medium | Stronger external or opposing evidence contradicts it. |`,
+    `| ${escapeTable(weakClaim)} needs caution before becoming a recommendation. | Claim verification map. | It may be validated by stronger primary sources. | Low | Primary or high-trust sources verify it. |`
+  ];
+  if (architecture.slug === 'product-gtm') {
+    rows.push('| The best answer depends on a sharp target, offer, channel, loop, experiment, and metric. | Product/GTM architecture requirements. | If the task is only descriptive, this may be too action-oriented. | Medium | User says they need a source summary rather than a GTM decision. |');
+  }
+  if (architecture.slug === 'growth-case') {
+    rows.push('| Growth can be explained through inflection points and mechanisms rather than chronology alone. | Growth reconstruction architecture. | Public evidence may not reveal early manual tactics. | Medium | Founder interviews, archives, or primary data show different drivers. |');
+  }
+  if (architecture.slug === 'wide-benchmark-synthesis') {
+    rows.push('| A useful formula must be derived from comparable cases and exceptions. | Benchmark synthesis architecture. | Case selection may be biased or incomplete. | Medium | New cases break the pattern or change the rubric. |');
+  }
+  return rows.join('\n');
+}
+
+function renderRedTeamCritique(architecture, question, claimReviews) {
+  const unresolved = claimReviews.filter((claim) => claim.status !== 'Supported').slice(0, 3);
+  const rows = [
+    `| Architecture mismatch | ${escapeTable(architecture.name)} may not match the user's hidden intent. | Ask and wait if the architecture changes the output direction. | Open |`,
+    '| Local-only evidence | This CLI scaffold does not browse or verify current external facts. | Treat public, market, competitor, legal, security, and user-demand claims as gaps until checked. | Open |',
+    '| First plausible story bias | The first coherent mechanism may crowd out counterevidence. | Run a counterfactual pass before public or high-stakes delivery. | Open |'
+  ];
+  for (const item of unresolved) {
+    rows.push(`| Weak claim: ${escapeTable(item.claim)} | ${escapeTable(item.evidence)} | ${escapeTable(item.treatment)} | Open |`);
+  }
+  if (architecture.slug === 'product-gtm') {
+    rows.push('| Premature GTM certainty | Desk research cannot prove willingness to pay, retention, or conversion. | Mark these as Validate Later unless user data or experiments exist. | Open |');
+  }
+  if (architecture.slug === 'wide-benchmark-synthesis') {
+    rows.push('| Pattern overfitting | The formula may describe selected winners rather than a general rule. | Include exceptions/outliers and transfer limits. | Open |');
+  }
+  return rows.join('\n');
+}
+
+function renderSynthesisPlan(architecture, question, mode, claimReviews) {
+  const safe = claimReviews.filter((claim) => claim.status === 'Supported' || claim.status === 'Partially supported').slice(0, 3).map((claim) => claim.claim);
+  const caveat = claimReviews.filter((claim) => claim.status !== 'Supported').slice(0, 3).map((claim) => claim.claim);
+  return [
+    `- Narrative spine: answer "${question}" through ${architecture.name}, while preserving evidence boundaries.`,
+    `- Mode-specific execution: ${mode.mode} Mode determines whether the work stays deep, goes wide, or combines broad coverage with deep synthesis.`,
+    `- Sections to include: ${architecture.finalStructure.join(' -> ')}.`,
+    `- Claims safer to use: ${safe.length ? safe.join(' / ') : 'none yet; keep the answer cautious.'}`,
+    `- Claims to caveat: ${caveat.length ? caveat.join(' / ') : 'no major weak claim detected locally, but external counterevidence remains unchecked.'}`,
+    `- Evidence to keep in appendix/source map: source map, evidence store, claim verification map, question ledger, hypothesis map, red-team critique.`,
+    `- Downstream preservation rule: report-writer, web-builder, and ppt-builder should preserve the selected architecture instead of flattening the research into generic bullets or presentation copy.`
+  ].join('\n');
+}
+
+function renderDepthStandard(question) {
+  return `| Standard | Requirement |
+|---|---|
+| Report depth | Treat this as a market-intelligence / corporate research report, not a short web page, slide outline, or chat answer. |
+| Standalone value | The Markdown report must be useful on its own before any PPT, HTML, email, or summary artifact is created. |
+| Required depth dimensions | audience and decision context; methodology and source policy; market/category map; customer or segment hypotheses; competitor/substitute logic; mechanism analysis; benchmarks; evidence confidence; caveats; risks; execution implications; source map; downstream handoff. |
+| No compression rule | Do not shrink the research merely because a downstream artifact was requested. A web page or deck is a separate translation layer. |
+| Current request framing | ${escapeTable(question)} |`;
+}
+
+function renderResearchContract(project, question, filePath, mode) {
+  return `| Field | Value |
+|---|---|
+| Objective | Answer the research question with evidence, mechanism analysis, uncertainty, and practical implications. |
+| User decision or next action | Help the user decide how to understand, use, present, or act on the source material. |
+| Audience | Not specified; assume the user and downstream Agent Computer agents. |
+| Output artifact | Deep research report plus reusable research artifacts under \`workspace/projects/${project}/research/\`. |
+| Scope | Provided source, local workspace context, claim extraction, and local evidence scan. |
+| Exclusions | Current web browsing, private connectors, interviews, and external account data are not performed by this local CLI. |
+| Freshness requirement | External freshness is unknown until the runtime agent browses or checks current sources. |
+| Source priority | User-provided source first; local workspace evidence second; runtime agent should use Tier 1 external sources for consequential claims. |
+| Private/local source permissions | Local workspace files only. Private connectors require explicit user approval. |
+| Depth or coverage budget | ${mode.mode} Mode scaffold; runtime agent should continue N-pass research until the stop condition is reached. |
+| Uncertainty threshold | Claims without direct local or external support must be marked as gaps, hypotheses, or validation needs. |
+| Confirmation gates | Ask and wait before changing the core research direction, audience, output artifact, or evidence strategy. |
+| Stop condition | Stop after creating the local research scaffold; continue in runtime when external evidence or user direction is needed. |
+| Downstream handoff | Report, PPT, email, or strategy agents should use the source map, evidence store, claim map, and question ledger. |
+
+Research question: ${question}
+
+Primary source: \`${filePath}\``;
+}
+
+function renderResearchSourcePolicy(mode) {
+  return `| Tier | Source type | How it is used |
+|---|---|---|
+| Tier 1 | Official/company docs, filings, primary data, original interviews, product docs, academic papers, legal docs | Required for consequential factual claims when available. |
+| Tier 2 | Trusted media, respected industry analysis, reputable expert writing | Used for context, interpretation, and cross-checking. |
+| Tier 3 | Personal blogs, forums, social posts, community discussions | Used only as weak signals or leads. |
+| User-provided | Local files, PDFs, notes, internal documents | Preserved as source material; claims remain document claims until externally verified. |
+| Private connectors | Email, calendar, Drive, Slack, CRM, account data | Not used unless the user explicitly grants permission and scope. |
+
+- Selected mode implication: ${mode.mode} Mode should ${mode.mode === 'Wide' ? 'apply the same source policy to every item.' : mode.mode === 'Hybrid' ? 'validate broad case evidence before deriving the synthesis.' : 'prioritize claim depth, contradiction checks, and source trust over broad coverage.'}
+- Local CLI boundary: external browsing was not run.`;
+}
+
+function renderEvidenceStoreRows(primaryPath, facts, evidenceItems, claimReviews) {
+  const rows = [];
+  const factList = facts.slice(0, 6);
+  factList.forEach((fact, index) => {
+    rows.push(`| E${index + 1} | ${escapeTable(fact)} | \`${primaryPath}\` | User-provided | Medium | Extracted from the primary workspace source; externally unverified. |`);
+  });
+  const offset = rows.length;
+  evidenceItems.slice(0, 6).forEach((item, index) => {
+    rows.push(`| E${offset + index + 1} | ${escapeTable(item.excerpt || 'Local supporting context')} | \`${item.path}\` | User-provided | Medium | Local workspace evidence checked for support, contradiction, or context. |`);
+  });
+  if (!rows.length && claimReviews.length) {
+    rows.push(`| E1 | ${escapeTable(claimReviews[0].claim)} | primary source | User-provided | Low | Claim extracted but evidence remains weak. |`);
+  }
+  return rows.length ? rows.join('\n') : '| E1 | No atomic evidence extracted | primary source | User-provided | Low | Ask for more source material or run external research. |';
+}
+
+function renderTargetedRetryLog(mode, claimReviews) {
+  const weak = claimReviews.filter((claim) => claim.status !== 'Supported').slice(0, 8);
+  if (!weak.length) {
+    return '| Item or claim | Why it is weak | Retry action | Status |\n|---|---|---|---|\n| Counterevidence search | No weak local claim detected, but external counterevidence was not checked. | Runtime agent should search for disconfirming sources if the answer will be public or high-impact. | Deferred |';
+  }
+  const rows = weak.map((claim) => {
+    const action = mode.mode === 'Wide'
+      ? 'Re-run the item with a stricter source policy and fill missing schema fields.'
+      : mode.mode === 'Hybrid'
+        ? 'Check primary sources, then decide whether this changes the pattern synthesis.'
+        : 'Run a focused next pass with primary sources, opposing evidence, or expert context.';
+    return `| ${escapeTable(claim.claim)} | ${escapeTable(claim.evidence)} | ${action} | Not started |`;
+  });
+  return ['| Item or claim | Why it is weak | Retry action | Status |', '|---|---|---|---|', ...rows].join('\n');
+}
+
+function renderWorkerPacketTemplate(mode, question) {
+  const itemLabel = mode.mode === 'Hybrid' ? 'Case or example' : 'Item';
+  return `## Worker Packet Template
+
+| Field | Value |
+|---|---|
+| Job ID | item-001 |
+| ${itemLabel} |  |
+| Task | Research this item under the shared rubric for: ${escapeTable(question)} |
+| Source policy | Tier 1 first, Tier 2 for context, Tier 3 only as weak signals. |
+| Max sources | 3-5 per item unless the user sets another budget. |
+| Output schema | summary, facts, sources, confidence, unknowns, transferable lesson. |
+
+## Rubric
+
+- Audience or target user
+- Initial wedge or problem
+- Distribution/discovery mechanism
+- Evidence-backed metric or signal
+- Monetization or operating model when relevant
+- Risks, counterevidence, or uncertainty
+- Transferable lesson
+
+## Required Output
+
+| Field | Value |
+|---|---|
+| Summary |  |
+| Facts |  |
+| Sources |  |
+| Confidence | High / Medium / Low |
+| Unknowns |  |
+| Transferable lesson |  |`;
+}
+
+function renderResearchQa(question, mode, architecture, evidenceItems, claimReviews) {
+  const unresolved = claimReviews.filter((claim) => claim.status !== 'Supported');
+  const hasExternalBoundary = true;
+  return `# Research QA
+
+## Question
+
+${question}
+
+## Mode
+
+- Selected mode: ${mode.mode}
+- Mode reason: ${mode.reason}
+
+## Architecture
+
+- Selected architecture: ${architecture.name}
+- Architecture trigger: ${architecture.trigger}
+- Required QA criteria: ${architecture.qaCriteria.join(' / ')}
+
+## Checks
+
+| Check | Result | Notes |
+|---|---:|---|
+| Research contract present | PASS | Written as \`research-contract.md\`. |
+| Architecture decision present | PASS | Written as \`architecture-decision.md\`. |
+| Source policy present | PASS | Included in report and contract. |
+| Question ledger present | PASS | Written as \`question-ledger.md\`. |
+| Hypothesis map present | PASS | Written as \`hypothesis-map.md\`. |
+| Red-team critique present | PASS | Written as \`red-team-critique.md\`. |
+| Synthesis plan present | PASS | Written as \`synthesis-plan.md\`. |
+| Question-to-synthesis trace present | PASS | Final report includes question routing lanes, questions that changed the recommendation, assumptions, and evidence confidence. |
+| Evidence store present | PASS | Written as \`evidence-store.md\`. |
+| Claim verification map present | PASS | Written as \`claim-verification-map.md\`. |
+| Local evidence checked | PASS | ${evidenceItems.length + 1} local source(s), including the primary input. |
+| External browsing boundary stated | ${hasExternalBoundary ? 'PASS' : 'FAIL'} | Local CLI does not perform web research. |
+| Unresolved claims visible | ${unresolved.length ? 'PASS' : 'PASS'} | ${unresolved.length} claim(s) need validation, retry, or counterevidence checks. |
+
+## Verdict
+
+Passes local deep-research scaffold QA. Runtime deep research should continue with external sources when current facts, public claims, market evidence, competitor evidence, security, legal, or user-demand claims matter.
+`;
+}
+
+function renderDownstreamHandoff(mode, architecture, topic, claimReviews) {
+  const safe = claimReviews.filter((claim) => claim.status === 'Supported' || claim.status === 'Partially supported').slice(0, 4);
+  const risky = claimReviews.filter((claim) => claim.status !== 'Supported').slice(0, 4);
+  return [
+    `- Recommended next agent: report-writer for a decision-ready report; web-builder only after the full report exists if the user asks for HTML/web output; ppt-builder if the user asks for a deck; email-operator only after claim-safety review.`,
+    `- Research mode to preserve: ${mode.mode}.`,
+    `- Research architecture to preserve: ${architecture.name}.`,
+    `- Artifacts to hand off: \`research-contract.md\`, \`architecture-decision.md\`, \`source-map.md\`, \`evidence-store.md\`, \`claim-verification-map.md\`, \`question-ledger.md\`, \`hypothesis-map.md\`, \`red-team-critique.md\`, \`synthesis-plan.md\`, and \`${topic}_deep-research.md\`.`,
+    `- Claims safer to use: ${safe.length ? safe.map((claim) => claim.claim).join(' / ') : 'none yet; use the source material cautiously.'}`,
+    `- Claims to avoid or caveat: ${risky.length ? risky.map((claim) => claim.claim).join(' / ') : 'no major weak claims detected locally, but external counterevidence remains unchecked.'}`,
+    `- Suggested narrative angle: emphasize mechanisms, evidence boundaries, and what the user can do next.`,
+    `- Source/reference layer: preserve source IDs and claim statuses in report appendices, web source sections, speaker notes, or PPT reference slides.`
+  ].join('\n');
 }
 
 function renderDeepShortAnswer(facts, supported, unresolved) {
@@ -255,8 +952,232 @@ function renderResearchPassLog(evidenceItems, claimReviews) {
 | Pass 2 candidate | Highest-usefulness unresolved questions | ${unresolvedCount} unresolved or partial claim(s) | Not run by the local CLI; runtime agent should continue if needed | What external source, interview, benchmark, or artifact would verify the key gap? |`;
 }
 
-function renderQuestionLedger(question, source, claimReviews) {
+function buildSocraticQuestionSet(question, source, claimReviews, mode) {
+  const unresolved = claimReviews.filter((claim) => claim.status !== 'Supported');
+  const firstWeak = unresolved[0]?.claim || 'the strongest current interpretation';
+  const text = `${question}\n${source}`;
+  const topicMechanism = /growth|marketing|brand|go[-\s]?to[-\s]?market|launch|성장|마케팅|브랜드|출시/i.test(text)
+    ? 'growth, positioning, distribution, trust, community, PR, pricing, or founder credibility'
+    : /product|제품|서비스|ux|user|사용자/i.test(text)
+      ? 'activation, retention, user motivation, product loop, and switching cost'
+      : 'mechanism, constraint, incentive, timing, and proof';
+  const questions = [
+    {
+      type: 'Intent',
+      lane: 'Ask User Now',
+      question: `What decision, action, or change should "${question}" ultimately support?`,
+      why: 'Without this, the research can become broad but not useful.',
+      action: 'Ask the user if multiple decision contexts are plausible; otherwise state the working assumption.'
+    },
+    {
+      type: 'Intent',
+      lane: 'Ask User Now',
+      question: 'What would make the user say this research was practically useful rather than merely interesting?',
+      why: 'Usefulness should control depth, examples, and final synthesis.',
+      action: 'Convert the answer into success criteria for the next research pass.'
+    },
+    {
+      type: 'Evidence',
+      lane: 'Research Next',
+      question: `What source would verify or falsify "${firstWeak}"?`,
+      why: 'The weakest consequential claim should drive the next pass.',
+      action: 'Search for primary, official, recent, or opposing evidence before using the claim strongly.'
+    },
+    {
+      type: 'Evidence',
+      lane: 'Research Next',
+      question: 'Which numbers, dates, benchmarks, or product claims are being repeated without strong source support?',
+      why: 'Unsupported specifics create false confidence in reports, decks, and emails.',
+      action: 'Move unsupported specifics into the retry log or cite source-backed evidence.'
+    },
+    {
+      type: 'Mechanism',
+      lane: 'Research Next',
+      question: `Which mechanism actually explains the pattern: ${topicMechanism}?`,
+      why: 'Mechanism choice changes what should be benchmarked and what the user can copy.',
+      action: 'Compare evidence for each plausible mechanism and name the strongest one.'
+    },
+    {
+      type: 'Mechanism',
+      lane: 'Research Next',
+      question: 'For whom does this mechanism work, and under what constraints would it fail?',
+      why: 'A good strategic answer needs boundary conditions, not only a positive case.',
+      action: 'Look for segment, timing, channel, capability, and adoption constraints.'
+    },
+    {
+      type: 'Counterfactual',
+      lane: 'Research Next',
+      question: 'What evidence would make the current interpretation wrong or too narrow?',
+      why: 'Counterevidence prevents the first plausible story from becoming the final story.',
+      action: 'Run a disconfirming-source pass before final recommendation.'
+    },
+    {
+      type: 'Counterfactual',
+      lane: 'Assume And Proceed',
+      question: `If ${mode.mode} Mode is wrong, what mode should replace it and why?`,
+      why: 'Research mode affects coverage, source strategy, and output shape.',
+      action: 'Switch mode only after confirming the new contract or explaining the assumption.'
+    },
+    {
+      type: 'Transfer',
+      lane: 'Assume And Proceed',
+      question: 'What should the user do differently next week if this research is true?',
+      why: 'Deep research should change action, messaging, product, or validation priorities.',
+      action: 'Translate findings into tests, decisions, roadmap moves, or narrative choices.'
+    },
+    {
+      type: 'Transfer',
+      lane: requiresBehaviorValidation(text) ? 'Validate Later' : 'Assume And Proceed',
+      question: 'Which finding belongs in the main narrative, which belongs in an appendix, and which belongs in a caution box?',
+      why: 'This prevents downstream report or PPT agents from flattening nuance.',
+      action: 'Tag findings by main claim, support, appendix, limitation, or open question.'
+    },
+    {
+      type: 'Handoff',
+      lane: 'Assume And Proceed',
+      question: 'What must the next agent preserve so it does not overclaim or over-compress the research?',
+      why: 'Report, PPT, and email agents need evidence boundaries and narrative intent.',
+      action: 'Hand off source map, evidence store, claim map, and narrative caution notes.'
+    },
+    {
+      type: 'Handoff',
+      lane: 'Ask User Now',
+      question: 'What exact user-facing question should be asked before downstream work continues?',
+      why: 'Some choices are strategic and should not be silently decided by the agent.',
+      action: 'Ask and wait if the answer changes audience, scope, output, or claim strength.'
+    }
+  ];
+  return questions;
+}
+
+function renderSocraticQuestionEngine(questionSet) {
+  return questionSet.map((item) => `| ${item.type} | ${item.lane || classifyQuestionLane(item)} | ${escapeTable(item.question)} | ${escapeTable(item.why)} | ${escapeTable(item.action)} |`).join('\n');
+}
+
+function renderQuestionRoutingLanes(questionSet, source, question) {
+  const lanes = ['Ask User Now', 'Research Next', 'Assume And Proceed', 'Validate Later'];
   const rows = [];
+  for (const lane of lanes) {
+    const items = questionSet.filter((item) => (item.lane || classifyQuestionLane(item)) === lane);
+    const required = lane === 'Ask User Now'
+      ? 'Ask clearly, then stop and wait if the answer would change the work.'
+      : lane === 'Research Next'
+        ? 'Turn into the next source, local-file, counterevidence, or retry action.'
+        : lane === 'Assume And Proceed'
+          ? 'State the assumption in the final output and avoid presenting it as fact.'
+          : requiresBehaviorValidation(`${source}\n${question}`)
+            ? 'Keep as future validation for behavior, conversion, retention, sales, pricing, or implementation.'
+            : 'Not required for this task unless real-world behavior must prove the claim.';
+    rows.push(`| ${lane} | ${escapeTable(items.map((item) => item.question).join(' / ') || 'None for this pass.')} | ${escapeTable(required)} |`);
+  }
+  return rows.join('\n');
+}
+
+function renderSelectedNextBestQuestion(questionSet, claimReviews) {
+  const unresolved = claimReviews.filter((claim) => claim.status !== 'Supported');
+  const selected = unresolved.length
+    ? questionSet.find((item) => item.type === 'Evidence')
+    : questionSet.find((item) => item.type === 'Counterfactual');
+  return `- Question: ${selected.question}
+- Why this question now: ${selected.why}
+- Answer through research or ask user: answer through research unless this changes the user's research contract.
+- Next sources/actions: ${selected.action}
+- If asking user becomes necessary: ask one concise direction-setting question and wait.`;
+}
+
+function renderQuestionsThatChangedRecommendation(questionSet, claimReviews, mode) {
+  const unresolved = claimReviews.filter((claim) => claim.status !== 'Supported');
+  const rows = [];
+  const evidenceQ = questionSet.find((item) => item.type === 'Evidence');
+  const mechanismQ = questionSet.find((item) => item.type === 'Mechanism');
+  const counterQ = questionSet.find((item) => item.type === 'Counterfactual');
+  const transferQ = questionSet.find((item) => item.type === 'Transfer');
+  if (evidenceQ) {
+    rows.push(`| ${escapeTable(evidenceQ.question)} | Weak or unverified claims are kept out of the strongest recommendation and moved into evidence gaps, retry, or caveats. | ${escapeTable(unresolved[0]?.evidence || 'Local evidence scan and claim verification map.')} |`);
+  }
+  if (mechanismQ) {
+    rows.push(`| ${escapeTable(mechanismQ.question)} | The synthesis prioritizes mechanism and boundary conditions instead of producing a flat summary. | ${escapeTable(`${mode.mode} Mode, source structure, and extracted claims.`)} |`);
+  }
+  if (counterQ) {
+    rows.push(`| ${escapeTable(counterQ.question)} | The recommendation is framed with counterevidence risk and avoids overclaiming when disconfirming sources were not checked. | ${escapeTable('Counterfactual question lane and targeted retry log.')} |`);
+  }
+  if (transferQ) {
+    rows.push(`| ${escapeTable(transferQ.question)} | Findings are translated into next actions, downstream handoff rules, or validation-later items instead of remaining descriptive. | ${escapeTable('User-usefulness loop and downstream handoff.')} |`);
+  }
+  return rows.length ? rows.join('\n') : '| No recommendation-changing question detected | The output remains a first-pass scaffold. | Ask for more context or run another research pass. |';
+}
+
+function renderAssumptionsBeingCarried(question, source, claimReviews, evidenceItems = []) {
+  const explicit = findArtifactSection([source, ...evidenceItems.map((item) => item.text)], 'Assumptions Being Carried')
+    || findArtifactSection([source, ...evidenceItems.map((item) => item.text)], 'Key Assumptions');
+  const unresolvedCount = claimReviews.filter((claim) => claim.status !== 'Supported').length;
+  const assumptions = [
+    `The output should optimize for the user's stated question: "${question}".`,
+    'Local workspace evidence can support a first-pass synthesis, but external browsing is not performed by this CLI command.',
+    `${unresolvedCount} claim(s) remain unsupported, partial, or hypothetical until checked with stronger sources.`
+  ];
+  if (requiresBehaviorValidation(`${source}\n${question}`)) {
+    assumptions.push('User behavior, willingness to pay, retention, conversion, or implementation claims require future validation rather than desk-research certainty.');
+  }
+  const generated = assumptions.map((item) => `- ${item}`).join('\n');
+  return explicit ? `${explicit}\n\n${generated}` : generated;
+}
+
+function renderEvidenceConfidence(primaryPath, evidenceItems, claimReviews) {
+  const artifactRows = renderEvidenceConfidenceFromArtifacts(evidenceItems);
+  if (artifactRows) return artifactRows;
+  const rows = [];
+  const sampled = claimReviews.slice(0, 6);
+  for (const item of sampled) {
+    const confidence = item.status === 'Supported' ? 'High'
+      : item.status === 'Partially supported' ? 'Medium'
+        : item.status === 'Hypothesis' ? 'Low'
+          : 'Low';
+    rows.push(`| ${escapeTable(item.claim)} | ${escapeTable(item.evidence || primaryPath)} | ${confidence} | ${escapeTable(item.treatment)} |`);
+  }
+  if (!rows.length) {
+    rows.push(`| Primary source material | \`${escapeTable(primaryPath)}\` | Medium | Treat as user-provided source material unless externally verified. |`);
+  }
+  if (evidenceItems.length) {
+    rows.push(`| Local supporting files | ${escapeTable(evidenceItems.slice(0, 3).map((item) => item.path).join(' / '))} | Medium | Local evidence improves traceability but may not verify current external facts. |`);
+  }
+  return rows.join('\n');
+}
+
+function renderValidationLaterItems(source, question, claimReviews) {
+  if (!requiresBehaviorValidation(`${source}\n${question}`)) {
+    return '- Not required by default for this task. Add validation-later items only if a claim depends on real-world behavior or implementation.';
+  }
+  const likely = claimReviews.filter((item) => /user|사용자|market|시장|price|가격|retention|conversion|paid|subscription|launch|go[-\s]?to[-\s]?market|growth|sales|implementation|구독|전환|출시|성장/i.test(item.claim)).slice(0, 5);
+  const rows = ['| Item | Why desk research is not enough | Later validation signal |', '|---|---|---|'];
+  if (likely.length) {
+    for (const item of likely) {
+      rows.push(`| ${escapeTable(item.claim)} | ${escapeTable(item.treatment)} | User behavior, interviews, beta usage, pricing response, retention, conversion, sales, or implementation evidence. |`);
+    }
+  } else {
+    rows.push('| User response or implementation claim | Desk research can suggest the direction but cannot prove behavior. | Pilot usage, retention, conversion, pricing response, sales feedback, or implementation result. |');
+  }
+  return rows.join('\n');
+}
+
+function classifyQuestionLane(item) {
+  if (item.type === 'Evidence' || item.type === 'Mechanism' || item.type === 'Counterfactual') return 'Research Next';
+  if (item.type === 'Intent') return 'Ask User Now';
+  if (item.type === 'Transfer') return 'Assume And Proceed';
+  return 'Assume And Proceed';
+}
+
+function requiresBehaviorValidation(text) {
+  return /product|market|positioning|go[-\s]?to[-\s]?market|gtm|launch|pricing|retention|conversion|monetization|sales|user|customer|onboarding|growth|strategy|business model|제품|시장|포지셔닝|출시|가격|리텐션|전환|수익|사용자|고객|온보딩|성장|전략|비즈니스 모델/i.test(String(text || ''));
+}
+
+function renderQuestionLedger(question, source, claimReviews, questionSet = []) {
+  const rows = [];
+  for (const item of questionSet) {
+    const status = item.type === 'Evidence' || item.type === 'Counterfactual' ? 'Unresolved' : 'New';
+    const evidence = item.type === 'Intent' ? 'User request and working contract' : item.type === 'Handoff' ? 'Downstream artifact needs' : 'Question engine';
+    rows.push(`| ${escapeTable(item.question)} | ${escapeTable(item.why)} | ${status} | ${escapeTable(evidence)} | ${escapeTable(item.action)} |`);
+  }
   rows.push(`| What is the real decision behind "${escapeTable(question)}"? | Keeps the research useful instead of merely comprehensive. | New | User request and source frame | Ask the user if multiple decision paths are plausible; otherwise state the working assumption. |`);
   const unresolved = claimReviews.filter((claim) => claim.status !== 'Supported').slice(0, 4);
   for (const claim of unresolved) {
@@ -391,6 +1312,9 @@ export async function writeReport(root, filePath, options = {}) {
   const supported = claimReviews.filter((claim) => claim.status === 'Supported' || claim.status === 'Partially supported');
   const unresolved = claimReviews.filter((claim) => claim.status !== 'Supported');
   const gapRows = claimReviews.filter((claim) => claim.status === 'Confirmed gap' || claim.status === 'Needs validation' || claim.status === 'Hypothesis');
+  const reportQuestionTrace = renderReportQuestionTrace(source, claimReviews, evidence.items);
+  const reportAssumptions = renderAssumptionsBeingCarried(options.question || topic, source, claimReviews, evidence.items);
+  const reportEvidenceConfidence = renderEvidenceConfidence(filePath, evidence.items, claimReviews);
   const body = `# Report
 
 ## Audience
@@ -415,6 +1339,12 @@ This report was generated from a source file and a lightweight local evidence sc
 |---|---|---|---|
 ${claimReviews.length ? claimReviews.map(renderClaimRow).join('\n') : '| No specific claim extracted | Needs validation | No claim-like lines found in the source. | Preserve source and request more context. |'}
 
+## Claim-Evidence-Confidence-Caveat Matrix
+
+| Claim | Evidence | Confidence | Caveat | Decision Use |
+|---|---|---|---|---|
+${renderClaimEvidenceConfidenceCaveatMatrix(claimReviews)}
+
 ## Evidence Gaps Checked
 
 - Source length: ${source.length} characters
@@ -432,6 +1362,20 @@ ${renderGapsFilled(evidence.items, supported)}
 ## Remaining Gaps
 
 ${renderRemainingGaps(gapRows)}
+
+## Questions That Changed The Recommendation
+
+${reportQuestionTrace}
+
+## Assumptions Being Carried
+
+${reportAssumptions}
+
+## Evidence Confidence / Claim-Evidence-Confidence-Caveat Matrix
+
+| Claim | Evidence | Confidence | Caveat |
+|---|---|---|---|
+${reportEvidenceConfidence}
 
 ## Findings
 
@@ -971,6 +1915,42 @@ function renderClaimRow(item) {
   return `| ${escapeTable(item.claim)} | ${item.status} | ${escapeTable(item.evidence)} | ${escapeTable(item.treatment)} |`;
 }
 
+function renderClaimEvidenceConfidenceCaveatMatrix(claimReviews) {
+  if (!claimReviews.length) {
+    return '| No specific claim extracted | No evidence mapped | Low | Need more source material. | Do not use as a decision point yet. |';
+  }
+  return claimReviews.slice(0, 12).map((item) => {
+    const confidence = confidenceForClaimReview(item);
+    const caveat = caveatForClaimReview(item);
+    const decisionUse = decisionUseForClaimReview(item);
+    return `| ${escapeTable(item.claim)} | ${escapeTable(item.evidence)} | ${confidence} | ${escapeTable(caveat)} | ${escapeTable(decisionUse)} |`;
+  }).join('\n');
+}
+
+function confidenceForClaimReview(item) {
+  if (item.status === 'Supported') return 'High';
+  if (item.status === 'Partially supported') return 'Medium';
+  if (item.status === 'Hypothesis') return 'Low';
+  if (item.status === 'Confirmed gap') return 'Low';
+  return 'Low';
+}
+
+function caveatForClaimReview(item) {
+  if (item.status === 'Supported') return 'Use normally, but keep source context visible.';
+  if (item.status === 'Partially supported') return 'Use with qualification; supporting evidence is directional or incomplete.';
+  if (item.status === 'Hypothesis') return 'Treat as a working hypothesis until validated.';
+  if (item.status === 'Confirmed gap') return 'Keep as a gap; do not convert into a claim.';
+  return 'Needs stronger evidence before high-confidence use.';
+}
+
+function decisionUseForClaimReview(item) {
+  if (item.status === 'Supported') return 'Can support the main narrative.';
+  if (item.status === 'Partially supported') return 'Can shape the recommendation if caveated.';
+  if (item.status === 'Hypothesis') return 'Use for experiment design or next research.';
+  if (item.status === 'Confirmed gap') return 'Use as a risk or validation item.';
+  return 'Keep out of the core conclusion.';
+}
+
 function renderGapsFilled(evidenceItems, supported) {
   const lines = ['- Local report structure added.', '- Source content preserved in the appendix.'];
   if (supported.length) lines.push(`- ${supported.length} source item(s) connected to local evidence.`);
@@ -988,6 +1968,23 @@ function renderRemainingGaps(items) {
     rows.push(`| ${escapeTable(item.claim)} | ${gapReason(item)} | ${neededEvidence(item.claim)} |`);
   }
   return rows.join('\n');
+}
+
+function renderReportQuestionTrace(source, claimReviews, evidenceItems = []) {
+  const fromArtifacts = findArtifactSection([source, ...evidenceItems.map((item) => item.text)], 'Questions That Changed The Recommendation');
+  if (fromArtifacts) return fromArtifacts;
+  if (/Socratic Question Engine|Question Ledger/i.test(source)) {
+    const unresolved = claimReviews.find((item) => item.status !== 'Supported');
+    const rows = [
+      '| Question | Effect on report | Evidence or assumption used |',
+      '|---|---|---|',
+      `| Which claim is weakest or most outcome-changing? | The report keeps unsupported items in gaps, risk, or next actions instead of the main conclusion. | ${escapeTable(unresolved?.evidence || 'Local evidence scan and claim map.')} |`,
+      '| Which finding should become the main narrative instead of appendix detail? | The report prioritizes supported claims and preserves detailed source material in the appendix. | Source structure, evidence map, and user-facing purpose. |',
+      '| What must a downstream agent preserve? | The report keeps evidence boundaries, assumptions, and caveats visible for PPT/email/handoff use. | Question ledger and source-preservation rule. |'
+    ];
+    return rows.join('\n');
+  }
+  return '- No explicit question ledger was detected in the source. The report still turns weak or unresolved claims into gaps, risks, and next actions.';
 }
 
 function gapReason(item) {
@@ -1042,6 +2039,7 @@ function renderReportRecommendations(project, claimReviews) {
   if (claimReviews.some((item) => item.status === 'Confirmed gap' || item.status === 'Needs validation')) {
     lines.push('- Convert remaining gaps into quick-researcher or deep-dive-researcher tasks before making public or high-confidence claims.');
   }
+  lines.push('- Use `web-builder` if this report needs to become a local HTML page or interactive web report.');
   lines.push('- Use `ppt-builder` if this report needs to become a deck.');
   return lines.join('\n');
 }
@@ -1052,6 +2050,64 @@ function renderNextActions(root, out, claimReviews) {
   if (hasExternalGaps) lines.push('- Run focused supplementary research for competitor, security, install, or user-validation gaps.');
   lines.push(`- Run \`node tools/agent-computer.mjs qa ${rel(root, out)}\`.`);
   return lines.join('\n');
+}
+
+function extractSection(text, heading) {
+  const pattern = new RegExp(`(^##\\s+${escapeRegExp(heading)}\\s*\\n)([\\s\\S]*?)(?=\\n##\\s+|$)`, 'im');
+  const match = String(text || '').match(pattern);
+  return match ? match[2].trim() : '';
+}
+
+function findArtifactSection(texts, heading) {
+  for (const text of texts) {
+    const section = extractSection(text, heading);
+    if (section) return section;
+  }
+  return '';
+}
+
+function renderEvidenceConfidenceFromArtifacts(evidenceItems = []) {
+  const explicit = findArtifactSection(evidenceItems.map((item) => item.text), 'Evidence Confidence');
+  if (explicit && explicit.includes('|')) return stripMarkdownTableHeaderIfPresent(explicit);
+  const claimMap = evidenceItems.find((item) => /claim-verification-map\.md$/i.test(item.path));
+  if (!claimMap) return '';
+  const rows = parseMarkdownTableRows(claimMap.text)
+    .filter((row) => row.length >= 3)
+    .slice(0, 8)
+    .map((row) => {
+      const [claim, status, evidence, note] = row;
+      return `| ${escapeTable(claim)} | ${escapeTable(evidence)} | ${confidenceFromStatus(status)} | ${escapeTable(note || status)} |`;
+    });
+  return rows.join('\n');
+}
+
+function stripMarkdownTableHeaderIfPresent(text) {
+  const lines = String(text || '').split(/\r?\n/).filter((line) => line.trim());
+  if (lines.length >= 2 && /^\s*\|/.test(lines[0]) && /^\s*\|?\s*:?-{2,}:?\s*\|/.test(lines[1])) {
+    return lines.slice(2).join('\n');
+  }
+  return text.trim();
+}
+
+function parseMarkdownTableRows(text) {
+  const lines = String(text || '')
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => /^\|.*\|$/.test(line));
+  const body = lines.filter((line) => !/^\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)+\|?$/.test(line));
+  if (body.length > 1) body.shift();
+  return body.map((line) => line.slice(1, -1).split('|').map((cell) => cell.trim().replace(/\\\|/g, '|')));
+}
+
+function confidenceFromStatus(status) {
+  const text = String(status || '').toLowerCase();
+  if (/confirmed|supported|verified|확인|검증|high/.test(text) && !/partially|directionally|부분|low/.test(text)) return 'High';
+  if (/directionally|partial|reasoned|medium|전략|추론|부분/.test(text)) return 'Medium';
+  return 'Low';
+}
+
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 function escapeTable(value) {

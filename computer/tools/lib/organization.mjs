@@ -122,10 +122,12 @@ async function writePolicy(path, policy) {
 projects/
   <project-slug>/
     source/          original or user-provided files
+    planning/        planning state, assumptions, questions, briefs, and next actions
     converted/       agent-readable converted documents
     research/        quick/deep research briefs and source packs
     reports/         written reports and narrative documents
     presentations/   PPTX decks and slide planning artifacts
+    web/             local static HTML pages and interactive web reports
     qa/              QA reports and verification logs
     assets/          images, rendered pages, contact sheets, media
     tasks/           project-specific task briefs
@@ -135,8 +137,10 @@ projects/
 ## Work Type Rules
 
 - Reports go under \`reports/\`.
+- Planning state, planning briefs, assumptions, questions, blindspot reviews, and next actions go under \`planning/\`.
 - Research briefs go under \`research/\`.
 - PPTX files and PPT planning files go under \`presentations/\`.
+- HTML pages and local web report files go under \`web/\`.
 - QA files go under \`qa/\`.
 - Images and visual assets go under \`assets/\`.
 - Unknown or ambiguous files go to \`review-needed/\` unless a confident project target exists.
@@ -179,10 +183,12 @@ Recommended layout:
 \`\`\`text
 projects/<project-slug>/
   source/
+  planning/
   converted/
   research/
   reports/
   presentations/
+  web/
   qa/
   assets/
   tasks/
@@ -269,6 +275,8 @@ function outputFolder(file) {
     if (rel.includes('/pages/') || rel.includes('/contact-sheets/')) return 'assets';
     return 'converted';
   }
+  if (rel.includes('/planning/')) return 'planning';
+  if (rel.includes('/web/')) return 'web';
   if (rel.includes('/qa/')) return 'qa';
   if (rel.includes('/preview/') || rel.includes('/contact-sheets/')) return 'assets';
   if (rel.includes('/prototype/') || rel.includes('/output/')) return 'presentations';
@@ -278,8 +286,10 @@ function outputFolder(file) {
   if (normalizedName.includes('email-package')) return 'reports';
   if (normalizedName.includes('reflection')) return 'reports';
   if (['.pptx', '.key'].includes(ext)) return 'presentations';
-  if (['.html', '.htm'].includes(ext)) return 'presentations';
+  if (['.html', '.htm', '.css'].includes(ext)) return 'web';
+  if (ext === '.js' && /(web|website|page|interactive|dashboard|app)/.test(normalizedName)) return 'web';
   if (['.pdf', '.docx', '.txt', '.md'].includes(ext)) {
+    if (/(planning-state|planning-brief|question-ledger|assumption-map|blindspot-review|research-needed|next-actions)/.test(normalizedName)) return 'planning';
     if (normalizedName.includes('report')) return 'reports';
     if (normalizedName.includes('research')) return 'research';
     return 'source';
@@ -290,6 +300,7 @@ function outputFolder(file) {
 
 function ownerFolder(ext) {
   if (['.pptx'].includes(ext)) return 'reports/presentations';
+  if (['.html', '.htm', '.css'].includes(ext)) return 'reports/web';
   if (['.md', '.txt', '.docx', '.pdf'].includes(ext)) return 'reports/source';
   return 'review-needed';
 }
@@ -314,6 +325,8 @@ function cleanProjectStem(value) {
     .replace(/-report$/, '')
     .replace(/-ppt-(content-spec|design-spec|build-plan|qa)$/, '')
     .replace(/-ppt-production-plan$/, '')
+    .replace(/-web-(content-spec|design-spec|build-plan|qa)$/, '')
+    .replace(/-web-report$/, '')
     .replace(/-(content-spec|design-spec|build-plan|production-plan)$/, '')
     .replace(/-email-package$/, '')
     .replace(/-reflection$/, '')

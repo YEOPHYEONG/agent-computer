@@ -30,6 +30,29 @@ Use this workspace with Claude Code by opening the `agent-computer` folder. Clau
 - Confirm inferred hidden intent before acting on it.
 - For multi-agent chains, define handoff artifacts, quality gates, and final QA criteria before execution.
 
+## Native Subagents
+
+Agent Computer keeps canonical deep-research specialist specs under `computer/agents/work/deep-dive-researcher/subagents/`.
+
+Claude Code project subagents can be materialized from those specs into `.claude/agents/ac-*.md`, but this should be explicit. Do not silently create or overwrite `.claude/agents/` files during ordinary research.
+
+Use the fixed roster only. Do not materialize one-off personality subagents as product behavior. Serious research should prepare preflight roles first:
+
+- `ac-intent-analyst`
+- `ac-research-architect`
+
+When the user approves native Claude Code subagents:
+
+```bash
+node computer/tools/agent-computer.mjs deep-research <source.md> --question "..." --runtime claude-code --native-subagents --materialize-subagents
+```
+
+The deep-dive researcher remains the Research Director. Claude subagents gather evidence, verify claims, map markets, inspect docs, red-team assumptions, or plan synthesis. They do not own the final report.
+
+Each run should create `subagent-orchestration.md`, `subagent-results/README.md`, and `subagent-results/_template.md`. When Claude Code subagents actually run, save or summarize findings under `workspace/projects/<project-slug>/research/subagent-results/ac-*.md`.
+
+If native subagents are unavailable or not approved, use the generated `worker-packets/ac-*.md` files instead. Do not claim native subagents ran unless the `subagent-results/ac-*.md` files contain actual findings or faithful summaries.
+
 ## Example
 
 ```text

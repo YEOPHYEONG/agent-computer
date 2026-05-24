@@ -18,23 +18,29 @@ export function routeRequest(root, request) {
   const add = (agent) => {
     if (!chain.includes(agent)) chain.push(agent);
   };
-  const reuseRequested = /\b(continue|update|improve|revise|modify|edit|compare|existing|previous|reuse)\b|\bbased on\b|이어|이어서|계속|수정|고쳐|개선|비교|기존|(?:^|\s)(?:이전|전에|전에 만든|기반)/.test(text);
+  const reuseRequested = /\b(continue|update|improve|revise|modify|edit|existing|previous|reuse)\b|\bbased on\b|이어|이어서|계속|수정|고쳐|개선|기존|(?:^|\s)(?:이전|전에|전에 만든|기반)|(?:compare|비교).*(?:\bexisting\b|\bprevious\b|기존|(?:^|\s)이전)|(?:\bexisting\b|\bprevious\b|기존|(?:^|\s)이전).*(?:compare|비교)/.test(text);
   const helpRequest = isHowToUseRequest(request);
-  const wantsAgentBuild = /(agent|에이전트|앱).*(build|create|만들|생성)|(?:build|create|만들|생성|새로운|새).*(agent|에이전트|앱)/.test(text);
+  const wantsAgentBuild = /(agent|에이전트|agent\s*app|에이전트\s*앱).*(build|create|만들|생성)|(?:build|create|만들|생성|새로운|새).*(agent|에이전트|agent\s*app|에이전트\s*앱)/.test(text);
+  const wantsWebArtifact = /(web\s*page|webpage|website|landing\s*page|html|interactive\s*web|web\s*report|웹페이지|웹\s*페이지|웹사이트|랜딩\s*페이지|인터랙티브\s*웹|html로|웹으로)/.test(text);
+  const transformsExistingReportToWeb = wantsWebArtifact && /\b(this|current|existing|previous)\s+(report|memo|document)\b|(?:이|그|위|방금|기존|이전|해당)\s*(?:보고서|리포트|문서)/.test(text);
+  const wantsPlanning = !wantsAgentBuild && /(idea|concept|planning|plan|planner|brainstorm|service concept|content concept|business idea|campaign|community idea|아이디어|기획|구상|플래닝|사업화|서비스\s*(?:만들|기획|구상)|콘텐츠\s*(?:만들|기획|구상)|브랜드\s*(?:기획|구상)|캠페인\s*(?:기획|구상)|커뮤니티\s*(?:기획|구상)|같이\s*생각|같이\s*기획)/.test(text);
 
   const explicit = [
     'workspace-router', 'agent-builder', 'document-ingestor', 'file-organizer',
     'memory-curator', 'qa-verifier', 'quick-researcher', 'deep-dive-researcher',
-    'report-writer', 'ppt-builder', 'email-operator', 'friend-counselor',
+    'report-writer', 'web-builder', 'ppt-builder', 'email-operator', 'friend-counselor',
+    'planning-partner',
     'instagram-growth-analyst'
   ].find((agent) => text.includes(agent));
   if (explicit) add(explicit);
 
   if (/(pdf|pptx|docx|image|convert|ingest|markdown)/.test(text)) add('document-ingestor');
+  if (wantsPlanning) add('planning-partner');
   if (!wantsAgentBuild && /(instagram|insta|인스타|인스타그램|reel|reels|릴스).*(growth|grow|analysis|analytics|audit|성장|분석|진단|감사)|(?:growth|grow|analysis|analytics|audit|성장|분석|진단).*(instagram|insta|인스타|인스타그램|reel|reels|릴스)/.test(text)) add('instagram-growth-analyst');
   if (!wantsAgentBuild && /(quick|fast|brief|간단|빠른)/.test(text) && /(research|조사|find|look up)/.test(text)) add('quick-researcher');
-  if (!wantsAgentBuild && !chain.includes('instagram-growth-analyst') && /(deep|dive|research|조사|분석|investigate)/.test(text)) add(text.includes('quick') ? 'quick-researcher' : 'deep-dive-researcher');
-  if (/(report|보고서|docx|memo|write up)/.test(text)) add('report-writer');
+  if (!wantsAgentBuild && !chain.includes('instagram-growth-analyst') && /(deep|dive|research|리서치|조사|분석|비교|탐색|investigate)/.test(text)) add(text.includes('quick') ? 'quick-researcher' : 'deep-dive-researcher');
+  if (/(report|보고서|docx|memo|write up)/.test(text) && !transformsExistingReportToWeb) add('report-writer');
+  if (wantsWebArtifact) add('web-builder');
   if (/(ppt|deck|slides|presentation|발표|슬라이드)/.test(text)) add('ppt-builder');
   if (/(email|mail|메일|reply|follow-up|outreach|contact|연락처|주소록)/.test(text)) add('email-operator');
   if (/(에게|한테).*(보내|발송|send)|(?:보내|발송|send).*(에게|한테|email|mail|메일)/.test(text)) add('email-operator');
@@ -47,19 +53,28 @@ export function routeRequest(root, request) {
   if (chain.includes('ppt-builder') && !chain.includes('report-writer') && (chain.includes('deep-dive-researcher') || chain.includes('quick-researcher') || chain.includes('document-ingestor'))) {
     add('report-writer');
   }
+  if (chain.includes('web-builder') && !chain.includes('report-writer') && (chain.includes('deep-dive-researcher') || chain.includes('quick-researcher') || chain.includes('document-ingestor'))) {
+    add('report-writer');
+  }
 
   if (helpRequest && chain.length === 0) add('workspace-router');
   if (chain.length === 0) add('workspace-router');
   if (!chain.includes('qa-verifier') && (
     chain.includes('report-writer')
+    || chain.includes('web-builder')
     || chain.includes('ppt-builder')
     || chain.includes('deep-dive-researcher')
     || chain.includes('quick-researcher')
+    || chain.includes('planning-partner')
   )) add('qa-verifier');
   if (chain.includes('agent-builder') && !chain.includes('qa-verifier')) add('qa-verifier');
   sortChain(chain);
   const routing = routingDecision(request, chain, helpRequest, reuseRequested);
   const intent = intentDecision(request, chain, helpRequest);
+  const researchMode = researchModeDecision(request, chain);
+  const researchArchitecture = researchArchitectureDecision(request, chain);
+  const researchRuntime = researchRuntimeDecision(request, chain, researchMode, researchArchitecture);
+  const executionGate = executionGateDecision(request, chain, intent, routing, researchMode, researchArchitecture);
   const checkpoints = chainCheckpoints(chain, intent, routing, request);
 
   return `# Routing Plan
@@ -79,6 +94,22 @@ ${renderRoutingMode(routing)}
 ## Intent Check
 
 ${renderIntentCheck(intent)}
+
+## Execution Gate
+
+${renderExecutionGate(executionGate)}
+
+## Research Mode
+
+${renderResearchMode(researchMode)}
+
+## Research Architecture
+
+${renderResearchArchitecture(researchArchitecture)}
+
+## Runtime Subagent Execution
+
+${renderResearchRuntime(researchRuntime)}
 
 ## Chain Checkpoints
 
@@ -188,7 +219,7 @@ function renderRoutingMode(routing) {
 function hasMeaningfulWorkRequest(text, chain, helpRequest) {
   if (helpRequest) return false;
   if (chain.some((agent) => agent !== 'workspace-router')) return true;
-  return /(create|make|build|write|draft|turn|convert|inspect|organize|send|research|verify|remember|improve|revise|summarize|analyze|read|check|qa|report|ppt|deck|slides|email|agent|webpage|website|markdown|docx|pdf|만들|작성|초안|바꿔|변환|읽|정리|보내|발송|조사|검수|기억|개선|수정|요약|분석|보고서|발표|웹페이지|문서)/.test(text);
+  return /(create|make|build|write|draft|turn|convert|inspect|organize|send|research|verify|remember|improve|revise|summarize|analyze|read|check|qa|report|ppt|deck|slides|email|agent|webpage|website|markdown|docx|pdf|만들|작성|초안|바꿔|변환|읽|정리|보내|발송|리서치|조사|검수|기억|개선|수정|요약|분석|비교|탐색|보고서|발표|웹페이지|문서)/.test(text);
 }
 
 function hasContextReference(text) {
@@ -200,7 +231,8 @@ function hasContinuationMarker(text) {
 }
 
 function isCorrectionRequest(text) {
-  return /^(아니|아냐|그건 아니|no,|not\b)|아니라|말고|대신|정정|수정하면|틀렸|wrong|correction|revise the assumption/.test(text);
+  if (/질문하지\s*말고|묻지\s*말고|안\s*물어보고|without asking|do not ask|don't ask/i.test(text)) return false;
+  return /^(아니|아냐|그건 아니|no,|not\b)|아니라|대신|정정|수정하면|틀렸|wrong|correction|revise the assumption|(?:^|\s)말고(?:\s|$)/.test(text);
 }
 
 function intentDecision(request, chain, helpRequest) {
@@ -227,7 +259,7 @@ function intentDecision(request, chain, helpRequest) {
       stopIfAsked: 'yes'
     };
   }
-  if (chain.includes('ppt-builder') || chain.includes('deep-dive-researcher') || chain.includes('agent-builder') || chain.includes('friend-counselor')) {
+  if (chain.includes('ppt-builder') || chain.includes('deep-dive-researcher') || chain.includes('agent-builder') || chain.includes('friend-counselor') || chain.includes('planning-partner')) {
     return {
       sensitivity: 'high',
       surface: describeSurfaceRequest(chain),
@@ -271,6 +303,278 @@ function renderIntentCheck(intent) {
     `- Confirmation gate needed: ${intent.confirmationGate}`,
     `- If a question is asked, stop and wait before execution: ${intent.stopIfAsked}`
   ].join('\n');
+}
+
+function executionGateDecision(request, chain, intent, routing, researchMode, researchArchitecture) {
+  if (routing.mode === 'question-only') {
+    return {
+      state: 'PROCEED_CHAT_ONLY',
+      reason: 'The request is usage help or conversation, not a durable work artifact.',
+      allowedBeforeAnswer: ['answer in chat'],
+      blockedBeforeAnswer: [],
+      askNow: 'No intent question needed.'
+    };
+  }
+
+  const explicitAssumptionPermission = hasExplicitAssumptionPermission(request);
+  const highIntent = intent.sensitivity === 'high';
+  const materialChain = chain.some((agent) => ['deep-dive-researcher', 'ppt-builder', 'agent-builder', 'friend-counselor', 'planning-partner'].includes(agent));
+  if (highIntent && !explicitAssumptionPermission) {
+    return {
+      state: 'STOP_BEFORE_EXECUTION',
+      reason: 'High intent-sensitivity work can produce materially different outputs depending on audience, objective, evidence standard, narrative, or success criteria.',
+      allowedBeforeAnswer: [
+        'read routing and agent instructions',
+        'draft a chain contract',
+        'create preflight-only notes if needed'
+      ],
+      blockedBeforeAnswer: [
+        'final research report',
+        'strategy recommendation',
+        'PPT/deck',
+        'web page',
+        'email/send package',
+        'agent implementation'
+      ],
+      askNow: primaryIntentGateQuestion(intent, researchMode, researchArchitecture, chain)
+    };
+  }
+
+  if (highIntent && explicitAssumptionPermission) {
+    return {
+      state: 'PROCEED_WITH_EXPLICIT_ASSUMPTIONS',
+      reason: 'The user explicitly allowed reasonable assumptions or asked not to stop for clarification.',
+      allowedBeforeAnswer: ['execute under named assumptions', 'record assumptions in the project artifacts'],
+      blockedBeforeAnswer: ['unapproved external actions'],
+      askNow: 'No blocking question; state the assumptions before executing.'
+    };
+  }
+
+  if (intent.sensitivity === 'medium' || materialChain) {
+    return {
+      state: 'ASK_IF_MATERIAL',
+      reason: 'Proceed only when missing context would not materially change the artifact.',
+      allowedBeforeAnswer: ['execute low-risk parts', 'state assumptions'],
+      blockedBeforeAnswer: ['direction changes based on unconfirmed hidden intent'],
+      askNow: intent.questions[0] || 'Ask only if the answer changes the output.'
+    };
+  }
+
+  return {
+    state: 'PROCEED',
+    reason: 'Low intent-sensitivity or sufficiently bounded request.',
+    allowedBeforeAnswer: ['execute inside workspace'],
+    blockedBeforeAnswer: ['unapproved external actions'],
+    askNow: 'No blocking question needed.'
+  };
+}
+
+function renderExecutionGate(gate) {
+  return [
+    `- Gate state: ${gate.state}`,
+    `- Why: ${gate.reason}`,
+    '- Allowed before user answer:',
+    ...gate.allowedBeforeAnswer.map((item) => `  - ${item}`),
+    '- Blocked before user answer:',
+    ...(gate.blockedBeforeAnswer.length ? gate.blockedBeforeAnswer : ['none']).map((item) => `  - ${item}`),
+    `- Ask now: ${gate.askNow}`,
+    '- Rule: if the gate state is STOP_BEFORE_EXECUTION, ask the question and wait. Do not continue into final deliverables in the same turn.'
+  ].join('\n');
+}
+
+function hasExplicitAssumptionPermission(request) {
+  return /(assume and proceed|proceed under assumptions|use reasonable assumptions|no need to ask|do not ask|don't ask|without asking|가정하고\s*진행|합리적.*가정|적절히.*가정|질문하지\s*말고|묻지\s*말고|안\s*물어보고|알아서\s*가정)/i.test(request);
+}
+
+function primaryIntentGateQuestion(intent, researchMode, researchArchitecture, chain) {
+  if (chain.includes('deep-dive-researcher') && (chain.includes('ppt-builder') || /presentation|deck|slides|ppt/i.test(intent.surface))) {
+    return `I think this may be about ${intent.hiddenGoal} Confirm the audience and what the output should help them decide before I research and build the deck.`;
+  }
+  if (chain.includes('deep-dive-researcher')) {
+    const architecture = researchArchitecture?.architecture && researchArchitecture.architecture !== 'not applicable'
+      ? ` I would start with ${researchArchitecture.architecture}.`
+      : '';
+    const mode = researchMode?.mode && researchMode.mode !== 'not applicable'
+      ? ` Research mode would be ${researchMode.mode}.`
+      : '';
+    return `${intent.questions[0] || 'What decision or next action should this research support?'}${architecture}${mode} Is that direction correct?`;
+  }
+  if (chain.includes('ppt-builder')) return intent.questions[0] || 'Who is the audience, and what should they believe or do afterward?';
+  if (chain.includes('agent-builder')) return intent.questions[0] || 'What job should this agent perform, and what tools or tests are required?';
+  if (chain.includes('planning-partner')) return intent.questions[0] || 'What decision should this planning conversation help you make first?';
+  if (chain.includes('friend-counselor')) return intent.questions[0] || 'Do you want reflection, practical next steps, or help naming the real tension first?';
+  return intent.questions[0] || 'What outcome should this work optimize for?';
+}
+
+function researchModeDecision(request, chain) {
+  if (!chain.includes('deep-dive-researcher')) {
+    return {
+      applicable: false,
+      mode: 'not applicable',
+      reason: 'No deep-dive research agent selected.',
+      artifacts: []
+    };
+  }
+  const text = request.toLowerCase();
+  const numberSignals = [...text.matchAll(/\b(\d{2,})\b/g)].map((match) => Number(match[1])).filter((value) => value >= 10);
+  const broadCoverage = numberSignals.length > 0 || /(many|list|compare|comparison|table|matrix|dataset|profiles?|examples?|cases?|여러|목록|비교|표|데이터셋|사례|케이스|도구|회사|브랜드)/i.test(text);
+  const synthesis = /(formula|framework|pattern|principle|strategy|recommend|positioning|공식|프레임|패턴|전략|추천|포지셔닝|시사점|성공\s*공식)/i.test(text);
+  const judgment = /(which|decide|judge|tradeoff|vs\.?|versus|conflict|contradiction|뭐가|어떤|판단|결정|상충|모순|트레이드오프)/i.test(text);
+  if (broadCoverage && synthesis) {
+    return {
+      applicable: true,
+      mode: 'Hybrid',
+      reason: 'Broad case/item coverage appears necessary before deriving a formula, pattern, strategy, or recommendation.',
+      artifacts: ['research-contract.md', 'architecture-decision.md', 'runtime-subagent-plan.md', 'subagent-orchestration.md', 'subagent-results/', 'worker-packets/', 'source-map.md', 'evidence-store.md', 'hypothesis-map.md', 'red-team-critique.md', 'synthesis-plan.md', 'research-quality-control-plan.md', 'claim-verification-map.md', 'question-ledger.md']
+    };
+  }
+  if (broadCoverage && !judgment) {
+    return {
+      applicable: true,
+      mode: 'Wide',
+      reason: 'The request appears to involve many independent items that should share one rubric/schema.',
+      artifacts: ['research-contract.md', 'architecture-decision.md', 'runtime-subagent-plan.md', 'subagent-orchestration.md', 'subagent-results/', 'worker-packets/', 'source-map.md', 'evidence-store.md', 'hypothesis-map.md', 'red-team-critique.md', 'synthesis-plan.md', 'research-quality-control-plan.md', 'claim-verification-map.md', 'question-ledger.md']
+    };
+  }
+  return {
+    applicable: true,
+    mode: 'Deep',
+    reason: judgment
+      ? 'The request appears to require judgment, tradeoff analysis, or conflict resolution around one main question.'
+      : 'The request appears to center on one main question where evidence depth and mechanism analysis matter more than item coverage.',
+    artifacts: ['research-contract.md', 'architecture-decision.md', 'runtime-subagent-plan.md', 'subagent-orchestration.md', 'subagent-results/', 'worker-packets/', 'source-map.md', 'evidence-store.md', 'hypothesis-map.md', 'red-team-critique.md', 'synthesis-plan.md', 'research-quality-control-plan.md', 'claim-verification-map.md', 'question-ledger.md']
+  };
+}
+
+function renderResearchMode(researchMode) {
+  if (!researchMode.applicable) {
+    return '- Not applicable: no deep-dive research route selected.';
+  }
+  return [
+    `- Selected research mode: ${researchMode.mode}`,
+    `- Why: ${researchMode.reason}`,
+    `- Required research artifacts: ${researchMode.artifacts.map((item) => `\`${item}\``).join(', ')}`,
+    '- Confirmation rule: ask and wait before changing the research mode or research contract if the change would alter the output.'
+  ].join('\n');
+}
+
+function researchArchitectureDecision(request, chain) {
+  if (!chain.includes('deep-dive-researcher')) {
+    return {
+      applicable: false,
+      architecture: 'not applicable',
+      reason: 'No deep-dive research agent selected.',
+      confirmation: 'not applicable'
+    };
+  }
+
+  const text = request.toLowerCase();
+  const pick = (architecture, reason) => ({
+    applicable: true,
+    architecture,
+    reason,
+    confirmation: 'Ask and wait if this architecture would change audience, scope, evidence strategy, narrative, output artifact, or recommendation.'
+  });
+
+  if (/(cases?|examples?|benchmarks?|compare|comparison|matrix|formula|framework|pattern|success formula|사례|성공사례|벤치마크|비교|공식|프레임워크|패턴)/i.test(text)) {
+    return pick('Wide Benchmark To Deep Synthesis', 'The request appears to need broad cases or examples before deriving a formula, pattern, or recommendation.');
+  }
+  if (/(how .*grew|growth journey|growth history|milestones?|viral|community|brand growth|newsletter growth|creator growth|성장\s*과정|성장\s*여정|전환점|마일스톤|바이럴|커뮤니티|브랜드\s*성장)/i.test(text)) {
+    return pick('Growth Case Reconstruction', 'The request appears to ask how an entity grew across milestones and mechanisms.');
+  }
+  if (/(product|gtm|go[-\s]?to[-\s]?market|launch|pricing|channel|positioning|business model|retention|onboarding|monetization|sales|activation|제품|시장\s*전략|출시|가격|채널|포지셔닝|비즈니스\s*모델|리텐션|온보딩|수익|세일즈|활성화)/i.test(text)) {
+    return pick('Product / GTM Strategy Research', 'The request appears to affect product, launch, positioning, channel, monetization, retention, or business-model decisions.');
+  }
+  if (/(market|competitor|competitive|landscape|category|alternatives?|whitespace|segment|tam|sam|시장|경쟁|경쟁사|카테고리|대안|화이트스페이스|세그먼트)/i.test(text)) {
+    return pick('Market / Competitive Landscape', 'The request appears to map a category, market, competitors, alternatives, or whitespace.');
+  }
+  if (/(api|sdk|implementation|implement|integrat|debug|configure|architecture|official docs?|install|error|code|technical|기술|구현|연동|통합|설치|디버그|공식\s*문서|아키텍처)/i.test(text)) {
+    return pick('Technical / Implementation Research', 'The request appears to depend on exact technical implementation, docs, environment, or verification.');
+  }
+  if (/(pdf|pptx|deck|slides?|paper|report|transcript|document|source file|based on this|based on the source|자료|문서|보고서|논문|덱|원본|첨부|파일)/i.test(text)) {
+    return pick('Source-Heavy Evidence Review', 'The request appears to depend on preserving and interpreting a provided source.');
+  }
+  return pick('Strategic Decision Research', 'The request appears to need judgment, options, criteria, tradeoffs, or a recommendation.');
+}
+
+function renderResearchArchitecture(researchArchitecture) {
+  if (!researchArchitecture.applicable) {
+    return '- Not applicable: no deep-dive research route selected.';
+  }
+  return [
+    `- Selected research architecture: ${researchArchitecture.architecture}`,
+    `- Why: ${researchArchitecture.reason}`,
+    '- Required artifact: `architecture-decision.md`',
+    `- Confirmation rule: ${researchArchitecture.confirmation}`
+  ].join('\n');
+}
+
+function researchRuntimeDecision(request, chain, researchMode, researchArchitecture) {
+  if (!chain.includes('deep-dive-researcher')) {
+    return {
+      applicable: false,
+      mode: 'not applicable',
+      reason: 'No deep-dive research agent selected.',
+      explicitNativeRequest: false,
+      roles: []
+    };
+  }
+  const explicitNativeRequest = hasExplicitSubagentRequest(request);
+  const broadOrHighValue = ['Wide', 'Hybrid'].includes(researchMode.mode)
+    || /(deep|comprehensive|thorough|strategy|decision|benchmark|성공\s*공식|전략|의사결정|깊게|철저|벤치마크)/i.test(request);
+  const roles = rolesForRoutedArchitecture(researchArchitecture.architecture, researchMode.mode);
+  return {
+    applicable: true,
+    mode: explicitNativeRequest ? 'native-if-available' : broadOrHighValue ? 'worker-packets-with-native-proposal' : 'worker-packets',
+    reason: explicitNativeRequest
+      ? 'The user explicitly asked for subagents, delegation, or parallel agent work.'
+      : broadOrHighValue
+        ? 'The request is broad or high-value, so specialist worker packets should be created and the agent may propose native subagents.'
+        : 'The request can run through the deep-dive researcher with specialist worker packets as needed.',
+    explicitNativeRequest,
+    roles
+  };
+}
+
+function renderResearchRuntime(runtime) {
+  if (!runtime.applicable) return '- Not applicable: no deep-dive research route selected.';
+  return [
+    `- Execution policy: ${runtime.mode}`,
+    `- Why: ${runtime.reason}`,
+    `- Explicit native-subagent permission: ${runtime.explicitNativeRequest ? 'yes' : 'no'}`,
+    `- Specialist roles to prepare: ${runtime.roles.map((role) => `\`ac-${role}\``).join(', ')}`,
+    '- Required artifact: `runtime-subagent-plan.md` plus `subagent-orchestration.md`, `subagent-results/`, and `worker-packets/ac-*.md`.',
+    '- Native result path: `workspace/projects/<project-slug>/research/subagent-results/ac-*.md` when native subagents actually run.',
+    '- Preflight roles: `ac-intent-analyst`, `ac-research-architect`.',
+    '- Codex rule: native subagents may be spawned only when the user explicitly asks for subagents, delegation, or parallel agent work.',
+    '- Claude Code rule: `.claude/agents/ac-*.md` files may be materialized only after explicit user approval.'
+  ].join('\n');
+}
+
+function hasExplicitSubagentRequest(request) {
+  return /(subagents?|sub-agents?|parallel agents?|parallel work|delegate|delegation|spawn|서브\s*에이전트|서브에이전트|병렬|위임|나눠서|여러\s*에이전트)/i.test(request);
+}
+
+function rolesForRoutedArchitecture(architecture, mode) {
+  const map = {
+    'Strategic Decision Research': ['intent-analyst', 'research-architect', 'source-scout', 'evidence-verifier', 'mechanism-analyst', 'red-team-critic', 'synthesis-architect', 'research-quality-controller', 'report-composer'],
+    'Product / GTM Strategy Research': ['intent-analyst', 'research-architect', 'source-scout', 'market-mapper', 'gtm-strategist', 'evidence-verifier', 'red-team-critic', 'synthesis-architect', 'research-quality-controller', 'report-composer'],
+    'Growth Case Reconstruction': ['intent-analyst', 'research-architect', 'source-scout', 'case-benchmark-worker', 'mechanism-analyst', 'evidence-verifier', 'red-team-critic', 'synthesis-architect', 'research-quality-controller', 'report-composer'],
+    'Market / Competitive Landscape': ['intent-analyst', 'research-architect', 'source-scout', 'market-mapper', 'evidence-verifier', 'red-team-critic', 'synthesis-architect', 'research-quality-controller', 'report-composer'],
+    'Technical / Implementation Research': ['intent-analyst', 'research-architect', 'technical-docs-reader', 'evidence-verifier', 'red-team-critic', 'synthesis-architect', 'research-quality-controller', 'report-composer'],
+    'Source-Heavy Evidence Review': ['intent-analyst', 'research-architect', 'source-scout', 'evidence-verifier', 'red-team-critic', 'synthesis-architect', 'research-quality-controller', 'report-composer'],
+    'Wide Benchmark To Deep Synthesis': ['intent-analyst', 'research-architect', 'source-scout', 'case-benchmark-worker', 'evidence-verifier', 'mechanism-analyst', 'red-team-critic', 'synthesis-architect', 'research-quality-controller', 'report-composer']
+  };
+  const base = map[architecture] || map['Strategic Decision Research'];
+  if (mode === 'Wide' || mode === 'Hybrid') return withRoleBeforeQualityGate(base, 'case-benchmark-worker');
+  return base;
+}
+
+function withRoleBeforeQualityGate(base, roleKey) {
+  if (base.includes(roleKey)) return base;
+  const gateIndex = base.findIndex((key) => key === 'research-quality-controller' || key === 'report-composer');
+  if (gateIndex === -1) return [...base, roleKey];
+  return [...base.slice(0, gateIndex), roleKey, ...base.slice(gateIndex)];
 }
 
 function chainCheckpoints(chain, intent, routing, request) {
@@ -335,11 +639,17 @@ function renderChainCheckpoints(checkpoints) {
 }
 
 function classifyChainType(chain) {
+  if (chain.includes('planning-partner') && chain.includes('deep-dive-researcher')) return 'planning-to-deep-research';
+  if (chain.includes('planning-partner') && chain.includes('report-writer')) return 'planning-to-report';
+  if (chain.includes('planning-partner') && chain.includes('web-builder')) return 'planning-to-web';
+  if (chain.includes('planning-partner') && chain.includes('ppt-builder')) return 'planning-to-presentation';
   if (chain.includes('document-ingestor') && chain.includes('report-writer') && chain.includes('ppt-builder')) return 'document-to-report-to-presentation';
   if (chain.includes('deep-dive-researcher') && chain.includes('report-writer') && chain.includes('ppt-builder')) return 'deep-research-to-report-to-presentation';
+  if (chain.includes('deep-dive-researcher') && chain.includes('report-writer') && chain.includes('web-builder')) return 'deep-research-to-report-to-web';
   if ((chain.includes('deep-dive-researcher') || chain.includes('quick-researcher')) && chain.includes('email-operator')) return 'research-to-email';
   if (chain.includes('agent-builder')) return 'agent-build-and-verify';
   if ((chain.includes('deep-dive-researcher') || chain.includes('quick-researcher')) && chain.includes('report-writer')) return 'research-to-report';
+  if (chain.includes('report-writer') && chain.includes('web-builder')) return 'report-to-web';
   if (chain.includes('report-writer') && chain.includes('ppt-builder')) return 'report-to-presentation';
   return 'multi-agent workflow';
 }
@@ -352,11 +662,17 @@ function preflightCheckpoint(chain, intent, routing, request) {
   if (chain.includes('ppt-builder') && (chain.includes('deep-dive-researcher') || chain.includes('quick-researcher'))) {
     return `Consolidate before execution: ${intent.questions.join(' / ')}`;
   }
+  if (chain.includes('web-builder') && (chain.includes('deep-dive-researcher') || chain.includes('quick-researcher'))) {
+    return `Consolidate before execution: ${intent.questions.join(' / ')}`;
+  }
   if ((chain.includes('deep-dive-researcher') || chain.includes('quick-researcher')) && chain.includes('email-operator')) {
     return 'Confirm target customer, relationship, desired action, and claim-safety standard before research-driven drafting.';
   }
   if (chain.includes('agent-builder')) {
     return 'Confirm job-to-be-done, required tools, inputs/outputs, safety boundaries, and smoke tests before building.';
+  }
+  if (chain.includes('planning-partner')) {
+    return `Start with a planning state and ask only the outcome-changing question: ${intent.questions[0] || 'What decision should this planning conversation help you make first?'}`;
   }
   if (intent.sensitivity === 'high' || intent.sensitivity === 'medium') {
     return `Use the Intent Check questions before execution: ${intent.questions.join(' / ')}`;
@@ -377,14 +693,22 @@ function handoffMap(chain) {
     if (chain.includes(from) && chain.includes(to)) handoffs.push(`${from} -> ${to}: ${description}`);
   };
   add('document-ingestor', 'report-writer', '`converted/source.agent.md`, `visual-review.md` when available, `conversion-log.md`, and extraction limitations');
+  add('planning-partner', 'quick-researcher', 'planning brief, research-needed list, assumptions, and the narrow fact check to run');
+  add('planning-partner', 'deep-dive-researcher', 'planning brief, real objective, selected lenses, assumptions, blind spots, and research-needed list');
+  add('planning-partner', 'report-writer', 'planning brief, question ledger, assumption map, blindspot review, and must-preserve decisions');
+  add('planning-partner', 'web-builder', 'planning brief, audience, page purpose, concept narrative, caveats, and source boundaries');
+  add('planning-partner', 'ppt-builder', 'planning brief, core narrative, audience, decisions, assumptions, and must-preserve caveats');
   if (chain.includes('document-ingestor') && chain.includes('ppt-builder') && !chain.includes('report-writer')) {
     handoffs.push('document-ingestor -> ppt-builder: converted source, visual review, conversion log, and source-fidelity limits');
   }
   add('quick-researcher', 'report-writer', 'quick brief, source links, agreement/disagreement notes, uncertainty, and deep-dive recommendation');
-  add('deep-dive-researcher', 'report-writer', 'research report, source map, claim verification map, question ledger, unresolved evidence gaps, and recommended stance');
+  add('deep-dive-researcher', 'report-writer', 'research contract, selected research mode, research report, evidence store, source map, claim verification map, question ledger, unresolved evidence gaps, and recommended stance');
   add('quick-researcher', 'email-operator', 'source-backed facts, unsupported claims to avoid, target notes, and recommended message angle');
   add('deep-dive-researcher', 'email-operator', 'research evidence, target/customer insight, supported claims, risky claims, and recommended message angle');
+  add('report-writer', 'web-builder', 'report, evidence map, source links, target audience, page purpose, must-preserve claims, and caveats');
+  add('deep-dive-researcher', 'web-builder', 'only through an approved research/report handoff; web-builder should not replace the MI-grade Markdown research report');
   add('report-writer', 'ppt-builder', 'report, evidence map, core narrative, audience/use case, must-preserve content, and visible caveats');
+  add('web-builder', 'qa-verifier', 'HTML/CSS/JS files, README, assets, screenshots or preview notes, responsive checks, accessibility notes, console status, and limitations');
   add('ppt-builder', 'qa-verifier', 'PPTX, content spec, design spec, build plan, prototype/preview paths, PPT QA, and render limitations');
   add('report-writer', 'qa-verifier', 'report, evidence map, assumptions, unresolved gaps, and source/reference notes');
   add('agent-builder', 'qa-verifier', 'agent folder, tools, templates, tests, examples, registry/doc updates, and smoke-test result or instructions');
@@ -403,11 +727,17 @@ function directionChangeCheckpoint(chain) {
   if (chain.includes('report-writer') && chain.includes('ppt-builder')) {
     return 'ask and wait if the deck narrative must materially diverge from the report narrative';
   }
+  if (chain.includes('report-writer') && chain.includes('web-builder')) {
+    return 'ask and wait if the web page narrative must materially diverge from the research/report narrative';
+  }
   if (chain.includes('document-ingestor')) {
     return 'ask and wait if extraction/rendering limitations make the requested downstream report or deck unreliable';
   }
   if (chain.includes('agent-builder')) {
     return 'ask and wait if the requested agent needs broader permissions, external accounts, or tools beyond the agreed scope';
+  }
+  if (chain.includes('planning-partner')) {
+    return 'ask and wait if a planning hypothesis changes the audience, purpose, business model, product shape, content format, or launch direction';
   }
   return 'ask and wait whenever a downstream agent would change the agreed chain contract';
 }
@@ -415,8 +745,11 @@ function directionChangeCheckpoint(chain) {
 function qualityGates(chain) {
   const gates = [];
   if (chain.includes('document-ingestor')) gates.push('converted source and visual-review limitations are clear before downstream writing');
-  if (chain.includes('deep-dive-researcher') || chain.includes('quick-researcher')) gates.push('research evidence and uncertainty are strong enough for downstream claims');
+  if (chain.includes('planning-partner')) gates.push('planning state, question ledger, assumption map, blindspot review, and next actions are updated before downstream work');
+  if (chain.includes('deep-dive-researcher')) gates.push('research contract, research mode, source policy, evidence store, claim map, and question ledger are complete before downstream claims');
+  if (chain.includes('quick-researcher')) gates.push('research evidence and uncertainty are strong enough for downstream claims');
   if (chain.includes('report-writer')) gates.push('report has a clear narrative, evidence map, caveats, and must-preserve content before downstream deck/email work');
+  if (chain.includes('web-builder')) gates.push('web-builder receives an approved report/research handoff before implementing HTML; web copy preserves caveats and source boundaries');
   if (chain.includes('ppt-builder')) gates.push('content spec, design spec, build plan, prototype/preview, and editable PPTX checks run before final QA');
   if (chain.includes('email-operator')) gates.push('draft package includes recipient resolution, assumptions, unsupported-claim warnings, and send checklist');
   if (chain.includes('agent-builder')) gates.push('new agent includes docs, workflow, tools/scaffolds when needed, examples, tests, and registry updates');
@@ -428,8 +761,11 @@ function finalQaCriteria(chain) {
   if (!chain.includes('qa-verifier')) return 'not required unless requested or the workflow becomes high-impact';
   const criteria = ['original request satisfaction', 'chain contract satisfaction', 'handoff completeness'];
   if (chain.includes('document-ingestor')) criteria.push('source fidelity and extraction/render limitations');
-  if (chain.includes('deep-dive-researcher') || chain.includes('quick-researcher')) criteria.push('evidence gaps and uncertainty');
+  if (chain.includes('planning-partner')) criteria.push('planning state, real objective, selected lenses, assumptions, blind spots, research-needed list, next actions, and handoff quality');
+  if (chain.includes('deep-dive-researcher')) criteria.push('research contract, source policy, evidence store, question ledger, claim verification, evidence gaps, and uncertainty');
+  if (chain.includes('quick-researcher')) criteria.push('evidence gaps and uncertainty');
   if (chain.includes('report-writer')) criteria.push('report structure, supported claims, and caveats');
+  if (chain.includes('web-builder')) criteria.push('static HTML structure, responsive behavior, accessibility, source/caveat visibility, and no unsupported claim inflation');
   if (chain.includes('ppt-builder')) criteria.push('editable PPTX, no full-slide screenshot fallback, text/visual QA, and render limitations');
   if (chain.includes('email-operator')) criteria.push('claim safety, tone, next action, connector status, and no accidental send');
   if (chain.includes('agent-builder')) criteria.push('agent app completeness, executable capability, tests, and registry/docs updates');
@@ -438,7 +774,10 @@ function finalQaCriteria(chain) {
 
 function describeSurfaceRequest(chain) {
   if (chain.includes('ppt-builder') && chain.includes('deep-dive-researcher')) return 'Research a topic deeply and turn it into a presentation.';
+  if (chain.includes('web-builder') && chain.includes('deep-dive-researcher')) return 'Research a topic deeply and turn it into a web page.';
   if (chain.includes('ppt-builder')) return 'Create a presentation deck.';
+  if (chain.includes('web-builder')) return 'Create a local static web page.';
+  if (chain.includes('planning-partner')) return 'Develop an idea through multi-turn planning.';
   if (chain.includes('deep-dive-researcher')) return 'Research a topic deeply.';
   if (chain.includes('quick-researcher')) return 'Research a focused question quickly.';
   if (chain.includes('report-writer')) return 'Write a report or structured document.';
@@ -453,6 +792,9 @@ function inferHiddenGoal(text, chain) {
   if (chain.includes('ppt-builder') && /(사례|case|examples?)/.test(text) && /(공식|formula|성공|success|전략|strategy)/.test(text)) {
     return 'Possibly derive a reusable success formula, not just collect examples.';
   }
+  if (chain.includes('web-builder') && chain.includes('deep-dive-researcher')) return 'Possibly create both a deep MI-grade research report and a separate web artifact; keep research depth separate from web presentation.';
+  if (chain.includes('web-builder')) return 'Possibly explain, persuade, or guide action through a local static page; confirm audience and page purpose.';
+  if (chain.includes('planning-partner')) return 'Possibly clarify the real objective, first audience, weakest assumptions, and next decision behind the idea.';
   if (chain.includes('ppt-builder')) return 'Possibly persuade, teach, decide, or create an execution plan; confirm which one matters.';
   if (chain.includes('deep-dive-researcher')) return 'Possibly support a decision or next action, not only gather information.';
   if (chain.includes('report-writer')) return 'Possibly turn rough material into decision-ready evidence and recommendations.';
@@ -464,6 +806,13 @@ function inferHiddenGoal(text, chain) {
 }
 
 function intentQuestions(text, chain) {
+  if (chain.includes('web-builder') && chain.includes('deep-dive-researcher')) {
+    return [
+      'Who is the web page for, and what should the reader do after opening it?',
+      'The default is an MI-grade Markdown report first, with the web page as a separate distilled interface. Is there any reason to deviate from that?',
+      'Which claims must remain visible with evidence and caveats on the page?'
+    ];
+  }
   if (chain.includes('ppt-builder') && chain.includes('deep-dive-researcher')) {
     if (/(사례|case|examples?)/.test(text) && /(공식|formula|성공|success)/.test(text)) {
       return [
@@ -482,6 +831,13 @@ function intentQuestions(text, chain) {
     return [
       'What decision or next action should this research support?',
       'Which uncertainty matters most: market, customer, message, channel, operation, evidence, or risk?'
+    ];
+  }
+  if (chain.includes('planning-partner')) {
+    return [
+      'What decision should this planning conversation help you make first?',
+      'Who do you most want this idea to serve or affect?',
+      'Should I challenge the idea hard now, or first help you develop the promising version?'
     ];
   }
   if (chain.includes('ppt-builder')) {
@@ -525,10 +881,12 @@ function sortChain(chain) {
   const order = [
     'workspace-router',
     'document-ingestor',
+    'planning-partner',
     'quick-researcher',
     'deep-dive-researcher',
     'instagram-growth-analyst',
     'report-writer',
+    'web-builder',
     'ppt-builder',
     'email-operator',
     'file-organizer',
@@ -685,13 +1043,50 @@ function expectedOutputs(chain, request = '', helpRequest = false, routing = nul
     outputs.push('- `workspace/projects/<project-slug>/converted/conversion-log.md`');
     outputs.push('- `workspace/projects/<project-slug>/converted/visual-review.md` when pages/slides are rendered');
   }
+  if (chain.includes('planning-partner')) {
+    outputs.push('- `workspace/projects/<project-slug>/planning/planning-state.md`');
+    outputs.push('- `workspace/projects/<project-slug>/planning/question-ledger.md`');
+    outputs.push('- `workspace/projects/<project-slug>/planning/assumption-map.md`');
+    outputs.push('- `workspace/projects/<project-slug>/planning/blindspot-review.md`');
+    outputs.push('- `workspace/projects/<project-slug>/planning/research-needed.md`');
+    outputs.push('- `workspace/projects/<project-slug>/planning/planning-brief.md`');
+    outputs.push('- `workspace/projects/<project-slug>/planning/next-actions.md`');
+  }
   if (chain.includes('quick-researcher')) outputs.push('- `workspace/projects/<project-slug>/research/<topic>_quick-research.md`');
-  if (chain.includes('deep-dive-researcher')) outputs.push('- `workspace/projects/<project-slug>/research/<topic>_deep-research.md`');
+  if (chain.includes('deep-dive-researcher')) {
+    outputs.push('- `workspace/projects/<project-slug>/research/research-contract.md`');
+    outputs.push('- `workspace/projects/<project-slug>/research/architecture-decision.md`');
+    outputs.push('- `workspace/projects/<project-slug>/research/source-map.md`');
+    outputs.push('- `workspace/projects/<project-slug>/research/evidence-store.md`');
+    outputs.push('- `workspace/projects/<project-slug>/research/question-ledger.md`');
+    outputs.push('- `workspace/projects/<project-slug>/research/claim-verification-map.md`');
+    outputs.push('- `workspace/projects/<project-slug>/research/hypothesis-map.md`');
+    outputs.push('- `workspace/projects/<project-slug>/research/red-team-critique.md`');
+    outputs.push('- `workspace/projects/<project-slug>/research/synthesis-plan.md`');
+    outputs.push('- `workspace/projects/<project-slug>/research/research-quality-control-plan.md`');
+    outputs.push('- `workspace/projects/<project-slug>/research/runtime-subagent-plan.md`');
+    outputs.push('- `workspace/projects/<project-slug>/research/subagent-orchestration.md`');
+    outputs.push('- `workspace/projects/<project-slug>/research/subagent-results/README.md`');
+    outputs.push('- `workspace/projects/<project-slug>/research/subagent-results/_template.md`');
+    outputs.push('- `workspace/projects/<project-slug>/research/subagent-results/ac-*.md` when native subagents actually run');
+    outputs.push('- `workspace/projects/<project-slug>/research/worker-packets/ac-*.md`');
+    outputs.push('- `workspace/projects/<project-slug>/research/retry-log.md`');
+    outputs.push('- `workspace/projects/<project-slug>/research/<topic>_deep-research.md`');
+    outputs.push('- `workspace/projects/<project-slug>/research/<topic>_research-qa.md`');
+  }
   if (chain.includes('instagram-growth-analyst')) {
     outputs.push('- `workspace/projects/<project-slug>/reports/instagram-growth-analysis-YYYY-MM-DD.md`');
     outputs.push('- optional experiment log from `computer/agents/work/instagram-growth-analyst/templates/experiment-log-template.md`');
   }
   if (chain.includes('report-writer')) outputs.push('- `workspace/projects/<project-slug>/reports/<topic>_report.md`');
+  if (chain.includes('web-builder')) {
+    outputs.push('- `workspace/projects/<project-slug>/web/<topic>/index.html`');
+    outputs.push('- `workspace/projects/<project-slug>/web/<topic>/styles.css`');
+    outputs.push('- `workspace/projects/<project-slug>/web/<topic>/app.js` when interaction is useful');
+    outputs.push('- `workspace/projects/<project-slug>/web/<topic>/README.md`');
+    outputs.push('- `workspace/projects/<project-slug>/web/<topic>/assets/`');
+    outputs.push('- `workspace/projects/<project-slug>/qa/<topic>_web-qa.md`');
+  }
   if (chain.includes('ppt-builder')) {
     outputs.push('- `workspace/projects/<project-slug>/presentations/<topic>_ppt-content-spec.md`');
     outputs.push('- `workspace/projects/<project-slug>/presentations/<topic>_ppt-design-spec.md`');

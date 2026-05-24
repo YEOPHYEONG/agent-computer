@@ -10,6 +10,8 @@ If an agent asks a question that can change the outcome, it must stop and wait f
 
 Do not ask and continue in the same turn.
 
+Do not convert an `Ask User Now` item into an assumption unless the user explicitly says to proceed under reasonable assumptions or not to ask. "The user asked me to do the task" is not enough approval to skip the gate for high-intent work.
+
 Bad:
 
 ```text
@@ -87,6 +89,13 @@ Behavior:
 - get confirmation before acting on a hypothesis
 - create a work contract after confirmation
 - ask again when evidence or direction materially changes the work
+
+Execution gate:
+
+- Gate state: `STOP_BEFORE_EXECUTION`
+- Allowed before answer: routing, chain contract, preflight-only notes
+- Blocked before answer: final research reports, strategy recommendations, decks, webpages, send packages, and new agent implementation
+- Resume only after the user answers or explicitly authorizes proceeding under named assumptions
 
 ## Socratic Questions
 

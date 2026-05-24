@@ -13,6 +13,8 @@ import { buildAgent } from './lib/agent-builder.mjs';
 import { formatContactAddResult, formatContactList, getEmailContact, listEmailContacts, saveEmailContactFromText, upsertEmailContact } from './lib/contacts.mjs';
 import { quickResearch, deepResearch, writeReport, writeEmailPackage, writeReflection } from './lib/research.mjs';
 import { buildPremiumDeckFromFile, planPremiumDeckFromFile } from './lib/deck.mjs';
+import { buildWebPageFromFile } from './lib/web.mjs';
+import { startPlanning } from './lib/planning.mjs';
 
 const root = workspaceRoot();
 const [command, ...args] = process.argv.slice(2);
@@ -29,9 +31,11 @@ Usage:
   node computer/tools/agent-computer.mjs curate-memory <file>
   node computer/tools/agent-computer.mjs qa <file>
   node computer/tools/agent-computer.mjs build-agent <name> [--category work|system|personal] [--with-tools]
+  node computer/tools/agent-computer.mjs planning --idea "..." [--project "..."]
   node computer/tools/agent-computer.mjs quick-research <file> [--question "..."]
-  node computer/tools/agent-computer.mjs deep-research <file> [--question "..."]
+  node computer/tools/agent-computer.mjs deep-research <file> [--question "..."] [--runtime codex|claude-code|fallback|auto] [--native-subagents] [--materialize-subagents]
   node computer/tools/agent-computer.mjs report <file> [--audience "..."]
+  node computer/tools/agent-computer.mjs web <file> [--title "..."]
   node computer/tools/agent-computer.mjs ppt <file> [--title "..."] [--max-slides 18] [--plan-only]
   node computer/tools/agent-computer.mjs email-contact add --alias "..." --email "..." [--name "..."] [--replace]
   node computer/tools/agent-computer.mjs email-contact save "person@example.com을 차니라는 연락처로 저장해줘"
@@ -145,6 +149,12 @@ async function main() {
     return;
   }
 
+  if (command === 'planning' || command === 'plan') {
+    const idea = option('--idea', args.join(' '));
+    printResult(await startPlanning(root, idea, { project: option('--project', '') }));
+    return;
+  }
+
   if (command === 'quick-research') {
     const file = firstValue();
     if (!file) throw new Error('quick-research requires a file path.');
@@ -155,7 +165,12 @@ async function main() {
   if (command === 'deep-research') {
     const file = firstValue();
     if (!file) throw new Error('deep-research requires a file path.');
-    printResult(await deepResearch(root, resolveWorkspacePath(root, file), { question: option('--question', '') }));
+    printResult(await deepResearch(root, resolveWorkspacePath(root, file), {
+      question: option('--question', ''),
+      runtime: option('--runtime', 'auto'),
+      nativeSubagents: has('--native-subagents'),
+      materializeSubagents: has('--materialize-subagents')
+    }));
     return;
   }
 
@@ -163,6 +178,16 @@ async function main() {
     const file = firstValue();
     if (!file) throw new Error('report requires a file path.');
     printResult(await writeReport(root, resolveWorkspacePath(root, file), { audience: option('--audience', 'general reader') }));
+    return;
+  }
+
+  if (command === 'web') {
+    const file = firstValue();
+    if (!file) throw new Error('web requires a report or source Markdown file path.');
+    const result = await buildWebPageFromFile(root, resolveWorkspacePath(root, file), { title: option('--title', '') });
+    const qa = await verifyFile(root, result.files[0], { request: 'Verify web-builder static HTML output.' });
+    result.files.push(qa.file);
+    printResult(result);
     return;
   }
 

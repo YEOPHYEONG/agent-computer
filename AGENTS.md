@@ -60,6 +60,23 @@ If an agent asks a question that can change the outcome, it must stop and wait f
 
 When an agent infers a hidden intent, present it as a hypothesis and confirm it before acting on it.
 
+For high intent-sensitivity work, do not convert `Ask User Now` questions into assumptions unless the user explicitly says to proceed under reasonable assumptions or not to ask. Phrases like "make a strategy", "deeply research", "build a deck", "make a web page", "create a new agent", or "position this product" should trigger an execution gate before final deliverables are created.
+
+Allowed before the user answers:
+
+- read routing and agent instructions
+- draft a chain contract
+- create preflight-only notes or intent checks
+
+Blocked before the user answers:
+
+- final research reports
+- strategy recommendations
+- PPT/deck files
+- web pages
+- email/send packages
+- new agent implementation
+
 Example:
 
 ```text
@@ -95,6 +112,26 @@ If a checkpoint asks an outcome-changing question, stop and wait for the user's 
 
 See `computer/docs/chain-checkpoints.md` for the shared chain policy.
 
+## Research Mode Rule
+
+Deep research should behave like a research operating loop, not a long answer generator.
+
+For serious research, `deep-dive-researcher` should define a research contract, choose Deep/Wide/Hybrid mode, set source policy, keep a question ledger, preserve an evidence store, verify consequential claims, and explain why the research stopped.
+
+Deep research produces its own full-depth Markdown report. It should not be replaced by a web page, deck, or email. When the user asks for HTML or an interactive web report, route the chain as `deep-dive-researcher -> report-writer -> web-builder -> qa-verifier`.
+
+Use:
+
+- Deep Mode for one hard question, strategic judgment, mechanisms, or conflicting evidence.
+- Wide Mode for many independent items that can share one rubric.
+- Hybrid Mode when broad coverage must feed a deep synthesis.
+
+Do not silently spawn runtime subagents. Use subagents only when the user explicitly asks for subagents, delegation, or parallel agent work, or when the user answers yes to a clear native-subagent approval gate proposed by Agent Computer. Otherwise, preserve Wide Mode with worker packets or sequential per-item notes.
+
+For Codex, project-scoped native custom agents live in `.codex/agents/ac-*.toml`. The matching markdown specs under `computer/agents/work/deep-dive-researcher/subagents/` are canonical product specs and fallback worker-packet sources, not automatic runtime registration by themselves.
+
+See `computer/docs/research-modes.md` for the shared research policy.
+
 ## Agent Computer Boundary Rule
 
 Agent Computer concepts map to workspace-native files and tools by default.
@@ -106,6 +143,7 @@ Agent Computer concepts map to workspace-native files and tools by default.
 | remember this | update workspace `computer/memory/`, not system memory or external note apps |
 | organize files | use `file-organizer` dry-run/manifests inside this workspace, not Finder operations |
 | make a PPT | use `ppt-builder` outputs under `workspace/projects/<slug>/presentations/`, not PowerPoint/Keynote app automation by default |
+| make HTML / web page | use `web-builder` outputs under `workspace/projects/<slug>/web/`, after research/report handoff when needed |
 | convert/read a document | use `document-ingestor` outputs under `workspace/projects/<slug>/converted/` |
 
 Host OS apps, browser profiles, external accounts, device contacts, calendars, email inboxes, publishing tools, payment tools, and account settings are external peripherals. Use them only when the user explicitly asks for that external system and grants the needed approval.
@@ -121,7 +159,7 @@ The answer should emphasize:
 - The user can ask in normal language.
 - The user normally looks at `workspace/inbox/` for source files and `workspace/projects/` for finished work.
 - Agent Computer routes requests to installed agent apps and chains them when useful.
-- Final outputs are saved under `workspace/projects/<project-slug>/{converted,research,reports,presentations,qa,assets,tasks}/`.
+- Final outputs are saved under `workspace/projects/<project-slug>/{converted,research,reports,presentations,web,qa,assets,tasks}/`.
 - Reports, PPT decks, converted docs, drafts, and QA logs are durable files, not just chat text.
 - External sending, host apps, account access, deletion, and real file moves require explicit approval.
 
@@ -142,7 +180,7 @@ Examples:
 - Organize this workspace by project. Show me the dry-run first.
 - Draft an email to Alex about the Agent Computer preview.
 
-Results usually live under workspace/projects/{project-name}/ in converted, research, reports, presentations, and qa folders.
+Results usually live under workspace/projects/{project-name}/ in converted, research, reports, presentations, web, and qa folders.
 ```
 
 ## New Request Isolation Rule
@@ -172,9 +210,11 @@ Agents are not just prompts. When an agent requires executable capability, its a
 | organize workspace files | `file-organizer` |
 | update memory | `memory-curator` |
 | verify output quality | `qa-verifier` |
+| plan an idea, service, content project, brand, campaign, community, or business | `planning-partner` |
 | deep research | `deep-dive-researcher` |
 | quick research | `quick-researcher` |
 | write reports | `report-writer` |
+| build HTML/web pages | `web-builder` |
 | build PPT decks | `ppt-builder` |
 | write email | `email-operator` |
 | reflective conversation | `friend-counselor` |
@@ -202,10 +242,11 @@ Agents are not just prompts. When an agent requires executable capability, its a
 - Operating layer: `computer/{agents,system,tools,templates,docs,examples,memory}` and runtime config files.
 - User output layer: `workspace/{projects,inbox,outputs,converted,reports,tasks,archive,trash}`.
 - Users should normally find final work by opening `workspace/projects/<project-slug>/`, not by browsing the operating layer.
-- Preferred project-first layout: `workspace/projects/<project-slug>/{source,converted,research,reports,presentations,qa,assets,tasks,archive}/`.
+- Preferred project-first layout: `workspace/projects/<project-slug>/{source,converted,research,reports,presentations,web,qa,assets,tasks,archive}/`.
 - Use `workspace/projects/<project-slug>/converted/` for source material transformed into agent-readable Markdown.
 - Use `workspace/projects/<project-slug>/reports/` for final reports and documents.
 - Use `workspace/projects/<project-slug>/presentations/` for decks, PPT specs, prototypes, and slide assets.
+- Use `workspace/projects/<project-slug>/web/` for local static HTML pages and interactive web reports.
 - Use `workspace/projects/<project-slug>/qa/` for QA reports and verification logs.
 - Use `workspace/archive/` for old but useful material.
 - Use `workspace/trash/` for discarded material.

@@ -22,6 +22,8 @@ For project-first organization, proposed destinations should follow:
 projects/<project-slug>/<work-type>/<filename>
 ```
 
+Common work types include `source`, `converted`, `research`, `reports`, `presentations`, `web`, `qa`, `assets`, `tasks`, and `archive`.
+
 
 ## Dry Run
 
