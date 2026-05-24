@@ -5,6 +5,7 @@
 - Project:
 - Page purpose:
 - Primary audience:
+- QA mode: `fast` / `standard` / `premium`
 - Local path:
 - Open file:
 
@@ -43,12 +44,15 @@
 
 ## QA Summary
 
+- QA manifest:
 - Desktop render:
 - Mobile render:
 - Console:
 - Overflow:
+- Critical interactions:
 - Keyboard/focus:
 - Source/caveat visibility:
+- Repair loops used:
 
 ## Limitations
 

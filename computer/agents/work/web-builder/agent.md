@@ -38,6 +38,29 @@ Default standards:
 - assets kept inside the project folder
 - no external publishing unless the user explicitly approves deployment
 
+## QA Mode Policy
+
+Use progressive QA. The goal is to catch real breakage quickly, not to run a premium visual audit on every local web page.
+
+Default mode is `standard`.
+
+| Mode | Use When | Required QA | Repair Loop Limit |
+|---|---|---|---|
+| `fast` | quick internal drafts, low-risk previews, early structure checks | file existence, JS syntax, asset paths, one desktop viewport, console errors, horizontal overflow | 1 |
+| `standard` | default for most local web reports and internal strategy pages | desktop `1440x900`, mobile `390x844`, console errors, asset load failures, horizontal overflow, critical interactions only, one contact sheet when practical | 2 |
+| `premium` | public launch pages, GitHub showcase pages, external client artifacts, fragile interactive pages | desktop/tablet/mobile viewports, all important interactions, screenshots/contact sheet, source/caveat visibility, keyboard/focus pass, deeper visual scan | 4 |
+
+Before browser QA, write or state a small QA manifest:
+
+- selected mode
+- required viewports
+- critical selectors
+- critical interactions
+- checks to skip unless premium
+- repair loop limit
+
+Do not expand `standard` into `premium` unless the user asks for public/external quality or a failure shows the page is fragile. If the repair loop limit is reached and non-critical issues remain, record them in QA notes instead of continuing indefinitely.
+
 ## Inputs Expected
 
 - `research/<topic>_deep-research.md`

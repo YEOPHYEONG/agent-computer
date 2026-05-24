@@ -9,7 +9,11 @@ export async function buildWebPageFromFile(root, filePath, options = {}) {
   const topic = safeTopicName(title);
   const project = inferProjectSlug(root, filePath, topic);
   const outDir = projectPath(root, project, 'web', topic);
+  const qaMode = normalizeQaMode(options.qaMode);
+  const qaPolicy = webQaPolicy(qaMode);
+  const qaManifestPath = projectPath(root, project, 'qa', `${topic}_web-qa-manifest.md`);
   const sourceRel = relative(userRoot(root), filePath).replace(/\\/g, '/');
+  const qaManifestRel = relative(userRoot(root), qaManifestPath).replace(/\\/g, '/');
   const toc = extractToc(source);
   const htmlBody = markdownToHtml(source);
 
@@ -22,12 +26,93 @@ export async function buildWebPageFromFile(root, filePath, options = {}) {
   await writeText(indexPath, renderIndex({ title, sourceRel, toc, htmlBody }));
   await writeText(cssPath, renderCss());
   await writeText(jsPath, renderJs());
-  await writeText(readmePath, renderReadme({ title, sourceRel, indexPath, cssPath, jsPath }));
+  await writeText(readmePath, renderReadme({ title, sourceRel, qaMode, qaManifestRel }));
+  await writeText(qaManifestPath, renderQaManifest({ title, sourceRel, qaMode, qaPolicy }));
 
   return {
-    files: [indexPath, cssPath, jsPath, readmePath],
+    files: [indexPath, cssPath, jsPath, readmePath, qaManifestPath],
     text: `Wrote local web artifact under ${outDir}`
   };
+}
+
+function normalizeQaMode(value) {
+  const mode = String(value || 'standard').toLowerCase();
+  if (['fast', 'standard', 'premium'].includes(mode)) return mode;
+  return 'standard';
+}
+
+function webQaPolicy(mode) {
+  const policies = {
+    fast: {
+      viewports: ['1440x900'],
+      criticalSelectors: ['body', 'header.hero', 'main.shell', 'article.report'],
+      criticalInteractions: ['scroll table of contents when present'],
+      requiredChecks: ['file existence', 'JS syntax', 'asset paths', 'console errors', 'horizontal overflow'],
+      skipUnlessPremium: ['tablet viewport', 'all-link crawl', 'full-page screenshot set', 'keyboard/focus pass', 'deep visual scan'],
+      screenshotPolicy: 'optional single desktop screenshot',
+      repairLoopLimit: 1
+    },
+    standard: {
+      viewports: ['1440x900', '390x844'],
+      criticalSelectors: ['body', 'header.hero', 'main.shell', 'article.report', '.toc'],
+      criticalInteractions: ['table of contents active state', 'critical tabs/filters/buttons if implemented'],
+      requiredChecks: ['file existence', 'JS syntax', 'asset paths', 'console errors', 'horizontal overflow', 'desktop render', 'mobile render'],
+      skipUnlessPremium: ['tablet viewport', 'all interactions', 'all-link crawl', 'keyboard/focus pass for every control', 'deep visual scan'],
+      screenshotPolicy: 'one contact sheet when practical',
+      repairLoopLimit: 2
+    },
+    premium: {
+      viewports: ['1440x900', '1024x768', '390x844'],
+      criticalSelectors: ['body', 'header.hero', 'main.shell', 'article.report', '.toc', 'interactive controls', 'source/caveat sections'],
+      criticalInteractions: ['all tabs', 'all filters', 'all accordions', 'source/reference controls', 'primary CTAs'],
+      requiredChecks: ['file existence', 'JS syntax', 'asset paths', 'console errors', 'horizontal overflow', 'desktop render', 'tablet render', 'mobile render', 'important interactions', 'keyboard/focus', 'source/caveat visibility'],
+      skipUnlessPremium: ['none'],
+      screenshotPolicy: 'screenshots or contact sheet required when a renderer is available',
+      repairLoopLimit: 4
+    }
+  };
+  return policies[mode] || policies.standard;
+}
+
+function renderQaManifest({ title, sourceRel, qaMode, qaPolicy }) {
+  return `# Web QA Manifest
+
+Page: ${title}
+
+## Source
+
+- Source report: \`${sourceRel}\`
+
+## Selected Mode
+
+- Mode: \`${qaMode}\`
+- Repair loop limit: ${qaPolicy.repairLoopLimit}
+- Screenshot policy: ${qaPolicy.screenshotPolicy}
+
+## Required Viewports
+
+${qaPolicy.viewports.map((viewport) => `- ${viewport}`).join('\n')}
+
+## Critical Selectors
+
+${qaPolicy.criticalSelectors.map((selector) => `- \`${selector}\``).join('\n')}
+
+## Critical Interactions
+
+${qaPolicy.criticalInteractions.map((interaction) => `- ${interaction}`).join('\n')}
+
+## Required Checks
+
+${qaPolicy.requiredChecks.map((check) => `- ${check}`).join('\n')}
+
+## Skip Unless Premium
+
+${qaPolicy.skipUnlessPremium.map((check) => `- ${check}`).join('\n')}
+
+## Repair Policy
+
+Fix critical breakage first: console errors, missing assets, non-rendering page, unusable navigation, or horizontal overflow. Stop after the repair loop limit and record remaining non-critical issues in the final QA note instead of continuing indefinitely.
+`;
 }
 
 function inferTitle(markdown) {
@@ -398,7 +483,7 @@ updateActiveLink();
 `;
 }
 
-function renderReadme({ title, sourceRel }) {
+function renderReadme({ title, sourceRel, qaMode, qaManifestRel }) {
   return `# ${title}
 
 This is a local static web artifact generated by \`web-builder\`.
@@ -420,6 +505,8 @@ The HTML page is a presentation layer. Keep the Markdown report as the durable r
 - Open \`index.html\` locally to inspect layout.
 - Check that source/caveat boundaries from the report are still visible.
 - If this page came from deep research, verify that the full Markdown research/report artifact also exists.
+- QA mode: \`${qaMode}\`
+- QA manifest: \`${qaManifestRel}\`
 `;
 }
 

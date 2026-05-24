@@ -1085,6 +1085,7 @@ function expectedOutputs(chain, request = '', helpRequest = false, routing = nul
     outputs.push('- `workspace/projects/<project-slug>/web/<topic>/app.js` when interaction is useful');
     outputs.push('- `workspace/projects/<project-slug>/web/<topic>/README.md`');
     outputs.push('- `workspace/projects/<project-slug>/web/<topic>/assets/`');
+    outputs.push('- `workspace/projects/<project-slug>/qa/<topic>_web-qa-manifest.md` with `fast`, `standard`, or `premium` QA scope');
     outputs.push('- `workspace/projects/<project-slug>/qa/<topic>_web-qa.md`');
   }
   if (chain.includes('ppt-builder')) {

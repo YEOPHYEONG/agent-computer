@@ -24,7 +24,13 @@ Use `web-builder` when the user asks for an HTML page, landing page, interactive
 Local helper:
 
 ```bash
-node computer/tools/agent-computer.mjs web workspace/projects/<project-slug>/reports/<topic>_report.md --title "Page Title"
+node computer/tools/agent-computer.mjs web workspace/projects/<project-slug>/reports/<topic>_report.md --title "Page Title" --qa-mode standard
 ```
 
-The helper creates a static HTML package from a Markdown source report. Runtime agents can then improve the layout, add interactions, render screenshots, and run visual QA.
+The helper creates a static HTML package from a Markdown source report and writes a web QA manifest. Runtime agents can then improve the layout, add interactions, render screenshots, and run browser QA according to the selected mode.
+
+QA modes:
+
+- `fast`: quick internal drafts. One desktop viewport, console/overflow basics, one repair loop.
+- `standard`: default. Desktop and mobile checks, critical interactions only, up to two repair loops.
+- `premium`: public/external artifacts. More viewports, screenshots/contact sheet, keyboard/focus and deeper visual scan, up to four repair loops.
