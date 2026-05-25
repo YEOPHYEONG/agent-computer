@@ -114,11 +114,32 @@ Convert this PDF into an agent-readable document, then create a report and prese
 
 Agent Computer should route the request to installed agents, create a project folder, save durable outputs under `workspace/projects/{project-slug}/`, and QA the result when appropriate.
 
-### Codex Native Subagents
+### Subagents For Hard Research
 
-Agent Computer includes project-scoped Codex custom agents under `.codex/agents/ac-*.toml` for deep research. These map to the canonical deep-dive specialist roles, such as `ac-intent-analyst`, `ac-research-architect`, `ac-market-mapper`, `ac-evidence-verifier`, `ac-research-quality-controller`, and `ac-report-composer`.
+For serious research, strategy, market, product, GTM, technical, or source-heavy work, explicitly allowing subagents can improve the result. The reason is simple: Agent Computer can split the work into specialist roles for intent analysis, research architecture, source scouting, market mapping, mechanism analysis, evidence verification, red-team critique, quality control, and final report composition.
 
-Codex does not spawn subagents automatically. For serious research, Agent Computer should ask for explicit approval before using native subagents. If approved, subagent findings should be saved or summarized under `workspace/projects/{project-slug}/research/subagent-results/ac-*.md` before the final report is composed.
+Try phrasing it like this:
+
+```text
+Use Agent Computer subagents if they would improve this research. Ask me before spawning native subagents, then save their findings under the project folder.
+```
+
+Subagents are not useful for every task. They add coordination overhead, so Agent Computer should use them mainly when multiple specialist viewpoints will materially improve the answer.
+
+| Agent app | Native subagent support | When it helps |
+|---|---|---|
+| `deep-dive-researcher` | Yes. Codex ships `.codex/agents/ac-*.toml` for the canonical research roles. | Serious market, strategy, product, technical, source-heavy, benchmark, or investment-adjacent research. |
+| `planning-partner` | Not directly by default. It can hand off to `deep-dive-researcher` when evidence or specialist research is needed. | Vague ideas where the real decision, audience, or direction is still unclear. |
+| `report-writer` | Usually no. It should consume research packages and composer drafts rather than spawn new research workers by itself. | Turning approved research, notes, or converted sources into a structured report. |
+| `web-builder` | No research subagents by default. It should build from an approved report or research package. | Turning a finished report into a local HTML page or interactive web report. |
+| `ppt-builder` | No research subagents by default. It should build from approved source material, specs, and QA gates. | Creating editable PPTX decks from known source content. |
+| `image-deck-maker` | No research subagents by default. It is `$imagegen`-native and should work from approved source content and locked slide text. | Creating full-slide generated image decks where visual impact matters more than editability. |
+| `visual-asset-maker` | No research subagents by default. It is `$imagegen`-native and should work from approved copy and creative direction. | Creating campaign images, thumbnails, social assets, launch visuals, and showcase images. |
+| `document-ingestor`, `file-organizer`, `memory-curator`, `email-operator`, `qa-verifier` | No native subagents by default. | These are usually better as focused single-agent workflows with clear approval gates. |
+
+Codex does not spawn subagents automatically. Agent Computer includes project-scoped Codex custom agents under `.codex/agents/ac-*.toml`, but for serious research it should ask for explicit approval before using them. If approved, subagent findings should be saved or summarized under `workspace/projects/{project-slug}/research/subagent-results/ac-*.md` before the final report is composed.
+
+Claude Code can use the same canonical Agent Computer role specs, but project-level Claude subagent files should be materialized only when the user explicitly approves that runtime setup.
 
 ### Optional Local CLI
 

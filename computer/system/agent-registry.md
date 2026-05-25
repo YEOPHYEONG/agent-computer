@@ -31,3 +31,18 @@
 | Agent | Path | Purpose |
 |---|---|---|
 | friend-counselor | `computer/agents/personal/friend-counselor` | Reflection and supportive conversation |
+
+## Native Subagent Support
+
+Native subagents are a runtime capability, not a property every agent app needs.
+
+| Agent app | Support level | Rule |
+|---|---|---|
+| deep-dive-researcher | Native Codex custom agents available via `.codex/agents/ac-*.toml` | Use for serious research only after explicit user approval or explicit user request. Save findings under `workspace/projects/<project-slug>/research/subagent-results/ac-*.md`. |
+| planning-partner | Handoff only | Clarify intent and hand off to `deep-dive-researcher` when specialist research is needed. |
+| report-writer | Consume research package | Do not spawn research subagents directly by default. Use the deep-dive research package, including `ac-report-composer.md` when present. |
+| web-builder | Consume approved source | Do not conduct deep research. Build from approved reports and research packages. |
+| ppt-builder | Consume approved source | Do not conduct deep research. Build from approved reports, specs, and source material. |
+| image-deck-maker | No research subagents by default | Generate full-slide visuals through `$imagegen` from approved source content and locked slide text. |
+| visual-asset-maker | No research subagents by default | Generate visual assets through `$imagegen` from approved copy and creative direction. |
+| document-ingestor / file-organizer / memory-curator / email-operator / qa-verifier | Single-agent by default | Keep workflows focused and approval-gated. |
