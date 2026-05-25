@@ -18,30 +18,38 @@ export function routeRequest(root, request) {
   const add = (agent) => {
     if (!chain.includes(agent)) chain.push(agent);
   };
-  const reuseRequested = /\b(continue|update|improve|revise|modify|edit|existing|previous|reuse)\b|\bbased on\b|이어|이어서|계속|수정|고쳐|개선|기존|(?:^|\s)(?:이전|전에|전에 만든|기반)|(?:compare|비교).*(?:\bexisting\b|\bprevious\b|기존|(?:^|\s)이전)|(?:\bexisting\b|\bprevious\b|기존|(?:^|\s)이전).*(?:compare|비교)/.test(text);
+  const reuseRequested = /\b(continue|update|improve|revise|modify|edit|existing|previous|reuse)\b|\bbased on\b|이어|이어서|계속|수정|고쳐|개선|기존|(?:^|\s)(?:이전|전에|전에 만든)(?:\s|$)|(?:기존|이전|방금|위|해당).{0,12}기반|(?:compare|비교).*(?:\bexisting\b|\bprevious\b|기존|(?:^|\s)이전)|(?:\bexisting\b|\bprevious\b|기존|(?:^|\s)이전).*(?:compare|비교)/.test(text);
   const helpRequest = isHowToUseRequest(request);
-  const wantsAgentBuild = /(agent|에이전트|agent\s*app|에이전트\s*앱).*(build|create|만들|생성)|(?:build|create|만들|생성|새로운|새).*(agent|에이전트|agent\s*app|에이전트\s*앱)/.test(text);
+  const rawWantsAgentBuild = /(agent|에이전트|agent\s*app|에이전트\s*앱).*(build|create|만들|생성)|(?:build|create|만들|생성|새로운|새).*(agent|에이전트|agent\s*app|에이전트\s*앱)/.test(text);
   const wantsWebArtifact = /(web\s*page|webpage|website|landing\s*page|html|interactive\s*web|web\s*report|웹페이지|웹\s*페이지|웹사이트|랜딩\s*페이지|인터랙티브\s*웹|html로|웹으로)/.test(text);
+  const wantsImageDeck = /(image\s*deck|image[-\s]*based\s*(deck|slides?|presentation)|full[-\s]*slide\s*image|generated\s*(deck|slides?|presentation)|visual\s*deck|이미지\s*덱|이미지\s*(?:기반|형|로)\s*(?:덱|ppt|피피티|프레젠테이션|장표|슬라이드)|풀\s*장표\s*이미지|통이미지\s*(?:덱|ppt|피피티|장표|슬라이드)|비주얼\s*(?:덱|프레젠테이션)|장표.*이미지\s*생성|이미지\s*생성.*장표)/.test(text);
+  const wantsVisualAsset = /(visual\s*asset|campaign\s*(asset|visual|image)|promo(?:tional)?\s*(asset|visual|image|graphic)|social\s*(asset|post|card|image|content)|instagram\s*(post|card|image|content|creative)|thumbnail|youtube\s*thumbnail|banner|poster|launch\s*(card|image|graphic|visual)|hero\s*(image|이미지)|readme\s*(hero|showcase)|github\s*hero\s*이미지|(?:x|twitter)\s*카드|open\s*graph|og\s*image|홍보물|홍보\s*(?:이미지|비주얼|에셋|소재)|캠페인\s*(?:이미지|비주얼|소재|에셋)|소셜\s*(?:이미지|콘텐츠|카드|소재)|인스타(?:그램)?\s*(?:콘텐츠|이미지|카드|포스트|게시물|소재)|썸네일|유튜브\s*썸네일|배너|포스터|런칭\s*(?:이미지|카드|비주얼)|히어로\s*이미지|쇼케이스\s*이미지|카드뉴스)/.test(text);
+  const wantsAgentBuild = rawWantsAgentBuild && !wantsImageDeck && !wantsVisualAsset;
   const transformsExistingReportToWeb = wantsWebArtifact && /\b(this|current|existing|previous)\s+(report|memo|document)\b|(?:이|그|위|방금|기존|이전|해당)\s*(?:보고서|리포트|문서)/.test(text);
-  const wantsPlanning = !wantsAgentBuild && /(idea|concept|planning|plan|planner|brainstorm|service concept|content concept|business idea|campaign|community idea|아이디어|기획|구상|플래닝|사업화|서비스\s*(?:만들|기획|구상)|콘텐츠\s*(?:만들|기획|구상)|브랜드\s*(?:기획|구상)|캠페인\s*(?:기획|구상)|커뮤니티\s*(?:기획|구상)|같이\s*생각|같이\s*기획)/.test(text);
+  const transformsExistingReportToImageDeck = wantsImageDeck && /\b(this|current|existing|previous)\s+(report|memo|document)\b|(?:이|그|위|방금|기존|이전|해당)\s*(?:보고서|리포트|문서)/.test(text);
+  const transformsExistingReportToVisualAsset = wantsVisualAsset && /\b(this|current|existing|previous)\s+(report|memo|document)\b|(?:이|그|위|방금|기존|이전|해당)\s*(?:보고서|리포트|문서)/.test(text);
+  const rawWantsPlanning = /(idea|concept|planning|plan|planner|brainstorm|service concept|content concept|business idea|campaign|community idea|아이디어|기획|구상|플래닝|사업화|서비스\s*(?:만들|기획|구상)|콘텐츠\s*(?:만들|기획|구상)|브랜드\s*(?:기획|구상)|캠페인\s*(?:기획|구상)|커뮤니티\s*(?:기획|구상)|같이\s*생각|같이\s*기획)/.test(text);
+  const wantsPlanning = !wantsAgentBuild && rawWantsPlanning && (!wantsVisualAsset || /(planning|plan|brainstorm|strategy|아이디어|기획|구상|플래닝|전략|같이\s*생각|같이\s*기획)/.test(text));
 
   const explicit = [
     'workspace-router', 'agent-builder', 'document-ingestor', 'file-organizer',
     'memory-curator', 'qa-verifier', 'quick-researcher', 'deep-dive-researcher',
-    'report-writer', 'web-builder', 'ppt-builder', 'email-operator', 'friend-counselor',
+    'report-writer', 'web-builder', 'ppt-builder', 'image-deck-maker', 'visual-asset-maker', 'email-operator', 'friend-counselor',
     'planning-partner',
     'instagram-growth-analyst'
   ].find((agent) => text.includes(agent));
   if (explicit) add(explicit);
 
-  if (/(pdf|pptx|docx|image|convert|ingest|markdown)/.test(text)) add('document-ingestor');
+  if (/(pdf|pptx|docx|convert|ingest|markdown)/.test(text) || (!wantsImageDeck && !wantsVisualAsset && /(image|이미지).*(convert|ingest|markdown|read|변환|문서|읽)/.test(text))) add('document-ingestor');
   if (wantsPlanning) add('planning-partner');
   if (!wantsAgentBuild && /(instagram|insta|인스타|인스타그램|reel|reels|릴스).*(growth|grow|analysis|analytics|audit|성장|분석|진단|감사)|(?:growth|grow|analysis|analytics|audit|성장|분석|진단).*(instagram|insta|인스타|인스타그램|reel|reels|릴스)/.test(text)) add('instagram-growth-analyst');
   if (!wantsAgentBuild && /(quick|fast|brief|간단|빠른)/.test(text) && /(research|조사|find|look up)/.test(text)) add('quick-researcher');
   if (!wantsAgentBuild && !chain.includes('instagram-growth-analyst') && /(deep|dive|research|리서치|조사|분석|비교|탐색|investigate)/.test(text)) add(text.includes('quick') ? 'quick-researcher' : 'deep-dive-researcher');
-  if (/(report|보고서|docx|memo|write up)/.test(text) && !transformsExistingReportToWeb) add('report-writer');
+  if (/(report|보고서|docx|memo|write up)/.test(text) && !transformsExistingReportToWeb && !transformsExistingReportToImageDeck && !transformsExistingReportToVisualAsset) add('report-writer');
   if (wantsWebArtifact) add('web-builder');
-  if (/(ppt|deck|slides|presentation|발표|슬라이드)/.test(text)) add('ppt-builder');
+  if (wantsImageDeck) add('image-deck-maker');
+  if (wantsVisualAsset) add('visual-asset-maker');
+  if (!wantsImageDeck && /(ppt|deck|slides|presentation|발표|슬라이드)/.test(text)) add('ppt-builder');
   if (/(email|mail|메일|reply|follow-up|outreach|contact|연락처|주소록)/.test(text)) add('email-operator');
   if (/(에게|한테).*(보내|발송|send)|(?:보내|발송|send).*(에게|한테|email|mail|메일)/.test(text)) add('email-operator');
   if (/(organize|cleanup|clean up|folder|index|archive|files?|workspace|폴더|파일|워크스페이스|구조|인덱스|아카이브).*(정리|정돈|분류|organize|cleanup|index|archive)|(?:정리|정돈|분류).*(폴더|파일|워크스페이스|구조|인덱스|산출물)/.test(text)) add('file-organizer');
@@ -51,6 +59,12 @@ export function routeRequest(root, request) {
   if (/(고민|상담|friend|counsel|reflect)/.test(text)) add('friend-counselor');
 
   if (chain.includes('ppt-builder') && !chain.includes('report-writer') && (chain.includes('deep-dive-researcher') || chain.includes('quick-researcher') || chain.includes('document-ingestor'))) {
+    add('report-writer');
+  }
+  if (chain.includes('image-deck-maker') && !chain.includes('report-writer') && (chain.includes('deep-dive-researcher') || chain.includes('quick-researcher') || chain.includes('document-ingestor') || chain.includes('planning-partner'))) {
+    add('report-writer');
+  }
+  if (chain.includes('visual-asset-maker') && !chain.includes('report-writer') && (chain.includes('deep-dive-researcher') || chain.includes('quick-researcher') || chain.includes('document-ingestor'))) {
     add('report-writer');
   }
   if (chain.includes('web-builder') && !chain.includes('report-writer') && (chain.includes('deep-dive-researcher') || chain.includes('quick-researcher') || chain.includes('document-ingestor'))) {
@@ -63,6 +77,8 @@ export function routeRequest(root, request) {
     chain.includes('report-writer')
     || chain.includes('web-builder')
     || chain.includes('ppt-builder')
+    || chain.includes('image-deck-maker')
+    || chain.includes('visual-asset-maker')
     || chain.includes('deep-dive-researcher')
     || chain.includes('quick-researcher')
     || chain.includes('planning-partner')
@@ -259,7 +275,7 @@ function intentDecision(request, chain, helpRequest) {
       stopIfAsked: 'yes'
     };
   }
-  if (chain.includes('ppt-builder') || chain.includes('deep-dive-researcher') || chain.includes('agent-builder') || chain.includes('friend-counselor') || chain.includes('planning-partner')) {
+  if (chain.includes('ppt-builder') || chain.includes('image-deck-maker') || chain.includes('visual-asset-maker') || chain.includes('deep-dive-researcher') || chain.includes('agent-builder') || chain.includes('friend-counselor') || chain.includes('planning-partner')) {
     return {
       sensitivity: 'high',
       surface: describeSurfaceRequest(chain),
@@ -318,7 +334,7 @@ function executionGateDecision(request, chain, intent, routing, researchMode, re
 
   const explicitAssumptionPermission = hasExplicitAssumptionPermission(request);
   const highIntent = intent.sensitivity === 'high';
-  const materialChain = chain.some((agent) => ['deep-dive-researcher', 'ppt-builder', 'agent-builder', 'friend-counselor', 'planning-partner'].includes(agent));
+  const materialChain = chain.some((agent) => ['deep-dive-researcher', 'ppt-builder', 'image-deck-maker', 'visual-asset-maker', 'agent-builder', 'friend-counselor', 'planning-partner'].includes(agent));
   if (highIntent && !explicitAssumptionPermission) {
     return {
       state: 'STOP_BEFORE_EXECUTION',
@@ -387,6 +403,12 @@ function hasExplicitAssumptionPermission(request) {
 }
 
 function primaryIntentGateQuestion(intent, researchMode, researchArchitecture, chain) {
+  if (chain.includes('deep-dive-researcher') && chain.includes('visual-asset-maker')) {
+    return 'Confirm the target channels/formats, exact copy or CTA to lock, and that this is draft asset creation only unless you explicitly approve posting or publishing.';
+  }
+  if (chain.includes('deep-dive-researcher') && chain.includes('image-deck-maker')) {
+    return 'Confirm that the final artifact should be a full-slide image deck, not an editable PPTX. Also confirm the audience and which exact text must be locked before image generation.';
+  }
   if (chain.includes('deep-dive-researcher') && (chain.includes('ppt-builder') || /presentation|deck|slides|ppt/i.test(intent.surface))) {
     return `I think this may be about ${intent.hiddenGoal} Confirm the audience and what the output should help them decide before I research and build the deck.`;
   }
@@ -400,6 +422,8 @@ function primaryIntentGateQuestion(intent, researchMode, researchArchitecture, c
     return `${intent.questions[0] || 'What decision or next action should this research support?'}${architecture}${mode} Is that direction correct?`;
   }
   if (chain.includes('ppt-builder')) return intent.questions[0] || 'Who is the audience, and what should they believe or do afterward?';
+  if (chain.includes('image-deck-maker')) return intent.questions[0] || 'Confirm whether this should be a full-slide image deck, not an editable PPTX, and approve the text-lock step before generation.';
+  if (chain.includes('visual-asset-maker')) return intent.questions[0] || 'Confirm the target channel, exact copy, and whether this is draft asset creation only, not posting or publishing.';
   if (chain.includes('agent-builder')) return intent.questions[0] || 'What job should this agent perform, and what tools or tests are required?';
   if (chain.includes('planning-partner')) return intent.questions[0] || 'What decision should this planning conversation help you make first?';
   if (chain.includes('friend-counselor')) return intent.questions[0] || 'Do you want reflection, practical next steps, or help naming the real tension first?';
@@ -643,14 +667,22 @@ function classifyChainType(chain) {
   if (chain.includes('planning-partner') && chain.includes('report-writer')) return 'planning-to-report';
   if (chain.includes('planning-partner') && chain.includes('web-builder')) return 'planning-to-web';
   if (chain.includes('planning-partner') && chain.includes('ppt-builder')) return 'planning-to-presentation';
+  if (chain.includes('planning-partner') && chain.includes('image-deck-maker')) return 'planning-to-image-deck';
+  if (chain.includes('planning-partner') && chain.includes('visual-asset-maker')) return 'planning-to-visual-assets';
   if (chain.includes('document-ingestor') && chain.includes('report-writer') && chain.includes('ppt-builder')) return 'document-to-report-to-presentation';
+  if (chain.includes('document-ingestor') && chain.includes('report-writer') && chain.includes('image-deck-maker')) return 'document-to-report-to-image-deck';
+  if (chain.includes('document-ingestor') && chain.includes('report-writer') && chain.includes('visual-asset-maker')) return 'document-to-report-to-visual-assets';
   if (chain.includes('deep-dive-researcher') && chain.includes('report-writer') && chain.includes('ppt-builder')) return 'deep-research-to-report-to-presentation';
+  if (chain.includes('deep-dive-researcher') && chain.includes('report-writer') && chain.includes('image-deck-maker')) return 'deep-research-to-report-to-image-deck';
+  if (chain.includes('deep-dive-researcher') && chain.includes('report-writer') && chain.includes('visual-asset-maker')) return 'deep-research-to-report-to-visual-assets';
   if (chain.includes('deep-dive-researcher') && chain.includes('report-writer') && chain.includes('web-builder')) return 'deep-research-to-report-to-web';
   if ((chain.includes('deep-dive-researcher') || chain.includes('quick-researcher')) && chain.includes('email-operator')) return 'research-to-email';
   if (chain.includes('agent-builder')) return 'agent-build-and-verify';
   if ((chain.includes('deep-dive-researcher') || chain.includes('quick-researcher')) && chain.includes('report-writer')) return 'research-to-report';
   if (chain.includes('report-writer') && chain.includes('web-builder')) return 'report-to-web';
   if (chain.includes('report-writer') && chain.includes('ppt-builder')) return 'report-to-presentation';
+  if (chain.includes('report-writer') && chain.includes('image-deck-maker')) return 'report-to-image-deck';
+  if (chain.includes('report-writer') && chain.includes('visual-asset-maker')) return 'report-to-visual-assets';
   return 'multi-agent workflow';
 }
 
@@ -660,6 +692,12 @@ function preflightCheckpoint(chain, intent, routing, request) {
     return 'Confirm audience/use case only if it materially changes the report or deck; otherwise ingest first and use the source as primary evidence.';
   }
   if (chain.includes('ppt-builder') && (chain.includes('deep-dive-researcher') || chain.includes('quick-researcher'))) {
+    return `Consolidate before execution: ${intent.questions.join(' / ')}`;
+  }
+  if (chain.includes('image-deck-maker') && (chain.includes('deep-dive-researcher') || chain.includes('quick-researcher'))) {
+    return `Consolidate before execution: ${intent.questions.join(' / ')}`;
+  }
+  if (chain.includes('visual-asset-maker') && (chain.includes('deep-dive-researcher') || chain.includes('quick-researcher') || chain.includes('planning-partner'))) {
     return `Consolidate before execution: ${intent.questions.join(' / ')}`;
   }
   if (chain.includes('web-builder') && (chain.includes('deep-dive-researcher') || chain.includes('quick-researcher'))) {
@@ -698,6 +736,8 @@ function handoffMap(chain) {
   add('planning-partner', 'report-writer', 'planning brief, question ledger, assumption map, blindspot review, and must-preserve decisions');
   add('planning-partner', 'web-builder', 'planning brief, audience, page purpose, concept narrative, caveats, and source boundaries');
   add('planning-partner', 'ppt-builder', 'planning brief, core narrative, audience, decisions, assumptions, and must-preserve caveats');
+  add('planning-partner', 'image-deck-maker', 'planning brief, approved source content, audience, deck purpose, visual direction, source boundaries, slide-specific content-fit structures, text coverage targets, and `$imagegen` pure-imagegen generation requirement');
+  add('planning-partner', 'visual-asset-maker', 'planning brief, approved copy, channel goal, audience, CTA, brand direction, source boundaries, and `$imagegen` generation requirement');
   if (chain.includes('document-ingestor') && chain.includes('ppt-builder') && !chain.includes('report-writer')) {
     handoffs.push('document-ingestor -> ppt-builder: converted source, visual review, conversion log, and source-fidelity limits');
   }
@@ -708,8 +748,14 @@ function handoffMap(chain) {
   add('report-writer', 'web-builder', 'report, evidence map, source links, target audience, page purpose, must-preserve claims, and caveats');
   add('deep-dive-researcher', 'web-builder', 'only through an approved research/report handoff; web-builder should not replace the MI-grade Markdown research report');
   add('report-writer', 'ppt-builder', 'report, evidence map, core narrative, audience/use case, must-preserve content, and visible caveats');
+  add('report-writer', 'image-deck-maker', 'approved report, core messages, allowed claims, caveats, exact text candidates, visual use case, slide-specific content-fit structures, text coverage targets, and `$imagegen` pure-imagegen generation requirement');
+  add('deep-dive-researcher', 'image-deck-maker', 'only through an approved research/report handoff; image-deck-maker should not research or invent strategy and must use `$imagegen` for final visuals and visible slide text by default');
+  add('report-writer', 'visual-asset-maker', 'approved report or brief, allowed claims, exact copy candidates, CTA, channel requirements, caveats, and `$imagegen` generation requirement');
+  add('deep-dive-researcher', 'visual-asset-maker', 'only through an approved research/report handoff; visual-asset-maker should not research or invent campaign claims and must use `$imagegen` for final visuals');
   add('web-builder', 'qa-verifier', 'HTML/CSS/JS files, README, assets, screenshots or preview notes, responsive checks, accessibility notes, console status, and limitations');
   add('ppt-builder', 'qa-verifier', 'PPTX, content spec, design spec, build plan, prototype/preview paths, PPT QA, and render limitations');
+  add('image-deck-maker', 'qa-verifier', 'deck contract, adaptive text-rich content outline, slide-specific content-fit structures, text coverage targets, design outline, text lock, image prompts, `$imagegen` generation audit, pure-imagegen/hybrid-overlay declaration, generated images, package files, image-deck QA notes, and editability warning');
+  add('visual-asset-maker', 'qa-verifier', 'asset contract, copy lock, creative direction, format plan, image prompts, `$imagegen` generation audit, generated/variant/final assets, visual asset QA notes, and publishing boundary');
   add('report-writer', 'qa-verifier', 'report, evidence map, assumptions, unresolved gaps, and source/reference notes');
   add('agent-builder', 'qa-verifier', 'agent folder, tools, templates, tests, examples, registry/doc updates, and smoke-test result or instructions');
   add('email-operator', 'qa-verifier', 'draft package, recipient resolution, assumptions, claim risks, send checklist, and connector/send status');
@@ -726,6 +772,12 @@ function directionChangeCheckpoint(chain) {
   }
   if (chain.includes('report-writer') && chain.includes('ppt-builder')) {
     return 'ask and wait if the deck narrative must materially diverge from the report narrative';
+  }
+  if (chain.includes('report-writer') && chain.includes('image-deck-maker')) {
+    return 'ask and wait if the image deck would change the report narrative, exact text, source caveats, or approved visual promise';
+  }
+  if (chain.includes('visual-asset-maker')) {
+    return 'ask and wait if the visual asset would change approved copy, channel, CTA, brand promise, source caveats, or publishing boundary';
   }
   if (chain.includes('report-writer') && chain.includes('web-builder')) {
     return 'ask and wait if the web page narrative must materially diverge from the research/report narrative';
@@ -751,6 +803,8 @@ function qualityGates(chain) {
   if (chain.includes('report-writer')) gates.push('report has a clear narrative, evidence map, caveats, and must-preserve content before downstream deck/email work');
   if (chain.includes('web-builder')) gates.push('web-builder receives an approved report/research handoff before implementing HTML; web copy preserves caveats and source boundaries');
   if (chain.includes('ppt-builder')) gates.push('content spec, design spec, build plan, prototype/preview, and editable PPTX checks run before final QA');
+  if (chain.includes('image-deck-maker')) gates.push('deck contract, adaptive text-rich content outline, slide-specific content-fit structures, text coverage targets, design concept, text lock, and prompt pack are complete before `$imagegen` generation; exact text is approved when risky; pure-imagegen is the default; local text overlays require explicit hybrid-overlay approval');
+  if (chain.includes('visual-asset-maker')) gates.push('asset contract, copy lock, creative direction, format plan, and prompt pack are complete before `$imagegen` generation; exact copy is approved when risky; local renderers are support tools only');
   if (chain.includes('email-operator')) gates.push('draft package includes recipient resolution, assumptions, unsupported-claim warnings, and send checklist');
   if (chain.includes('agent-builder')) gates.push('new agent includes docs, workflow, tools/scaffolds when needed, examples, tests, and registry updates');
   if (chain.includes('qa-verifier')) gates.push('qa-verifier checks the original request and chain contract, not only file format');
@@ -767,14 +821,20 @@ function finalQaCriteria(chain) {
   if (chain.includes('report-writer')) criteria.push('report structure, supported claims, and caveats');
   if (chain.includes('web-builder')) criteria.push('static HTML structure, responsive behavior, accessibility, source/caveat visibility, and no unsupported claim inflation');
   if (chain.includes('ppt-builder')) criteria.push('editable PPTX, no full-slide screenshot fallback, text/visual QA, and render limitations');
+  if (chain.includes('image-deck-maker')) criteria.push('image-based deck boundary, `$imagegen` generation audit, pure-imagegen text unless hybrid-overlay approved, no local-renderer substitution, text-lock approval, adaptive text-rich standard-slide content, content-fit structure quality, text coverage target suitability, generated image text accuracy, visual consistency, package validity, and editability warning');
+  if (chain.includes('visual-asset-maker')) criteria.push('visual asset boundary, `$imagegen` generation audit, no local-renderer substitution, copy-lock approval, dimensions/safe area, generated image text accuracy, brand fit, channel fit, and no accidental posting/publishing');
   if (chain.includes('email-operator')) criteria.push('claim safety, tone, next action, connector status, and no accidental send');
   if (chain.includes('agent-builder')) criteria.push('agent app completeness, executable capability, tests, and registry/docs updates');
   return criteria.join('; ');
 }
 
 function describeSurfaceRequest(chain) {
+  if (chain.includes('visual-asset-maker') && chain.includes('deep-dive-researcher')) return 'Research or synthesize a topic and turn approved conclusions into visual campaign/social assets.';
+  if (chain.includes('image-deck-maker') && chain.includes('deep-dive-researcher')) return 'Research a topic deeply and turn approved conclusions into a full-slide image deck.';
   if (chain.includes('ppt-builder') && chain.includes('deep-dive-researcher')) return 'Research a topic deeply and turn it into a presentation.';
   if (chain.includes('web-builder') && chain.includes('deep-dive-researcher')) return 'Research a topic deeply and turn it into a web page.';
+  if (chain.includes('visual-asset-maker')) return 'Create campaign, social, thumbnail, banner, launch, or showcase visual assets.';
+  if (chain.includes('image-deck-maker')) return 'Create a full-slide generated image deck.';
   if (chain.includes('ppt-builder')) return 'Create a presentation deck.';
   if (chain.includes('web-builder')) return 'Create a local static web page.';
   if (chain.includes('planning-partner')) return 'Develop an idea through multi-turn planning.';
@@ -789,6 +849,8 @@ function describeSurfaceRequest(chain) {
 }
 
 function inferHiddenGoal(text, chain) {
+  if (chain.includes('visual-asset-maker')) return 'Possibly create channel-ready marketing assets, not just a pretty image; confirm channel, copy, CTA, brand direction, and publishing boundary.';
+  if (chain.includes('image-deck-maker')) return 'Possibly create a high-impact visual artifact, not an editable or source-dense deck; confirm image-based output and text-lock needs.';
   if (chain.includes('ppt-builder') && /(사례|case|examples?)/.test(text) && /(공식|formula|성공|success|전략|strategy)/.test(text)) {
     return 'Possibly derive a reusable success formula, not just collect examples.';
   }
@@ -806,6 +868,20 @@ function inferHiddenGoal(text, chain) {
 }
 
 function intentQuestions(text, chain) {
+  if (chain.includes('visual-asset-maker') && chain.includes('deep-dive-researcher')) {
+    return [
+      'Which channels and formats should the final visual assets target?',
+      'What exact copy, CTA, product name, or claim must be locked before image generation?',
+      'Should this produce draft assets only, with no posting or publishing?'
+    ];
+  }
+  if (chain.includes('image-deck-maker') && chain.includes('deep-dive-researcher')) {
+    return [
+      'Is the final deck meant to be a full-slide image deck rather than an editable PPTX?',
+      'Who is the audience, and what should the image deck make them feel, believe, or do?',
+      'Should exact text, Korean copy, numbers, or brand claims be locked for approval before image generation?'
+    ];
+  }
   if (chain.includes('web-builder') && chain.includes('deep-dive-researcher')) {
     return [
       'Who is the web page for, and what should the reader do after opening it?',
@@ -844,6 +920,20 @@ function intentQuestions(text, chain) {
     return [
       'Who is the audience, and what should they believe or do afterward?',
       'Should the deck be persuasive, educational, executive, or execution-focused?'
+    ];
+  }
+  if (chain.includes('image-deck-maker')) {
+    return [
+      'Is this intentionally a full-slide image deck, not an editable PPTX?',
+      'What exact text, if any, must appear inside the generated slide images?',
+      'What audience, mood, and design concept should guide the visual system?'
+    ];
+  }
+  if (chain.includes('visual-asset-maker')) {
+    return [
+      'Which channel and size should this asset target?',
+      'What exact copy or CTA must appear inside the generated image?',
+      'What brand mood, visual direction, and publishing boundary should I follow?'
     ];
   }
   if (chain.includes('report-writer')) {
@@ -888,6 +978,8 @@ function sortChain(chain) {
     'report-writer',
     'web-builder',
     'ppt-builder',
+    'image-deck-maker',
+    'visual-asset-maker',
     'email-operator',
     'file-organizer',
     'memory-curator',
@@ -1097,6 +1189,29 @@ function expectedOutputs(chain, request = '', helpRequest = false, routing = nul
     outputs.push('- deck-specific assets/layout work under `workspace/projects/<project-slug>/presentations/assets/` and `workspace/projects/<project-slug>/presentations/layout/` when needed');
     outputs.push('- approved premium PPTX reconstruction: `workspace/projects/<project-slug>/presentations/<topic>.pptx` with editable PPT elements');
     outputs.push('- `workspace/projects/<project-slug>/qa/<topic>_ppt-qa.md`');
+  }
+  if (chain.includes('image-deck-maker')) {
+    outputs.push('- `workspace/projects/<project-slug>/presentations/image-deck/deck-contract.md`');
+    outputs.push('- `workspace/projects/<project-slug>/presentations/image-deck/content-outline.md` with slide-specific content-fit structure and text coverage target');
+    outputs.push('- `workspace/projects/<project-slug>/presentations/image-deck/design-outline.md` with `Deck Design Concept`');
+    outputs.push('- `workspace/projects/<project-slug>/presentations/image-deck/text-lock.md` and user approval when risky exact text is used');
+    outputs.push('- `workspace/projects/<project-slug>/presentations/image-deck/image-prompts.md`');
+    outputs.push('- `$imagegen` generation audit proving final visuals and visible slide text used `$imagegen` unless `hybrid-overlay` was explicitly approved');
+    outputs.push('- generated slide images under `workspace/projects/<project-slug>/presentations/image-deck/generated/` when `$imagegen` generation runs');
+    outputs.push('- optional image-based PPTX/PDF under `workspace/projects/<project-slug>/presentations/image-deck/output/`');
+    outputs.push('- `workspace/projects/<project-slug>/qa/<topic>_image-deck-qa.md`');
+  }
+  if (chain.includes('visual-asset-maker')) {
+    outputs.push('- `workspace/projects/<project-slug>/assets/visual-assets/asset-contract.md`');
+    outputs.push('- `workspace/projects/<project-slug>/assets/visual-assets/copy-lock.md` and user approval when risky exact copy is used');
+    outputs.push('- `workspace/projects/<project-slug>/assets/visual-assets/creative-direction.md`');
+    outputs.push('- `workspace/projects/<project-slug>/assets/visual-assets/format-plan.md`');
+    outputs.push('- `workspace/projects/<project-slug>/assets/visual-assets/image-prompts.md`');
+    outputs.push('- `$imagegen` generation audit proving final visuals used `$imagegen`, not HTML/SVG/CSS/canvas as the main generator');
+    outputs.push('- generated assets under `workspace/projects/<project-slug>/assets/visual-assets/generated/` when `$imagegen` generation runs');
+    outputs.push('- variants under `workspace/projects/<project-slug>/assets/visual-assets/variants/`');
+    outputs.push('- selected final assets under `workspace/projects/<project-slug>/assets/visual-assets/final/`');
+    outputs.push('- `workspace/projects/<project-slug>/qa/<topic>_visual-asset-qa.md`');
   }
   if (chain.includes('email-operator')) {
     if (isContactOnlyRequest(request)) {

@@ -878,7 +878,7 @@ function renderDownstreamHandoff(mode, architecture, topic, claimReviews) {
   const safe = claimReviews.filter((claim) => claim.status === 'Supported' || claim.status === 'Partially supported').slice(0, 4);
   const risky = claimReviews.filter((claim) => claim.status !== 'Supported').slice(0, 4);
   return [
-    `- Recommended next agent: report-writer for a decision-ready report; web-builder only after the full report exists if the user asks for HTML/web output; ppt-builder if the user asks for a deck; email-operator only after claim-safety review.`,
+    `- Recommended next agent: report-writer for a decision-ready report; web-builder only after the full report exists if the user asks for HTML/web output; ppt-builder if the user asks for an editable deck; image-deck-maker if the user asks for a full-slide generated image deck; visual-asset-maker if the user asks for campaign/social/thumbnail assets; email-operator only after claim-safety review.`,
     `- Research mode to preserve: ${mode.mode}.`,
     `- Research architecture to preserve: ${architecture.name}.`,
     `- Artifacts to hand off: \`research-contract.md\`, \`architecture-decision.md\`, \`source-map.md\`, \`evidence-store.md\`, \`claim-verification-map.md\`, \`question-ledger.md\`, \`hypothesis-map.md\`, \`red-team-critique.md\`, \`synthesis-plan.md\`, and \`${topic}_deep-research.md\`.`,
@@ -2041,6 +2041,8 @@ function renderReportRecommendations(project, claimReviews) {
   }
   lines.push('- Use `web-builder` if this report needs to become a local HTML page or interactive web report.');
   lines.push('- Use `ppt-builder` if this report needs to become a deck.');
+  lines.push('- Use `image-deck-maker` if this report needs to become a full-slide generated image deck.');
+  lines.push('- Use `visual-asset-maker` if this report needs to become campaign, social, thumbnail, launch, or showcase visual assets.');
   return lines.join('\n');
 }
 

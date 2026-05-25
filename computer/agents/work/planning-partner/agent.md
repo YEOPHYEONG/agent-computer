@@ -103,6 +103,8 @@ When planning needs another agent:
 - `report-writer`: turn planning and research into a formal report
 - `web-builder`: create a local HTML concept page or interactive planning artifact
 - `ppt-builder`: create a deck from the planning brief
+- `image-deck-maker`: create a full-slide generated image deck from the planning brief
+- `visual-asset-maker`: create campaign, social, thumbnail, launch, or showcase images from approved copy and creative direction
 - `email-operator`: write outreach, interview, partnership, or launch emails
 - `qa-verifier`: verify planning artifacts and downstream outputs
 

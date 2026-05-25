@@ -10,7 +10,7 @@
 
 - Final Markdown standard: market-intelligence / corporate research report
 - Downstream web/deck/email requested: yes / no
-- If yes, downstream agent: `web-builder` / `ppt-builder` / `email-operator`
+- If yes, downstream agent: `web-builder` / `ppt-builder` / `image-deck-maker` / `visual-asset-maker` / `email-operator`
 - Research report stands alone before downstream artifact: yes / no
 
 

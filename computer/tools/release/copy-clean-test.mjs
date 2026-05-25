@@ -92,6 +92,9 @@ async function scanCopiedRelease(start) {
   const files = await listFiles(start);
   const errors = [];
   for (const rel of files) {
+    if (hasKnownDuplicateArtifact(rel)) {
+      errors.push(`${rel}: duplicate-copy artifact must not be included in clean test copies.`);
+    }
     if (/^workspace\/(inbox|projects|reports|converted|outputs|tasks|archive|trash)\/.+/.test(rel) && !/\/README\.md$/.test(rel)) {
       errors.push(`${rel}: generated user artifact must not be included in clean test copies.`);
     }
@@ -100,6 +103,29 @@ async function scanCopiedRelease(start) {
     }
   }
   return { fileCount: files.length, errors };
+}
+
+function hasKnownDuplicateArtifact(rel) {
+  const duplicateDirs = ['.codex', '.github', 'computer', 'workspace'];
+  const duplicateFiles = [
+    '.gitignore',
+    'AGENTS',
+    'CHANGELOG',
+    'CLAUDE',
+    'CONTRIBUTING',
+    'LICENSE',
+    'README',
+    'RELEASE_CHECKLIST',
+    'RELEASE_MANIFEST',
+    'SECURITY',
+    'START_HERE',
+    'package'
+  ];
+  const segments = rel.split('/');
+  return segments.some((segment) => {
+    if (duplicateDirs.some((name) => segment === `${name} 2`)) return true;
+    return duplicateFiles.some((name) => segment === `${name} 2` || segment.startsWith(`${name} 2.`));
+  });
 }
 
 async function listFiles(start) {

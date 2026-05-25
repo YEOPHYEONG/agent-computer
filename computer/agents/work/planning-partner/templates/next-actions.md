@@ -19,5 +19,6 @@
 - report-writer:
 - web-builder:
 - ppt-builder:
+- image-deck-maker:
+- visual-asset-maker:
 - email-operator:
-

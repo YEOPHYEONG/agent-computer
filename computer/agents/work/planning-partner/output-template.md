@@ -48,6 +48,8 @@ Ask only if the answer changes the next planning move.
 - To `report-writer`:
 - To `web-builder`:
 - To `ppt-builder`:
+- To `image-deck-maker`:
+- To `visual-asset-maker`:
 - To `email-operator`:
 
 ## Saved Artifacts

@@ -21,6 +21,8 @@
 | report-writer | `computer/agents/work/report-writer` | Reports and documents |
 | web-builder | `computer/agents/work/web-builder` | Local static HTML pages and interactive web reports |
 | ppt-builder | `computer/agents/work/ppt-builder` | Editable PPT decks |
+| image-deck-maker | `computer/agents/work/image-deck-maker` | `$imagegen`-native full-slide generated image decks from approved source content |
+| visual-asset-maker | `computer/agents/work/visual-asset-maker` | `$imagegen`-native campaign, social, thumbnail, banner, launch, and showcase images from approved briefs and copy |
 | email-operator | `computer/agents/work/email-operator` | Email drafts and follow-ups |
 | instagram-growth-analyst | `computer/agents/work/instagram-growth-analyst` | Analyze local Instagram performance data and produce growth experiments without external account access |
 

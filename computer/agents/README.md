@@ -14,7 +14,9 @@ Examples:
 - Email means draft package first; real sending needs approval and connector.
 - File cleanup means `file-organizer` dry-run/manifests.
 - Memory means workspace `computer/memory/`.
-- Deck creation means `ppt-builder` project artifacts.
+- Editable deck creation means `ppt-builder` project artifacts.
+- Full-slide generated image decks mean `image-deck-maker` project artifacts, with final visuals and visible slide text generated through `$imagegen` by default.
+- Campaign/social/thumbnail visual assets mean `visual-asset-maker` project artifacts, with final visuals generated through `$imagegen`.
 
 ## Project Isolation
 
@@ -112,6 +114,8 @@ Work:
 - `report-writer`
 - `web-builder`
 - `ppt-builder`
+- `image-deck-maker`
+- `visual-asset-maker`
 - `email-operator`
 - `instagram-growth-analyst`
 

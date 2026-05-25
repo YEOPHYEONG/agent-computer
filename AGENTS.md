@@ -144,11 +144,43 @@ Agent Computer concepts map to workspace-native files and tools by default.
 | organize files | use `file-organizer` dry-run/manifests inside this workspace, not Finder operations |
 | make a PPT | use `ppt-builder` outputs under `workspace/projects/<slug>/presentations/`, not PowerPoint/Keynote app automation by default |
 | make HTML / web page | use `web-builder` outputs under `workspace/projects/<slug>/web/`, after research/report handoff when needed |
+| make a full-slide image deck | use `image-deck-maker` outputs under `workspace/projects/<slug>/presentations/image-deck/`; final visuals must use `$imagegen`; use `ppt-builder` instead when editability matters |
+| make a promotional/social/thumbnail image | use `visual-asset-maker` outputs under `workspace/projects/<slug>/assets/visual-assets/`; final visuals must use `$imagegen`; do not post or publish without approval |
 | convert/read a document | use `document-ingestor` outputs under `workspace/projects/<slug>/converted/` |
 
 Host OS apps, browser profiles, external accounts, device contacts, calendars, email inboxes, publishing tools, payment tools, and account settings are external peripherals. Use them only when the user explicitly asks for that external system and grants the needed approval.
 
 Never reinterpret an Agent Computer-native request as a host-app operation just because the host app exists.
+
+## Imagegen-Native Creative Rule
+
+`image-deck-maker` and `visual-asset-maker` are `$imagegen`-native agents.
+
+For these agents, final visual generation must use the Codex `$imagegen` skill / built-in `image_gen` tool. HTML, CSS, SVG, canvas, Sharp, browser screenshots, or local render scripts are support tools only.
+
+For `image-deck-maker`, the default production mode is `pure-imagegen`: visible slide text, labels, content blocks, diagrams, and visual hierarchy should be generated inside the final slide image by `$imagegen`.
+
+Use `hybrid-overlay` only when the user explicitly approves local text/copy overlays for accuracy. Document that tradeoff in the generation audit.
+
+Allowed support use:
+
+- locked text/copy overlays
+- safe-area guides
+- contact sheets
+- dimension checks
+- package assembly
+- visual QA
+
+Not allowed:
+
+- using HTML/CSS/SVG/canvas/Sharp as the main creative generation engine
+- treating a locally rendered slide/page as a final imagegen deck or generated marketing asset
+- adding visible image-deck slide text by local overlay without explicit `hybrid-overlay` approval
+- producing mostly title/subtitle-only image deck slides when the source calls for substantive content
+- forcing one rigid text/layout structure across image-deck slides instead of choosing a content-fit structure per slide
+- creating project-local one-off renderers that bypass `$imagegen`
+
+If `$imagegen` is unavailable, stop and report the blocker. Do not silently substitute local rendering.
 
 ## Usage Help Response Rule
 
@@ -216,6 +248,8 @@ Agents are not just prompts. When an agent requires executable capability, its a
 | write reports | `report-writer` |
 | build HTML/web pages | `web-builder` |
 | build PPT decks | `ppt-builder` |
+| build full-slide image decks | `image-deck-maker` |
+| build visual campaign/social/thumbnail assets | `visual-asset-maker` |
 | write email | `email-operator` |
 | reflective conversation | `friend-counselor` |
 

@@ -187,6 +187,8 @@ If a related project exists, the agent may mention it as optional context, but s
 - `planning-partner`: multi-turn planning partner for ideas, services, content, brands, campaigns, communities, and projects
 - `report-writer`: structured reports and documents
 - `ppt-builder`: high-quality PPT workflow with content/design specs, prototype QA, and editable reconstruction gates
+- `image-deck-maker`: `$imagegen`-native, text-rich full-slide generated image decks from approved source content
+- `visual-asset-maker`: `$imagegen`-native campaign, social, thumbnail, banner, launch, and showcase images from approved briefs and copy
 - `web-builder`: local static HTML pages and interactive web reports from approved source material
 - `email-operator`: emails, replies, and follow-ups
 

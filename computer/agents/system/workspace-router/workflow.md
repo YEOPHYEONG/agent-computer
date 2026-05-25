@@ -87,6 +87,14 @@
 - Research that must be current or externally factual: `quick-researcher` or `deep-dive-researcher` -> `qa-verifier`.
 - Research to local HTML/web page: `deep-dive-researcher` -> `report-writer` -> `web-builder` -> `qa-verifier`.
 - HTML/web page from an approved report: `web-builder` -> `qa-verifier`.
+- Approved report/source to full-slide image deck: `image-deck-maker` -> `qa-verifier`.
+- Research to full-slide image deck: `deep-dive-researcher` -> `report-writer` -> `image-deck-maker` -> `qa-verifier`.
+- Approved brief/copy to visual assets: `visual-asset-maker` -> `qa-verifier`.
+- Research or strategy to visual assets: upstream research/planning/report agent -> `visual-asset-maker` -> `qa-verifier`.
+
+Creative image routes are `$imagegen`-native. `image-deck-maker` and `visual-asset-maker` must use `$imagegen` / built-in `image_gen` for final visual generation. HTML/SVG/CSS/canvas/Sharp/browser rendering is allowed only for explicitly approved overlays, contact sheets, package assembly, and QA.
+
+For `image-deck-maker`, default to `pure-imagegen`: visible slide text is generated inside the final image by `$imagegen`, and standard slides should contain enough visible content to stand alone. Each slide should choose a content-fit structure and text coverage target. Use `hybrid-overlay` only after explicit user approval.
 
 ## Chain Checkpoint Defaults
 
@@ -107,6 +115,26 @@ Continuation work:
 ```
 
 Route to `ppt-builder`. If "이걸" is unclear, ask which source to use and wait.
+
+Image deck continuation:
+
+```text
+이 보고서로 통이미지 장표 덱 만들어줘.
+```
+
+Route to `image-deck-maker`, not `ppt-builder`. Confirm the user wants a mostly non-editable image-based deck and require a text-lock gate before generation.
+
+Also state that final slide visuals and visible slide text should be generated with `$imagegen` by default. Local HTML/SVG text overlay requires explicit `hybrid-overlay` approval and cannot be the main creative engine. Standard content slides should not be title/subtitle-only, and should use content-fit structures instead of one fixed template.
+
+Visual asset continuation:
+
+```text
+Agent Computer 런칭용 X 카드랑 GitHub hero 이미지 만들어줘.
+```
+
+Route to `visual-asset-maker`. Confirm channel, format, copy-lock, and whether any posting/publishing is requested. Draft assets only by default.
+
+Also state that final assets must be generated with `$imagegen`; local HTML/SVG rendering may support copy overlay or QA but cannot be the main creative engine.
 
 Email continuation:
 

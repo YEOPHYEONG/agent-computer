@@ -205,6 +205,7 @@ async function scanRelease() {
     const stat = await fs.stat(full);
 
     if (rel.includes('.DS_Store')) errors.push(`${rel}: .DS_Store must not be included.`);
+    if (hasKnownDuplicateArtifact(rel)) errors.push(`${rel}: duplicate-copy artifact must not be included.`);
     if (rel.startsWith('computer/memory/private/')) errors.push(`${rel}: private memory must not be included.`);
     if (/^computer\/memory\/(context|user-preferences|pattern-library|memory-update-log)\.md$/.test(rel)) {
       errors.push(`${rel}: real memory file must not be included.`);
@@ -251,6 +252,29 @@ function isTextLike(rel) {
 
 function isAllowedExampleEmail(email) {
   return /@(example\.com|example\.org|example\.net)$/i.test(email);
+}
+
+function hasKnownDuplicateArtifact(rel) {
+  const duplicateDirs = ['.codex', '.github', 'computer', 'workspace'];
+  const duplicateFiles = [
+    '.gitignore',
+    'AGENTS',
+    'CHANGELOG',
+    'CLAUDE',
+    'CONTRIBUTING',
+    'LICENSE',
+    'README',
+    'RELEASE_CHECKLIST',
+    'RELEASE_MANIFEST',
+    'SECURITY',
+    'START_HERE',
+    'package'
+  ];
+  const segments = rel.split('/');
+  return segments.some((segment) => {
+    if (duplicateDirs.some((name) => segment === `${name} 2`)) return true;
+    return duplicateFiles.some((name) => segment === `${name} 2` || segment.startsWith(`${name} 2.`));
+  });
 }
 
 function runSmokeChecks() {
