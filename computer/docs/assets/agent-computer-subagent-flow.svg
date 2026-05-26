@@ -1,0 +1,74 @@
+<svg width="1600" height="760" viewBox="0 0 1600 760" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Agent Computer subagent research flow</title>
+  <desc id="desc">A visual explanation of how Agent Computer uses Codex native subagents for serious deep research.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1600" y2="760" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0B1020"/>
+      <stop offset="0.55" stop-color="#101827"/>
+      <stop offset="1" stop-color="#08251F"/>
+    </linearGradient>
+    <filter id="shadow" x="-18%" y="-18%" width="136%" height="136%">
+      <feDropShadow dx="0" dy="18" stdDeviation="20" flood-color="#000000" flood-opacity="0.28"/>
+    </filter>
+    <style>
+      .title { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 52px; font-weight: 850; letter-spacing: 0; fill: #F8FAFC; }
+      .sub { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 23px; font-weight: 600; letter-spacing: 0; fill: #B6C3D5; }
+      .label { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 23px; font-weight: 850; letter-spacing: 0; fill: #F8FAFC; }
+      .small { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 17px; font-weight: 650; letter-spacing: 0; fill: #C9D4E5; }
+      .mono { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; font-size: 16px; font-weight: 650; letter-spacing: 0; fill: #B8F1D2; }
+    </style>
+  </defs>
+  <rect width="1600" height="760" fill="url(#bg)"/>
+  <path d="M0 600C188 504 334 528 515 585C750 659 950 642 1154 540C1323 456 1466 482 1600 552V760H0V600Z" fill="#A6F3C5" opacity="0.06"/>
+
+  <text x="88" y="96" class="title">Subagents make hard research sharper.</text>
+  <text x="90" y="137" class="sub">For serious research, Agent Computer can split the problem into specialist roles, then compose one final report.</text>
+
+  <g filter="url(#shadow)">
+    <rect x="90" y="220" width="270" height="226" rx="26" fill="#172033" stroke="#2E3A54"/>
+    <text x="126" y="274" class="label">Approval gate</text>
+    <text x="126" y="314" class="small">Ask before spawning</text>
+    <text x="126" y="344" class="small">native runtime agents.</text>
+    <rect x="126" y="382" width="174" height="38" rx="11" fill="#232D42"/>
+    <text x="144" y="407" class="mono">yes / no</text>
+  </g>
+
+  <path d="M386 332H440" stroke="#8BD3FF" stroke-width="6" stroke-linecap="round"/>
+  <path d="M426 315L444 332L426 349" stroke="#8BD3FF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <g filter="url(#shadow)">
+    <rect x="468" y="180" width="592" height="306" rx="30" fill="#101826" stroke="#30405D"/>
+    <text x="510" y="236" class="label">Wave-based specialist work</text>
+    <g transform="translate(510 276)">
+      <rect width="222" height="46" rx="13" fill="#132A37" stroke="#315A82"/>
+      <text x="20" y="30" class="mono">ac-intent-analyst</text>
+      <rect x="254" width="244" height="46" rx="13" fill="#132A37" stroke="#315A82"/>
+      <text x="274" y="30" class="mono">ac-research-architect</text>
+      <rect y="68" width="194" height="46" rx="13" fill="#102B21" stroke="#3A7C5B"/>
+      <text x="20" y="98" class="mono">ac-source-scout</text>
+      <rect x="226" y="68" width="208" height="46" rx="13" fill="#102B21" stroke="#3A7C5B"/>
+      <text x="246" y="98" class="mono">ac-market-mapper</text>
+      <rect y="136" width="242" height="46" rx="13" fill="#2B2518" stroke="#9F7E35"/>
+      <text x="20" y="166" class="mono">ac-evidence-verifier</text>
+      <rect x="274" y="136" width="214" height="46" rx="13" fill="#2B1F25" stroke="#A35F72"/>
+      <text x="294" y="166" class="mono">ac-red-team-critic</text>
+    </g>
+  </g>
+
+  <path d="M1084 332H1138" stroke="#A6F3C5" stroke-width="6" stroke-linecap="round"/>
+  <path d="M1124 315L1142 332L1124 349" stroke="#A6F3C5" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <g filter="url(#shadow)">
+    <rect x="1168" y="220" width="342" height="226" rx="26" fill="#102B21" stroke="#3A7C5B"/>
+    <text x="1206" y="274" class="label">Final synthesis</text>
+    <text x="1206" y="314" class="small">Quality controller checks gaps.</text>
+    <text x="1206" y="344" class="small">Report composer drafts.</text>
+    <text x="1206" y="374" class="small">Research director accepts.</text>
+  </g>
+
+  <g transform="translate(408 574)" filter="url(#shadow)">
+    <rect width="784" height="88" rx="22" fill="#151D2C" stroke="#2E3A54"/>
+    <text x="36" y="37" class="small">Saved under the project:</text>
+    <text x="36" y="65" class="mono">workspace/projects/{project}/research/subagent-results/ac-*.md</text>
+  </g>
+</svg>

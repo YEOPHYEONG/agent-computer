@@ -1,36 +1,73 @@
 # Agent Computer
 
-Stop losing agent work in chat history. Boot an Agent Computer.
+Turn Codex or Claude Code into a local computer for agent work.
 
-![Agent Computer cover](computer/docs/assets/agent-computer-cover-v3.png)
+![Agent Computer cover](computer/docs/assets/agent-computer-cover-v4.png)
 
-Agent Computer is a local, file-based workspace where Codex, Claude Code, and similar coding agents run agents like apps. A single request can become a routed workflow, project folder, research brief, MI-grade report, editable deck, local web page, draft, converted document, and QA log.
+Agent Computer is a local, file-based workspace where coding agents run agent apps, create project folders, preserve memory, use tools, and leave behind inspectable outputs instead of disappearing into chat history.
 
-It is designed to be opened with coding agents such as Codex, Claude Code, or any assistant that can read and write files.
+Open the folder with Codex, Claude Code, or any file-editing coding agent. Then ask in normal language:
+
+```text
+Research newsletter success cases deeply, extract the repeatable growth formulas, and turn the findings into a rich editable PPT.
+```
+
+Agent Computer should route the work, create a fresh project folder, run the right agent chain, save the research/report/deck/QA files, and keep the result easy to continue later.
 
 > Unofficial project. Not affiliated with OpenAI, Anthropic, or any model provider.
 
-Status: experimental V0 preview. Agent Computer is intended for coding-agent power users who are comfortable opening a local folder with Codex, Claude Code, or a similar file-editing agent.
+Status: experimental V0 preview for coding-agent power users.
 
-New here? Start with [START_HERE.md](START_HERE.md).
+New here? Start with [START_HERE.md](START_HERE.md), or jump to [Quick Start](#quick-start).
 
-## Why This Exists
+## The Idea
 
-Most agent work disappears inside chat history. Agent Computer gives agents a durable workspace:
+Most coding-agent work is still trapped in a chat loop:
+
+```text
+prompt -> answer -> scroll away -> repeat
+```
+
+Agent Computer turns the same agent into a workspace-native operator:
+
+```text
+request
+-> route to installed agent apps
+-> create workspace/projects/{project-slug}/
+-> produce research, reports, decks, web pages, drafts, converted docs, assets, memory, and QA
+```
+
+The mental model is simple:
 
 - agents are apps
 - tools are executable capabilities
-- reports, decks, web pages, drafts, and converted files are outputs
-- memory is stored as Markdown
-- tasks and indexes make work recoverable
 - the operating layer lives under `computer/`
 - user work lives under `workspace/`
+- outputs are durable files
+- QA and evidence trails are part of the work
 
 ![Agent Computer overview](computer/docs/assets/agent-computer-hero.svg)
 
 The goal is to make AI work feel less like one-off prompting and more like using a computer built for agents.
 
 ![Before and after Agent Computer](computer/docs/assets/agent-computer-before-after.svg)
+
+## What It Can Do
+
+Agent Computer ships with working agent apps for:
+
+- deep research that asks better questions, uses evidence, and can use native subagents
+- report writing from notes, research packages, converted docs, or rough inputs
+- editable PPT decks with content specs, design specs, prototypes, reconstruction, and QA
+- full-slide `$imagegen` image decks and campaign/social/thumbnail visual assets
+- local HTML pages and interactive web reports from approved source material
+- PDF/PPTX/DOCX/image ingestion into agent-readable Markdown
+- workspace organization with dry-runs, manifests, and undo
+- email draft packages, local contact memory, and follow-up sequences
+- QA verification for reports, PPTX packages, routing, and safety boundaries
+- building new executable agent apps with tools, templates, tests, and docs
+
+![Agent Computer app map](computer/docs/assets/agent-computer-app-map.svg)
 
 ## Why Not Just Use Codex Directly?
 
@@ -45,6 +82,8 @@ Agent Computer
 -> workspace/projects/{project-slug}/
 -> research, reports, decks, web pages, drafts, converted docs, memory, and QA logs
 ```
+
+Agent Computer does not replace the model. It gives the model a filesystem, operating rules, agent apps, project memory, and quality gates.
 
 ## Showcase Workflow
 
@@ -68,7 +107,7 @@ deep-dive-researcher -> report-writer -> web-builder -> qa-verifier
 
 Expected output shape:
 
-![Agent Computer showcase workflow](computer/docs/assets/agent-computer-showcase.png)
+![Agent Computer workflow demo](computer/docs/assets/agent-computer-workflow-imagegen.png)
 
 ```text
 workspace/projects/newsletter-success-formula/
@@ -80,6 +119,30 @@ workspace/projects/newsletter-success-formula/
 ```
 
 The important part is not the example topic. It is the pattern: natural-language work becomes a project folder with artifacts you can inspect, edit, continue, and share.
+
+## Best First Prompts
+
+Use normal language. These are intentionally written like user requests, not CLI commands:
+
+```text
+How do I use this workspace?
+```
+
+```text
+Convert the PDF in workspace/inbox into an agent-readable document, then create a report and PPT.
+```
+
+```text
+Research this market deeply, write the full Markdown report, then turn it into an interactive HTML page.
+```
+
+```text
+Use Agent Computer subagents if they would improve this research. Ask me before spawning native subagents.
+```
+
+```text
+Create a text-rich full-slide image deck from this approved report. Use $imagegen for the final slide images.
+```
 
 ## Boundary Rule
 
@@ -100,7 +163,8 @@ External apps and accounts are peripherals. They are used only when the user exp
 1. Copy or clone this folder.
 2. Open it with Codex, Claude Code, or another coding agent.
 3. If using Codex, ask it to read `AGENTS.md`. If using Claude Code, ask it to read `CLAUDE.md`.
-4. Ask for work in normal language:
+4. Put source files in `workspace/inbox/` when you have them.
+5. Ask for work in normal language:
 
 ```text
 Research newsletter success cases deeply, extract the repeatable growth formulas, and turn the findings into a rich editable PPT.
@@ -114,6 +178,8 @@ Convert this PDF into an agent-readable document, then create a report and prese
 
 Agent Computer should route the request to installed agents, create a project folder, save durable outputs under `workspace/projects/{project-slug}/`, and QA the result when appropriate.
 
+You do not need to run npm commands for normal use. The npm scripts are optional helper tools for smoke tests, demos, routing checks, and local automation.
+
 ### Subagents For Hard Research
 
 For serious research, strategy, market, product, GTM, technical, or source-heavy work, explicitly allowing subagents can improve the result. The reason is simple: Agent Computer can split the work into specialist roles for intent analysis, research architecture, source scouting, market mapping, mechanism analysis, evidence verification, red-team critique, quality control, and final report composition.
@@ -125,6 +191,8 @@ Use Agent Computer subagents if they would improve this research. Ask me before 
 ```
 
 Subagents are not useful for every task. They add coordination overhead, so Agent Computer should use them mainly when multiple specialist viewpoints will materially improve the answer.
+
+![Agent Computer subagent flow](computer/docs/assets/agent-computer-subagent-flow.svg)
 
 | Agent app | Native subagent support | When it helps |
 |---|---|---|
@@ -192,30 +260,27 @@ If a related project exists, the agent may mention it as optional context, but s
 
 ## Default Apps
 
-### System Agents
+Agent Computer ships with installed agent apps. A request can use one app or a chain of apps.
 
-- `workspace-router`: chooses the right agent or agent chain
-- `agent-builder`: builds executable agent apps
-- `document-ingestor`: converts files into agent-readable Markdown
-- `file-organizer`: plans, moves, logs, and can undo workspace file organization
-- `memory-curator`: maintains useful memory
-- `qa-verifier`: checks quality and missing evidence
-
-### Work Agents
-
-- `quick-researcher`: fast, focused research with sources
-- `deep-dive-researcher`: deep research with evidence and causality
-- `planning-partner`: multi-turn planning partner for ideas, services, content, brands, campaigns, communities, and projects
-- `report-writer`: structured reports and documents
-- `ppt-builder`: high-quality PPT workflow with content/design specs, prototype QA, and editable reconstruction gates
-- `image-deck-maker`: `$imagegen`-native, text-rich full-slide generated image decks from approved source content
-- `visual-asset-maker`: `$imagegen`-native campaign, social, thumbnail, banner, launch, and showcase images from approved briefs and copy
-- `web-builder`: local static HTML pages and interactive web reports from approved source material
-- `email-operator`: emails, replies, and follow-ups
-
-### Personal Agents
-
-- `friend-counselor`: thoughtful reflection and supportive conversation
+| Agent app | Use it for |
+|---|---|
+| `workspace-router` | Choosing the right agent or agent chain. |
+| `agent-builder` | Building new executable agent apps with tools, templates, tests, and docs. |
+| `document-ingestor` | Converting PDF/PPTX/DOCX/images/text into agent-readable Markdown. |
+| `file-organizer` | Planning, moving, logging, and undoing workspace organization. |
+| `memory-curator` | Maintaining reusable context without storing secrets. |
+| `qa-verifier` | Checking output quality, evidence gaps, package validity, and safety issues. |
+| `quick-researcher` | Fast focused research with sources. |
+| `deep-dive-researcher` | Serious research with questions, evidence, causality, source confidence, and optional native subagents. |
+| `planning-partner` | Multi-turn planning for ideas, services, brands, campaigns, communities, content, and projects. |
+| `report-writer` | Turning notes, sources, research packages, or rough inputs into structured reports. |
+| `web-builder` | Building local static HTML pages and interactive web reports from approved source material. |
+| `ppt-builder` | Creating high-quality editable PPTX decks with content/design specs, prototype QA, and reconstruction gates. |
+| `image-deck-maker` | Creating text-rich full-slide generated image decks with `$imagegen`. |
+| `visual-asset-maker` | Creating campaign, social, thumbnail, banner, launch, and showcase images with `$imagegen`. |
+| `email-operator` | Writing email draft packages, replies, and follow-up sequences. |
+| `instagram-growth-analyst` | Analyzing local Instagram performance data and proposing growth experiments. |
+| `friend-counselor` | Thoughtful reflection and supportive conversation. |
 
 ## Directory Structure
 
