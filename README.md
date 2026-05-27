@@ -1,10 +1,28 @@
 # Agent Computer
 
-Turn Codex or Claude Code into a local computer for agent work.
+**A local operating system for AI agents.**
+
+Turn Codex, Claude Code, or any file-editing coding agent into a durable workspace where agents run like apps, create project folders, use tools, preserve memory, produce real files, and leave QA trails you can inspect.
+
+[![Release](https://img.shields.io/github/v/release/YEOPHYEONG/agent-computer?label=release)](https://github.com/YEOPHYEONG/agent-computer/releases)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Node 20+](https://img.shields.io/badge/node-%3E%3D20-43853d.svg)](package.json)
+[![Agent Apps](https://img.shields.io/badge/agent%20apps-15%2B-111827.svg)](computer/agents/README.md)
 
 ![Agent Computer cover](computer/docs/assets/agent-computer-cover-v4.png)
 
-Agent Computer is a local, file-based workspace where coding agents run agent apps, create project folders, preserve memory, use tools, and leave behind inspectable outputs instead of disappearing into chat history.
+## What It Is
+
+Most AI-agent work still disappears into chat history. Agent Computer changes the default output from "an answer" to **a project folder**:
+
+```text
+natural-language request
+-> routed agent workflow
+-> workspace/projects/{project-slug}/
+-> research, reports, decks, web pages, images, converted docs, memory, and QA
+```
+
+It is not a SaaS platform, daemon, or replacement for Codex/Claude Code. It is a repo-shaped operating layer that makes coding agents behave more like a local computer for knowledge work.
 
 Open the folder with Codex, Claude Code, or any file-editing coding agent. Then ask in normal language:
 
@@ -12,7 +30,27 @@ Open the folder with Codex, Claude Code, or any file-editing coding agent. Then 
 Research newsletter success cases deeply, extract the repeatable growth formulas, and turn the findings into a rich editable PPT.
 ```
 
-Agent Computer should route the work, create a fresh project folder, run the right agent chain, save the research/report/deck/QA files, and keep the result easy to continue later.
+Agent Computer should route the work, create a fresh project folder, run the right agent chain, save the research/report/deck/QA files, and keep the result easy to inspect, edit, continue, or share later.
+
+## See It Work
+
+One ordinary research question:
+
+```text
+Is electricity becoming the next big bottleneck for AI stocks?
+```
+
+became a complete workspace project with:
+
+- a [source-backed research report](computer/examples/showcases/power-is-the-new-gpu/research-report.md)
+- an [interactive local HTML report](computer/examples/showcases/power-is-the-new-gpu/web/ai-electricity-bottleneck-report/index.html)
+- an [editable PPTX deck](https://github.com/YEOPHYEONG/agent-computer/releases/download/v0.1.1/electricity-ai-time-to-power-bottleneck-deck.pptx)
+- a full-slide `$imagegen` visual deck ([PPTX](https://github.com/YEOPHYEONG/agent-computer/releases/download/v0.1.1/power-is-the-new-gpu-image-deck.pptx), [PDF](https://github.com/YEOPHYEONG/agent-computer/releases/download/v0.1.1/power-is-the-new-gpu-image-deck.pdf))
+- [source maps](computer/examples/showcases/power-is-the-new-gpu/source-map.md), [claim verification](computer/examples/showcases/power-is-the-new-gpu/claim-verification-map.md), and QA notes
+
+![Power Is the New GPU image deck contact sheet](computer/examples/showcases/power-is-the-new-gpu/assets/image-deck-contact-sheet.jpg)
+
+See the full showcase: [Power Is the New GPU](computer/examples/showcases/power-is-the-new-gpu/README.md).
 
 > Unofficial project. Not affiliated with OpenAI, Anthropic, or any model provider.
 
@@ -120,33 +158,13 @@ workspace/projects/newsletter-success-formula/
 
 The important part is not the example topic. It is the pattern: natural-language work becomes a project folder with artifacts you can inspect, edit, continue, and share.
 
-## Showcase: Power Is the New GPU
+## Full Showcase Files
 
-One research question, four deliverables:
-
-```text
-Is electricity becoming the next big bottleneck for AI stocks?
-
-Can you research this deeply and write an English report?
-
-Please treat it as educational research, not investment advice.
-```
-
-Agent Computer turned that into:
-
-- a [source-backed research report](computer/examples/showcases/power-is-the-new-gpu/research-report.md)
-- an [interactive local HTML report](computer/examples/showcases/power-is-the-new-gpu/web/ai-electricity-bottleneck-report/index.html)
-- an editable PowerPoint deck with native text, shapes, tables, bars, and diagrams ([download PPTX](https://github.com/YEOPHYEONG/agent-computer/releases/download/v0.1.1/electricity-ai-time-to-power-bottleneck-deck.pptx))
-- a full-slide `$imagegen` visual research deck ([download PPTX](https://github.com/YEOPHYEONG/agent-computer/releases/download/v0.1.1/power-is-the-new-gpu-image-deck.pptx), [PDF](https://github.com/YEOPHYEONG/agent-computer/releases/download/v0.1.1/power-is-the-new-gpu-image-deck.pdf))
-- [source maps](computer/examples/showcases/power-is-the-new-gpu/source-map.md), [claim verification](computer/examples/showcases/power-is-the-new-gpu/claim-verification-map.md), and QA notes
-
-The thesis: AI's power bottleneck is best understood as **regional time-to-power**, not global electricity scarcity.
-
-![Power Is the New GPU image deck contact sheet](computer/examples/showcases/power-is-the-new-gpu/assets/image-deck-contact-sheet.jpg)
+The `Power Is the New GPU` showcase includes the report, web page, editable deck, image-generated deck, source map, claim verification, and QA notes in one public-safe example folder.
 
 ![Editable PPT contact sheet](computer/examples/showcases/power-is-the-new-gpu/assets/editable-ppt-contact-sheet.jpg)
 
-See the full public-safe showcase: [Power Is the New GPU](computer/examples/showcases/power-is-the-new-gpu/README.md).
+Open the full showcase: [Power Is the New GPU](computer/examples/showcases/power-is-the-new-gpu/README.md).
 
 ## Best First Prompts
 
