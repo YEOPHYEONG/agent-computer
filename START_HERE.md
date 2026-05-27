@@ -2,7 +2,9 @@
 
 Welcome to Agent Computer.
 
-This folder is meant to feel like a small computer for agents. You open it with Codex, Claude Code, or another coding agent, then ask for work in normal language.
+Agent Computer is a local computer operated by your coding agent. You open this folder with Codex, Claude Code, or another file-editing agent, then ask for work in normal language.
+
+The agent should run installed agent apps, create project folders, and leave durable results behind instead of only answering in chat.
 
 ## If You Are a User
 

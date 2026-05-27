@@ -1,10 +1,10 @@
 # Agent Computer
 
-**A local operating system for high-quality AI agent work.**
+**A computer operated by agents.**
 
-Turn Codex, Claude Code, or any file-editing coding agent into a durable workspace where agents run like apps, create project folders, use tools, preserve memory, produce real files, and leave QA trails you can inspect.
+Not a chatbot. Not another automation script. Open this folder with Codex, Claude Code, or any file-editing coding agent, then ask for work in natural language.
 
-Designed for top-tier outputs, not disposable chat answers: deep research reports, interactive web reports, editable decks, image-generated decks, source maps, and QA artifacts.
+Agents run installed apps, use tools, create project folders, and leave behind top-tier work artifacts: deep research reports, interactive web reports, editable decks, image-generated decks, source maps, memory, and QA.
 
 [![Release](https://img.shields.io/github/v/release/YEOPHYEONG/agent-computer?label=release)](https://github.com/YEOPHYEONG/agent-computer/releases)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -15,7 +15,7 @@ Designed for top-tier outputs, not disposable chat answers: deep research report
 
 ## What It Is
 
-Most AI-agent work still disappears into chat history. Agent Computer changes the default output from "an answer" to **a project folder**:
+Agent Computer is a repo-shaped local computer operated by coding agents. It changes the default output from "an answer in chat" to **a project folder full of inspectable work**:
 
 ```text
 natural-language request
@@ -24,7 +24,7 @@ natural-language request
 -> research, reports, decks, web pages, images, converted docs, memory, and QA
 ```
 
-It is not a SaaS platform, daemon, or replacement for Codex/Claude Code. It is a repo-shaped operating layer that makes coding agents behave more like a local computer for knowledge work.
+It is not a SaaS platform, daemon, or replacement for Codex/Claude Code. It is an operating layer that makes coding agents behave more like workspace-native operators.
 
 Open the folder with Codex, Claude Code, or any file-editing coding agent. Then ask in normal language:
 

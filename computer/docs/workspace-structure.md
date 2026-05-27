@@ -43,7 +43,7 @@ Use `workspace/outputs/`, `workspace/converted/`, `workspace/reports/`, and `wor
 
 ## Operating Layer
 
-These folders are the operating system of the workspace.
+These folders are the operating layer of the agent-operated computer.
 
 ```text
 AGENTS.md

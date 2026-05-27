@@ -1,6 +1,6 @@
 # Agent Computer Operating Rules
 
-This folder is an Agent Computer: a file-based workspace where AI agents run like apps.
+This folder is an Agent Computer: a local computer operated by AI agents, where agents run installed apps and leave durable project artifacts behind.
 
 ## Core Rules
 

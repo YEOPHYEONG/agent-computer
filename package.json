@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": false,
   "type": "module",
-  "description": "A file-based computer for AI agents.",
+  "description": "A computer operated by agents.",
   "bin": {
     "agent-computer": "computer/tools/agent-computer.mjs"
   },

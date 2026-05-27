@@ -1,6 +1,6 @@
 # Claude Code Boot Instructions
 
-This folder is an Agent Computer workspace.
+This folder is an Agent Computer workspace: a local computer operated by Claude Code through installed agent apps.
 
 ## Boot
 
