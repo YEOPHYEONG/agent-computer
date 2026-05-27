@@ -1,0 +1,845 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AI Electricity Bottleneck | Research Web Report</title>
+    <meta
+      name="description"
+      content="A source-backed web report on electricity, grids, data centers, cooling, and AI infrastructure bottlenecks through 2030."
+    >
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to report</a>
+
+    <header class="hero" id="top">
+      <nav class="topbar" aria-label="Report utilities">
+        <a class="brand" href="#top" aria-label="Back to top">
+          <span class="brand-mark" aria-hidden="true">AI</span>
+          <span>Electricity Bottleneck Report</span>
+        </a>
+        <div class="top-actions" aria-label="Primary page links">
+          <a href="../../research-report.md">Markdown report</a>
+          <a href="../../source-map.md">Source map</a>
+          <a href="#sources">Sources</a>
+        </div>
+      </nav>
+
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">Educational research web report | 2026-2030</p>
+          <h1>Is electricity becoming AI's next infrastructure bottleneck?</h1>
+          <p class="hero-lede">
+            The strongest source-backed answer is not "the world is running out of power."
+            It is that AI is making <strong>regional time-to-power</strong> a central constraint:
+            securing, delivering, cooling, and reliably operating firm electricity in the right
+            places fast enough for data-center buildout.
+          </p>
+          <div class="hero-note" role="note">
+            Educational research only. No buy, sell, hold, short, weighting, price target, or
+            model-portfolio recommendation is made here.
+          </div>
+        </div>
+
+        <div class="hero-panel" aria-label="Report evidence snapshot">
+          <div class="panel-kicker">Evidence snapshot</div>
+          <div class="metric-grid">
+            <article class="metric-card">
+              <span class="metric-label">U.S. data centers, 2023</span>
+              <strong>176 TWh</strong>
+              <span>4.4% of U.S. electricity, DOE/LBNL</span>
+            </article>
+            <article class="metric-card">
+              <span class="metric-label">U.S. 2028 range</span>
+              <strong>325-580 TWh</strong>
+              <span>6.7%-12.0%, scenario range</span>
+            </article>
+            <article class="metric-card">
+              <span class="metric-label">Global data centers, 2024</span>
+              <strong>415 TWh</strong>
+              <span>About 1.5% of global electricity, IEA</span>
+            </article>
+            <article class="metric-card">
+              <span class="metric-label">Global 2030 base case</span>
+              <strong>945 TWh</strong>
+              <span>Just under 3%, IEA scenario</span>
+            </article>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="side-nav" aria-label="Report navigation">
+        <p class="side-title">Browse</p>
+        <a href="#thesis">Thesis</a>
+        <a href="#evidence">Evidence map</a>
+        <a href="#stack">Bottleneck stack</a>
+        <a href="#ecosystem">Market ecosystem</a>
+        <a href="#paid-risk">Paid vs risk</a>
+        <a href="#cases">Bull and bear</a>
+        <a href="#signals">Signals to watch</a>
+        <a href="#uncertainty">Uncertainty</a>
+        <a href="#sources">Sources</a>
+      </aside>
+
+      <main id="main">
+        <section class="section-band section-intro" id="thesis">
+          <div class="section-header">
+            <p class="eyebrow">Core thesis</p>
+            <h2>Power is no longer background infrastructure. It is a deployment gate.</h2>
+            <p>
+              The research narrowed the question from "electricity for AI stocks" to a more useful
+              mechanism: power availability by location, date, reliability standard, cooling design,
+              and cost-allocation rule.
+            </p>
+          </div>
+
+          <div class="thesis-grid">
+            <article class="thesis-card thesis-main">
+              <h3>The defensible claim</h3>
+              <p>
+                AI and broader data-center growth are making electricity, grid interconnection,
+                cooling, and firm-capacity planning more important in concentrated regions through
+                2030. This can reshape public-market narratives, but it does not determine
+                company-level equity returns.
+              </p>
+              <div class="callout-row">
+                <span>Best label</span>
+                <strong>Regional time-to-power</strong>
+              </div>
+              <div class="callout-row">
+                <span>Weak label</span>
+                <strong>Global electricity scarcity</strong>
+              </div>
+            </article>
+
+            <article class="confidence-card high">
+              <span>High confidence</span>
+              <strong>Physical constraint is real</strong>
+              <p>DOE/LBNL, IEA, EIA, NERC, FERC, PJM, utility disclosures, and filings support the direction.</p>
+            </article>
+            <article class="confidence-card medium">
+              <span>Medium confidence</span>
+              <strong>Narratives will change</strong>
+              <p>Mechanisms are clear; economics depend on contracts, regulation, demand conversion, and execution.</p>
+            </article>
+            <article class="confidence-card low">
+              <span>Low confidence</span>
+              <strong>Specific stock outcomes</strong>
+              <p>Valuation, margins, customer concentration, policy, and timing can redistribute or erase economics.</p>
+            </article>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <caption>Questions that changed the interpretation</caption>
+              <thead>
+                <tr>
+                  <th>Question</th>
+                  <th>Answer</th>
+                  <th>Effect on the web report</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Is this global electricity scarcity?</td>
+                  <td>Evidence favors regional, temporal, deliverable-power constraints.</td>
+                  <td>Lead with time-to-power.</td>
+                </tr>
+                <tr>
+                  <td>Is all data-center load AI load?</td>
+                  <td>No. Sources mix AI, cloud, enterprise IT, crypto, and other large loads.</td>
+                  <td>Separate total data centers, AI-ready capacity, and AI workload electricity.</td>
+                </tr>
+                <tr>
+                  <td>Do announced MW equal real load?</td>
+                  <td>No. Requests, forecasts, contracts, energized MW, and MWh are different evidence stages.</td>
+                  <td>Tag major numbers by evidence stage.</td>
+                </tr>
+                <tr>
+                  <td>Do bottlenecks automatically create stock winners?</td>
+                  <td>No. Exposure is not profit capture.</td>
+                  <td>Use mechanisms, metrics, and failure modes, not rankings.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="section-band" id="evidence">
+          <div class="section-header split-header">
+            <div>
+              <p class="eyebrow">Evidence map</p>
+              <h2>The headline numbers are large, but the labels matter.</h2>
+            </div>
+            <p>
+              Switch between U.S., global, AI-attribution, and regional evidence. The page preserves
+              the report's evidence-stage caveats instead of treating all megawatts as equal.
+            </p>
+          </div>
+
+          <div class="tab-shell" data-tabs>
+            <div class="tab-list" role="tablist" aria-label="Evidence views">
+              <button class="tab-button active" type="button" role="tab" aria-selected="true" aria-controls="tab-us" id="tab-us-button" data-tab="us">U.S. baseline</button>
+              <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="tab-global" id="tab-global-button" data-tab="global">Global context</button>
+              <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="tab-ai" id="tab-ai-button" data-tab="ai">AI attribution</button>
+              <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="tab-regional" id="tab-regional-button" data-tab="regional">Regional proof</button>
+            </div>
+
+            <div class="tab-panel active" role="tabpanel" id="tab-us" aria-labelledby="tab-us-button" data-panel="us">
+              <div class="evidence-layout">
+                <div class="evidence-copy">
+                  <h3>United States: actual use and scenario range</h3>
+                  <p>
+                    DOE/LBNL estimates U.S. data-center electricity use rose from <strong>58 TWh in 2014</strong>
+                    to <strong>176 TWh in 2023</strong>, reaching <strong>4.4% of U.S. electricity consumption</strong>.
+                    Its 2028 range is <strong>325-580 TWh</strong>, or <strong>6.7%-12.0%</strong>.
+                  </p>
+                  <p class="evidence-note">Evidence stage: actual-consumption estimate for 2023; scenario model for 2028. Total data centers, not AI-only.</p>
+                </div>
+                <div class="bar-visual" aria-label="U.S. data-center electricity trend">
+                  <div class="bar-row">
+                    <span>2014</span>
+                    <div class="bar-track"><div class="bar-fill us-2014"></div></div>
+                    <strong>58 TWh</strong>
+                  </div>
+                  <div class="bar-row">
+                    <span>2023</span>
+                    <div class="bar-track"><div class="bar-fill us-2023"></div></div>
+                    <strong>176 TWh</strong>
+                  </div>
+                  <div class="bar-row">
+                    <span>2028 low</span>
+                    <div class="bar-track"><div class="bar-fill us-2028-low"></div></div>
+                    <strong>325 TWh</strong>
+                  </div>
+                  <div class="bar-row">
+                    <span>2028 high</span>
+                    <div class="bar-track"><div class="bar-fill us-2028-high"></div></div>
+                    <strong>580 TWh</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-panel" role="tabpanel" id="tab-global" aria-labelledby="tab-global-button" data-panel="global" hidden>
+              <div class="evidence-layout">
+                <div class="evidence-copy">
+                  <h3>Global: material, not dominant</h3>
+                  <p>
+                    IEA estimates global data centers consumed about <strong>415 TWh in 2024</strong>, roughly
+                    <strong>1.5% of global electricity</strong>. Its Base Case reaches about
+                    <strong>945 TWh in 2030</strong>, just under <strong>3%</strong>.
+                  </p>
+                  <p class="evidence-note">Evidence stage: IEA model estimate and scenario. This is why the global headline should not be "the world is running out of electricity."</p>
+                </div>
+                <div class="scale-card">
+                  <span>Global framing</span>
+                  <strong>Share is modest. Concentration is not.</strong>
+                  <p>Global averages can hide acute load pockets where power, substations, permits, water, and grid rules decide deployment timing.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-panel" role="tabpanel" id="tab-ai" aria-labelledby="tab-ai-button" data-panel="ai" hidden>
+              <div class="term-grid">
+                <article class="term-card">
+                  <h3>Total data-center demand</h3>
+                  <p>Electricity used by all data-center workloads and infrastructure.</p>
+                  <span>Safe example: DOE/LBNL U.S. 176 TWh in 2023.</span>
+                </article>
+                <article class="term-card">
+                  <h3>AI-capable capacity</h3>
+                  <p>Capacity designed or upgraded for high-density AI workloads.</p>
+                  <span>Useful for powered shells, liquid cooling, and rack density.</span>
+                </article>
+                <article class="term-card">
+                  <h3>AI workload electricity</h3>
+                  <p>Electricity directly attributable to training, inference, serving, and related AI workloads.</p>
+                  <span>Use only when the source explicitly identifies it.</span>
+                </article>
+              </div>
+              <p class="evidence-note">
+                IEA supports AI as a major driver: accelerated servers, mainly AI-driven, account for almost half of the net global
+                data-center electricity increase to 2030. That is not the same as all data-center growth.
+              </p>
+            </div>
+
+            <div class="tab-panel" role="tabpanel" id="tab-regional" aria-labelledby="tab-regional-button" data-panel="regional" hidden>
+              <div class="table-wrap compact">
+                <table>
+                  <caption>Regional evidence shows why the bottleneck is local and staged</caption>
+                  <thead>
+                    <tr>
+                      <th>Region or case</th>
+                      <th>Evidence stage</th>
+                      <th>What it shows</th>
+                      <th>Caveat</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>PJM / Northern Virginia</td>
+                      <td>Requested / forecast / adjustment</td>
+                      <td>Large-load process supports data-center growth of up to about 30 GW between 2025 and 2030 after filtering non-firm requests.</td>
+                      <td>Not energized load; no strong price-causality claim is used.</td>
+                    </tr>
+                    <tr>
+                      <td>AEP Ohio</td>
+                      <td>Tariff / contracted / company update</td>
+                      <td>Data-center tariff shows load-study fees, collateral, minimum demand charges, and long contract terms.</td>
+                      <td>One service territory; company disclosure.</td>
+                    </tr>
+                    <tr>
+                      <td>Dominion / Northern Virginia</td>
+                      <td>Utility planning / forecast</td>
+                      <td>Data-center load is central to planning in a major U.S. cluster.</td>
+                      <td>IRPs are planning snapshots, not approval for every resource.</td>
+                    </tr>
+                    <tr>
+                      <td>Texas / ERCOT</td>
+                      <td>Forecast / large flexible load</td>
+                      <td>Large-load growth includes data centers and crypto, proving why all large load should not be labeled AI.</td>
+                      <td>AI-specific share is uncertain unless source identifies it.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-band visual-section" id="stack">
+          <div class="section-header split-header">
+            <div>
+              <p class="eyebrow">Bottleneck stack</p>
+              <h2>Annual energy is only one layer.</h2>
+            </div>
+            <p>
+              The useful question is whether power can become usable compute at a specific site by
+              a specific date. Each layer can be the limiting step.
+            </p>
+          </div>
+
+          <figure class="diagram-figure">
+            <img src="assets/time-to-power-stack.svg" alt="Diagram showing the time-to-power stack from annual energy through cost allocation.">
+            <figcaption>Content diagram: layers that turn electricity into AI compute capacity.</figcaption>
+          </figure>
+
+          <div class="stack-grid" aria-label="Time-to-power bottleneck layers">
+            <article>
+              <span>01</span>
+              <h3>Annual energy</h3>
+              <p>Enough MWh/TWh over the year for fuel supply, generation additions, and carbon matching.</p>
+            </article>
+            <article>
+              <span>02</span>
+              <h3>Peak and firm capacity</h3>
+              <p>Reliable MW during peaks, contingencies, low-renewable hours, and winter stress events.</p>
+            </article>
+            <article>
+              <span>03</span>
+              <h3>Transmission deliverability</h3>
+              <p>Power has to reach the load pocket; cheap generation elsewhere may not help.</p>
+            </article>
+            <article>
+              <span>04</span>
+              <h3>Substations and equipment</h3>
+              <p>Transformers, breakers, switchgear, feeders, cable, and substations can hold up service dates.</p>
+            </article>
+            <article>
+              <span>05</span>
+              <h3>Interconnection process</h3>
+              <p>Studies, network upgrades, agreements, and deposits separate speculative MW from likely load.</p>
+            </article>
+            <article>
+              <span>06</span>
+              <h3>Cooling and water</h3>
+              <p>Electricity becomes heat; rack density depends on thermal design and local constraints.</p>
+            </article>
+            <article>
+              <span>07</span>
+              <h3>Reliability and power quality</h3>
+              <p>Voltage, frequency, redundancy, backup, and dynamic load behavior matter for expensive clusters.</p>
+            </article>
+            <article>
+              <span>08</span>
+              <h3>Permits and cost allocation</h3>
+              <p>The decisive question may be who pays, who approves, and who bears reliability obligations.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section-band" id="ecosystem">
+          <div class="section-header split-header">
+            <div>
+              <p class="eyebrow">Public-market ecosystem</p>
+              <h2>Exposure is broad. Profit capture is not automatic.</h2>
+            </div>
+            <p>
+              Representative companies are examples of exposure categories only. This section is not
+              a recommendation, ranking, or valuation framework.
+            </p>
+          </div>
+
+          <div class="filter-toolbar" aria-label="Ecosystem filters">
+            <button type="button" class="filter-button active" data-ecosystem-filter="all">All</button>
+            <button type="button" class="filter-button" data-ecosystem-filter="compute">Compute demand</button>
+            <button type="button" class="filter-button" data-ecosystem-filter="power">Power delivery</button>
+            <button type="button" class="filter-button" data-ecosystem-filter="thermal">Cooling and onsite</button>
+            <button type="button" class="filter-button" data-ecosystem-filter="firm">Firm supply</button>
+          </div>
+          <p class="filter-count" aria-live="polite"><span id="ecosystem-count">13</span> exposure categories shown.</p>
+
+          <div class="ecosystem-grid" id="ecosystem-grid">
+            <article class="ecosystem-card" data-category="compute">
+              <h3>AI accelerators and semiconductors</h3>
+              <p class="example">NVIDIA, AMD, Broadcom, Marvell, Intel, TSMC, ASML, Samsung Electronics, SK Hynix, Micron.</p>
+              <dl>
+                <dt>Mechanism</dt>
+                <dd>Power constraints shift competition toward compute per MW, performance per watt, rack integration, and liquid-cooling compatibility.</dd>
+                <dt>Watch</dt>
+                <dd>Performance per watt, HBM supply, rack power, deployment delays, customer concentration.</dd>
+                <dt>Failure mode</dt>
+                <dd>GPU demand can outrun powered capacity; export controls and model economics can dominate power.</dd>
+              </dl>
+            </article>
+
+            <article class="ecosystem-card" data-category="compute">
+              <h3>Hyperscalers and cloud platforms</h3>
+              <p class="example">Microsoft, Amazon/AWS, Alphabet/Google, Meta, Oracle, Alibaba, Tencent.</p>
+              <dl>
+                <dt>Mechanism</dt>
+                <dd>They create demand and must secure power, land, cooling, PPAs, leases, and grid service.</dd>
+                <dt>Watch</dt>
+                <dd>Capex, finance leases, depreciation, utilization, AI revenue conversion, PUE/WUE.</dd>
+                <dt>Failure mode</dt>
+                <dd>Delayed capacity, higher capex, local opposition, and underutilization.</dd>
+              </dl>
+            </article>
+
+            <article class="ecosystem-card" data-category="compute">
+              <h3>Specialized AI clouds / GPU infrastructure</h3>
+              <p class="example">CoreWeave, Nebius, IREN, Hut 8, Applied Digital.</p>
+              <dl>
+                <dt>Mechanism</dt>
+                <dd>Power-secured GPU capacity can become scarce infrastructure.</dd>
+                <dt>Watch</dt>
+                <dd>Active MW, utilization, contracted revenue, debt/lease structure, customer concentration.</dd>
+                <dt>Failure mode</dt>
+                <dd>Delayed power, high leverage, GPU obsolescence, customer concentration.</dd>
+              </dl>
+            </article>
+
+            <article class="ecosystem-card" data-category="compute power thermal">
+              <h3>Colocation and data-center operators</h3>
+              <p class="example">Equinix, Digital Realty, Iron Mountain, GDS, VNET.</p>
+              <dl>
+                <dt>Mechanism</dt>
+                <dd>Powered capacity, interconnection, cooling density, and pre-leased MW become core products.</dd>
+                <dt>Watch</dt>
+                <dd>MW under construction, preleasing, vacancy, rent per kW, service dates.</dd>
+                <dt>Failure mode</dt>
+                <dd>Grid delays, customer self-build, water/permitting limits, overbuilding if demand slows.</dd>
+              </dl>
+            </article>
+
+            <article class="ecosystem-card" data-category="power">
+              <h3>Regulated electric utilities</h3>
+              <p class="example">Dominion Energy, Duke Energy, Southern Company, AEP, Entergy, Exelon/Pepco, FirstEnergy, Xcel, PG&E, Sempra.</p>
+              <dl>
+                <dt>Mechanism</dt>
+                <dd>Large-load growth can increase planning needs, capex, sales, and rate-base discussions.</dd>
+                <dt>Watch</dt>
+                <dd>Signed service agreements, tariffs, rate cases, reserve margins, customer deposits.</dd>
+                <dt>Failure mode</dt>
+                <dd>Regulatory lag, disallowed costs, affordability backlash, speculative forecasts.</dd>
+              </dl>
+            </article>
+
+            <article class="ecosystem-card" data-category="firm power">
+              <h3>Independent power producers</h3>
+              <p class="example">Constellation, Vistra, Talen, NRG, AES, Brookfield Renewable, RWE, Engie.</p>
+              <dl>
+                <dt>Mechanism</dt>
+                <dd>Firm power, nuclear, gas, storage-backed renewables, and PPAs can become more valuable in constrained regions.</dd>
+                <dt>Watch</dt>
+                <dd>PPA terms, capacity prices, plant availability, restart/uprate milestones.</dd>
+                <dt>Failure mode</dt>
+                <dd>Regulatory restrictions, fuel risk, project delays, cost-allocation disputes.</dd>
+              </dl>
+            </article>
+
+            <article class="ecosystem-card" data-category="power">
+              <h3>Grid equipment and electrical infrastructure</h3>
+              <p class="example">Eaton, Schneider Electric, Siemens Energy, GE Vernova, ABB, Hubbell, Powell, nVent, Quanta Services, Prysmian.</p>
+              <dl>
+                <dt>Mechanism</dt>
+                <dd>Transformers, switchgear, substations, cable, and EPC execution sit close to the bottleneck.</dd>
+                <dt>Watch</dt>
+                <dd>Backlog quality, book-to-bill, margins, lead times, end-market mix.</dd>
+                <dt>Failure mode</dt>
+                <dd>Input inflation, manufacturing expansion risk, customer concentration, cycle reversal.</dd>
+              </dl>
+            </article>
+
+            <article class="ecosystem-card" data-category="thermal power">
+              <h3>Critical power systems</h3>
+              <p class="example">Vertiv, Eaton, Schneider Electric, ABB, Siemens, Legrand, nVent, Powell.</p>
+              <dl>
+                <dt>Mechanism</dt>
+                <dd>Converts delivered MW into resilient rack power through UPS, PDUs, busway, modular power, and services.</dd>
+                <dt>Watch</dt>
+                <dd>Orders, backlog conversion, service attach, high-density rack support.</dd>
+                <dt>Failure mode</dt>
+                <dd>Deployment delays push revenue recognition; large customers can pressure margins.</dd>
+              </dl>
+            </article>
+
+            <article class="ecosystem-card" data-category="thermal">
+              <h3>Cooling and thermal management</h3>
+              <p class="example">Vertiv, Modine, Carrier, Johnson Controls, Trane Technologies, Lennox, SPX Technologies, nVent.</p>
+              <dl>
+                <dt>Mechanism</dt>
+                <dd>AI density raises need for liquid/hybrid cooling, CDUs, chillers, water management, and thermal engineering.</dd>
+                <dt>Watch</dt>
+                <dd>Liquid-cooling orders, rack density, WUE/PUE, retrofit vs new-build mix.</dd>
+                <dt>Failure mode</dt>
+                <dd>Liquid cooling is not a universal energy or water solution; end markets are mixed.</dd>
+              </dl>
+            </article>
+
+            <article class="ecosystem-card" data-category="thermal firm">
+              <h3>Backup, onsite power, and microgrids</h3>
+              <p class="example">Caterpillar, Cummins, Generac, Bloom Energy, GE Vernova, Siemens Energy, Tesla storage.</p>
+              <dl>
+                <dt>Mechanism</dt>
+                <dd>Slow interconnection and high reliability needs can increase backup, bridge, and onsite power demand.</dd>
+                <dt>Watch</dt>
+                <dd>Generator backlog, emissions permits, runtime limits, BESS attachment, fuel logistics.</dd>
+                <dt>Failure mode</dt>
+                <dd>Bridge power can be expensive, emissions-constrained, or politically contested.</dd>
+              </dl>
+            </article>
+
+            <article class="ecosystem-card" data-category="firm">
+              <h3>Gas turbines and gas infrastructure</h3>
+              <p class="example">GE Vernova, Siemens Energy, Mitsubishi Heavy Industries, Baker Hughes, Kinder Morgan, Williams, EQT, Chevron, Exxon Mobil.</p>
+              <dl>
+                <dt>Mechanism</dt>
+                <dd>Gas can provide near-term firm capacity in some regions.</dd>
+                <dt>Watch</dt>
+                <dd>Turbine slots, COD schedules, pipeline capacity, fuel prices, air permits.</dd>
+                <dt>Failure mode</dt>
+                <dd>Supply, deliverability, emissions rules, and stranded-asset risk.</dd>
+              </dl>
+            </article>
+
+            <article class="ecosystem-card" data-category="firm">
+              <h3>Nuclear, uprates, restarts, and SMRs</h3>
+              <p class="example">Constellation, Vistra, Talen, Cameco, Centrus, BWX Technologies, Oklo, NuScale.</p>
+              <dl>
+                <dt>Mechanism</dt>
+                <dd>Firm clean-power demand increases strategic interest in existing nuclear and credible restarts.</dd>
+                <dt>Watch</dt>
+                <dd>NRC milestones, PPA structure, restart execution, fuel supply, uprate approvals.</dd>
+                <dt>Failure mode</dt>
+                <dd>SMRs are mainly post-2030 optionality unless specific projects prove otherwise.</dd>
+              </dl>
+            </article>
+
+            <article class="ecosystem-card" data-category="firm power">
+              <h3>Renewables, storage, and flexibility</h3>
+              <p class="example">NextEra Energy, Brookfield Renewable, AES, Clearway, First Solar, Nextracker, Fluence, Tesla.</p>
+              <dl>
+                <dt>Mechanism</dt>
+                <dd>Renewable PPAs can supply energy; storage and flexibility help deliverability.</dd>
+                <dt>Watch</dt>
+                <dd>PPA volume, interconnection conversion, storage duration, curtailment, hourly matching.</dd>
+                <dt>Failure mode</dt>
+                <dd>Annual matching does not solve local 24/7 load; queues and curtailment can limit delivery.</dd>
+              </dl>
+            </article>
+          </div>
+        </section>
+
+        <section class="section-band" id="paid-risk">
+          <div class="section-header">
+            <p class="eyebrow">Who gets paid vs who carries risk</p>
+            <h2>The bottleneck creates invoices before it creates returns.</h2>
+            <p>
+              A useful public-market lens is not "winner/loser." It is which actors can bill for
+              scarce infrastructure, and which actors carry timing, utilization, regulatory, or
+              affordability risk.
+            </p>
+          </div>
+
+          <div class="paid-risk-grid">
+            <article class="ledger paid">
+              <h3>More likely to get paid when...</h3>
+              <ul>
+                <li>They sell scarce physical delivery assets: transformers, switchgear, substations, cable, UPS, busway, chillers, CDUs, EPC services.</li>
+                <li>They control already powered sites, firm capacity, or high-quality interconnection positions.</li>
+                <li>Contracts include deposits, minimum demand charges, long service terms, or take-or-pay style economics.</li>
+                <li>They can solve density: power distribution, liquid/hybrid cooling, or high-reliability rack environments.</li>
+              </ul>
+            </article>
+            <article class="ledger risk">
+              <h3>More likely to carry risk when...</h3>
+              <ul>
+                <li>They commit large capex before power, permits, customers, or utilization are secured.</li>
+                <li>They depend on speculative load requests that may never become energized MWh.</li>
+                <li>Regulators push upgrade costs onto shareholders, all ratepayers, or data-center customers in ways that slow demand.</li>
+                <li>Efficiency gains or weaker AI monetization reduce electricity growth relative to high-end scenarios.</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section class="section-band" id="cases">
+          <div class="section-header split-header">
+            <div>
+              <p class="eyebrow">Bull and bear cases</p>
+              <h2>Two things can be true: the bottleneck is real, and the narrative can be overextended.</h2>
+            </div>
+            <p>These are educational scenario lenses, not investment calls.</p>
+          </div>
+
+          <div class="case-grid">
+            <article class="case-card bull">
+              <span>Constraint case</span>
+              <h3>Time-to-power stays tight</h3>
+              <p>
+                Energized MW lags requests; large-load tariffs spread; grid equipment and cooling
+                backlogs stay elevated; hyperscaler capex remains high; firm power gets more valuable
+                in constrained regions.
+              </p>
+            </article>
+            <article class="case-card base">
+              <span>Base case</span>
+              <h3>Regional, staged friction</h3>
+              <p>
+                Demand grows materially, but the tightness is uneven. The most important signals are
+                conversion from requests to contracts to energized load, plus cost-allocation rules.
+              </p>
+            </article>
+            <article class="case-card bear">
+              <span>Relief case</span>
+              <h3>Efficiency, attrition, or supply catch-up</h3>
+              <p>
+                Actual MWh tracks the low end of scenarios; AI output per MW improves fast; project
+                pipelines de-rate; generation, storage, equipment, and flexibility catch up in key regions.
+              </p>
+            </article>
+          </div>
+
+          <div class="scenario-strip" aria-label="Scenario framework">
+            <article>
+              <strong>Tight-power / delayed buildout</strong>
+              <span>Service dates slip; co-location disputes intensify; powered capacity remains scarce.</span>
+            </article>
+            <article>
+              <strong>Regulatory friction</strong>
+              <span>More collateral, special tariffs, moratoria, denied cost recovery, water and emissions constraints.</span>
+            </article>
+            <article>
+              <strong>Supply catch-up</strong>
+              <span>Faster interconnection, shorter lead times, more credible hourly matching and flexible load.</span>
+            </article>
+          </div>
+        </section>
+
+        <section class="section-band" id="signals">
+          <div class="section-header split-header">
+            <div>
+              <p class="eyebrow">Signals to watch</p>
+              <h2>Track conversion quality, not just headlines.</h2>
+            </div>
+            <p>
+              The best ongoing evidence separates actual load from announcements and tests whether
+              infrastructure converts into usable, monetized compute.
+            </p>
+          </div>
+
+          <div class="filter-toolbar" aria-label="Signals filters">
+            <button type="button" class="filter-button active" data-signal-filter="all">All</button>
+            <button type="button" class="filter-button" data-signal-filter="load">Load conversion</button>
+            <button type="button" class="filter-button" data-signal-filter="rules">Rules and regulation</button>
+            <button type="button" class="filter-button" data-signal-filter="delivery">Delivery chain</button>
+            <button type="button" class="filter-button" data-signal-filter="economics">Economics</button>
+            <button type="button" class="filter-button" data-signal-filter="thermal">Thermal</button>
+          </div>
+
+          <div class="signal-list" id="signal-list">
+            <article data-signal="load">
+              <span>Load conversion</span>
+              <h3>Energized MW and actual MWh in data-center-heavy territories</h3>
+              <p>Separates real usage from announced campuses and power requests.</p>
+            </article>
+            <article data-signal="load">
+              <span>Load conversion</span>
+              <h3>Requested vs forecast vs contracted vs energized MW</h3>
+              <p>Shows attrition, double-counting, and planning discipline.</p>
+            </article>
+            <article data-signal="rules">
+              <span>Rules and regulation</span>
+              <h3>FERC, NERC, PJM, and state commission updates</h3>
+              <p>Tracks reliability, co-location, tariff, and cost-allocation rules.</p>
+            </article>
+            <article data-signal="rules">
+              <span>Rules and regulation</span>
+              <h3>Large-load tariffs, collateral, minimum bills, curtailability terms</h3>
+              <p>Shows who pays for upgrades and whether demand can flex.</p>
+            </article>
+            <article data-signal="delivery">
+              <span>Delivery chain</span>
+              <h3>Transformer, switchgear, cable, substation, and EPC backlog quality</h3>
+              <p>Measures physical delivery constraints, but use official or clearly labeled industry estimates.</p>
+            </article>
+            <article data-signal="economics">
+              <span>Economics</span>
+              <h3>Hyperscaler capex, finance leases, depreciation, utilization, AI revenue conversion</h3>
+              <p>Tests whether expensive infrastructure becomes productive revenue, not just spending.</p>
+            </article>
+            <article data-signal="thermal">
+              <span>Thermal</span>
+              <h3>PUE, WUE, rack density, liquid-cooling adoption, and local water constraints</h3>
+              <p>Shows whether delivered power becomes usable compute.</p>
+            </article>
+            <article data-signal="delivery">
+              <span>Delivery chain</span>
+              <h3>PPA deliverability, hourly matching, storage attachment, interconnection status</h3>
+              <p>Tests whether clean-energy procurement actually solves local power needs.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section-band" id="uncertainty">
+          <div class="section-header">
+            <p class="eyebrow">Uncertainty and guardrails</p>
+            <h2>What would make the thesis wrong or overstated?</h2>
+          </div>
+
+          <div class="uncertainty-grid">
+            <article>
+              <h3>Efficiency and output per MW</h3>
+              <p>Better chips, compression, routing, batching, sparsity, and serving software can reduce electricity per useful AI task.</p>
+            </article>
+            <article>
+              <h3>Project overcounting</h3>
+              <p>Announcements, power requests, letters of intent, signed agreements, and energized load are different evidence stages.</p>
+            </article>
+            <article>
+              <h3>Non-AI confounders</h3>
+              <p>Crypto, manufacturing, EVs, hydrogen, LNG, population growth, and broader electrification can appear in utility forecasts.</p>
+            </article>
+            <article>
+              <h3>Regulatory cost allocation</h3>
+              <p>If large-load customers internalize upgrade costs, the bottleneck may slow projects rather than enrich utility shareholders.</p>
+            </article>
+            <article>
+              <h3>Supply catch-up</h3>
+              <p>Equipment, generation, storage, transmission, cooling, and flexible load could improve faster than expected in key regions.</p>
+            </article>
+            <article>
+              <h3>Narrative and valuation risk</h3>
+              <p>Physical bottlenecks can be real while market narratives are overextended. Revenue exposure is not earnings exposure.</p>
+            </article>
+          </div>
+
+          <div class="avoid-box">
+            <h3>Claims deliberately not used as firm evidence</h3>
+            <ul>
+              <li>Strong PJM price-causality claims.</li>
+              <li>NERC 1,500 MW incident claim.</li>
+              <li>TVA data-center load-share claims.</li>
+              <li>Official-sounding transformer deficit percentages without narrower verification.</li>
+              <li>Any claim that all data-center growth is AI or that announced GW equals actual load.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="section-band source-section" id="sources">
+          <div class="section-header split-header">
+            <div>
+              <p class="eyebrow">Primary sources</p>
+              <h2>Source-backed, with evidence boundaries visible.</h2>
+            </div>
+            <div class="source-tools">
+              <label for="source-search">Search sources</label>
+              <input id="source-search" type="search" placeholder="Try DOE, PJM, FERC, cooling">
+            </div>
+          </div>
+
+          <div class="source-grid" id="source-grid">
+            <a class="source-card" href="https://eta-publications.lbl.gov/sites/default/files/2024-12/lbnl-2024-united-states-data-center-energy-usage-report.pdf" data-source="doe lbnl united states data center energy usage electricity cooling water">
+              <span>Tier 1</span>
+              <strong>DOE/LBNL: 2024 United States Data Center Energy Usage Report</strong>
+              <p>U.S. historical data-center electricity, 2028 scenario range, cooling and water context.</p>
+            </a>
+            <a class="source-card" href="https://www.iea.org/reports/energy-and-ai" data-source="iea energy and ai global demand supply concentration">
+              <span>Tier 1</span>
+              <strong>IEA: Energy and AI</strong>
+              <p>Global data-center electricity, 2030 base case, AI-energy nexus, concentration.</p>
+            </a>
+            <a class="source-card" href="https://www.eia.gov/pressroom/releases/press582.php" data-source="eia steo electricity demand growth data centers large computing facilities">
+              <span>Tier 1</span>
+              <strong>EIA: January 2026 STEO release</strong>
+              <p>U.S. electricity demand growth and data centers as a major driver.</p>
+            </a>
+            <a class="source-card" href="https://prod.nerc.com/globalassets/our-work/assessments/nerc_ltra_2025.pdf" data-source="nerc reliability assessment large load resource adequacy">
+              <span>Tier 1</span>
+              <strong>NERC: 2025 Long-Term Reliability Assessment</strong>
+              <p>Reliability, resource adequacy, large-load growth, and planning caveats.</p>
+            </a>
+            <a class="source-card" href="https://www.ferc.gov/sites/default/files/2026-03/26_State-of-the-Market_0324_1430.pdf" data-source="ferc state of markets data centers capacity large loads flexibility">
+              <span>Tier 1</span>
+              <strong>FERC: 2025 State of the Markets</strong>
+              <p>Federal market framing, large-load characteristics, and capacity context.</p>
+            </a>
+            <a class="source-card" href="https://ferc.gov/news-events/news/ferc-orders-action-co-location-issues-related-data-centers-running-ai" data-source="ferc pjm co-location data centers ai reliability consumer costs">
+              <span>Tier 1</span>
+              <strong>FERC: PJM co-location action</strong>
+              <p>Evidence that data-center co-location is a market-design and cost-allocation issue.</p>
+            </a>
+            <a class="source-card" href="https://www.pjm.com/-/media/DotCom/library/reports-notices/load-forecast/2025-load-report.pdf" data-source="pjm load forecast data center large load northern virginia">
+              <span>Tier 1</span>
+              <strong>PJM: 2025 Long-Term Load Forecast Report</strong>
+              <p>PJM load-forecast and large-load adjustment context.</p>
+            </a>
+            <a class="source-card" href="https://www.aepohio.com/company/about/rates/data-center-tariff/" data-source="aep ohio data center tariff collateral minimum demand charges load study">
+              <span>Tier 1</span>
+              <strong>AEP Ohio: Data Center Tariff</strong>
+              <p>Concrete example of tariff terms, load studies, collateral, and minimum demand charges.</p>
+            </a>
+            <a class="source-card" href="https://www.microsoft.com/investor/reports/ar25/" data-source="microsoft annual report data centers energy capacity capex ai cloud">
+              <span>Tier 1</span>
+              <strong>Microsoft: 2025 Annual Report</strong>
+              <p>Hyperscaler data-center scale and energy as a strategic dependency.</p>
+            </a>
+            <a class="source-card" href="https://investors.constellationenergy.com/news-releases/news-release-details/constellation-launch-crane-clean-energy-center-restoring-jobs/" data-source="constellation microsoft crane clean energy center nuclear ppa restart">
+              <span>Tier 1</span>
+              <strong>Constellation: Crane Clean Energy Center announcement</strong>
+              <p>Example of firm clean-power procurement tied to data-center demand.</p>
+            </a>
+          </div>
+          <p class="no-results" id="source-no-results" hidden>No matching sources. Try a broader term.</p>
+        </section>
+      </main>
+    </div>
+
+    <footer class="footer">
+      <p>
+        Built from the project research package:
+        <a href="../../research-report.md">final report</a>,
+        <a href="../../source-map.md">source map</a>, and
+        <a href="../../research-qa.md">research QA notes</a>.
+      </p>
+      <a href="#top">Back to top</a>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>

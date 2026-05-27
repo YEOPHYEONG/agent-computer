@@ -120,6 +120,34 @@ workspace/projects/newsletter-success-formula/
 
 The important part is not the example topic. It is the pattern: natural-language work becomes a project folder with artifacts you can inspect, edit, continue, and share.
 
+## Showcase: Power Is the New GPU
+
+One research question, four deliverables:
+
+```text
+Is electricity becoming the next big bottleneck for AI stocks?
+
+Can you research this deeply and write an English report?
+
+Please treat it as educational research, not investment advice.
+```
+
+Agent Computer turned that into:
+
+- a [source-backed research report](computer/examples/showcases/power-is-the-new-gpu/research-report.md)
+- an [interactive local HTML report](computer/examples/showcases/power-is-the-new-gpu/web/ai-electricity-bottleneck-report/index.html)
+- an editable PowerPoint deck with native text, shapes, tables, bars, and diagrams
+- a full-slide `$imagegen` visual research deck
+- [source maps](computer/examples/showcases/power-is-the-new-gpu/source-map.md), [claim verification](computer/examples/showcases/power-is-the-new-gpu/claim-verification-map.md), and QA notes
+
+The thesis: AI's power bottleneck is best understood as **regional time-to-power**, not global electricity scarcity.
+
+![Power Is the New GPU image deck contact sheet](computer/examples/showcases/power-is-the-new-gpu/assets/image-deck-contact-sheet.jpg)
+
+![Editable PPT contact sheet](computer/examples/showcases/power-is-the-new-gpu/assets/editable-ppt-contact-sheet.jpg)
+
+See the full public-safe showcase: [Power Is the New GPU](computer/examples/showcases/power-is-the-new-gpu/README.md).
+
 ## Best First Prompts
 
 Use normal language. These are intentionally written like user requests, not CLI commands:

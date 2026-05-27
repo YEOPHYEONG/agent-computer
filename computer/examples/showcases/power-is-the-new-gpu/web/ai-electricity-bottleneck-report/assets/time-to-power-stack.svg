@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="360" viewBox="0 0 1160 360" role="img" aria-labelledby="title desc">
+  <title id="title">Time-to-power stack</title>
+  <desc id="desc">Eight connected layers that turn electricity into usable AI compute capacity.</desc>
+  <rect width="1160" height="360" fill="#fbfcf8"/>
+  <g fill="none" stroke="#d7ded6" stroke-width="1">
+    <path d="M40 278 H1120"/>
+    <path d="M40 188 H1120"/>
+    <path d="M40 98 H1120"/>
+  </g>
+  <g font-family="Arial, Helvetica, sans-serif">
+    <text x="48" y="50" fill="#17201b" font-size="26" font-weight="700">Time-to-power: from electricity to usable AI compute</text>
+    <text x="48" y="78" fill="#5b665f" font-size="15">The constraint can appear at any layer. National TWh averages do not answer site-level service dates.</text>
+  </g>
+  <g font-family="Arial, Helvetica, sans-serif" font-size="13">
+    <g transform="translate(48 118)">
+      <rect width="126" height="142" rx="8" fill="#eef5ef" stroke="#0b6b57"/>
+      <circle cx="24" cy="27" r="14" fill="#0b6b57"/>
+      <text x="20" y="32" fill="#fff" font-size="12" font-weight="700">1</text>
+      <text x="18" y="62" fill="#17201b" font-size="16" font-weight="700">Annual</text>
+      <text x="18" y="82" fill="#17201b" font-size="16" font-weight="700">energy</text>
+      <text x="18" y="112" fill="#5b665f">Enough MWh</text>
+      <text x="18" y="130" fill="#5b665f">over the year</text>
+    </g>
+    <g transform="translate(184 118)">
+      <rect width="126" height="142" rx="8" fill="#ffffff" stroke="#d7ded6"/>
+      <circle cx="24" cy="27" r="14" fill="#17805e"/>
+      <text x="20" y="32" fill="#fff" font-size="12" font-weight="700">2</text>
+      <text x="18" y="62" fill="#17201b" font-size="16" font-weight="700">Firm</text>
+      <text x="18" y="82" fill="#17201b" font-size="16" font-weight="700">capacity</text>
+      <text x="18" y="112" fill="#5b665f">Reliable MW</text>
+      <text x="18" y="130" fill="#5b665f">at peak</text>
+    </g>
+    <g transform="translate(320 118)">
+      <rect width="126" height="142" rx="8" fill="#eef5ef" stroke="#0b6b57"/>
+      <circle cx="24" cy="27" r="14" fill="#2f6fb3"/>
+      <text x="20" y="32" fill="#fff" font-size="12" font-weight="700">3</text>
+      <text x="18" y="62" fill="#17201b" font-size="16" font-weight="700">Transmission</text>
+      <text x="18" y="82" fill="#17201b" font-size="16" font-weight="700">delivery</text>
+      <text x="18" y="112" fill="#5b665f">Power reaches</text>
+      <text x="18" y="130" fill="#5b665f">load pocket</text>
+    </g>
+    <g transform="translate(456 118)">
+      <rect width="126" height="142" rx="8" fill="#ffffff" stroke="#d7ded6"/>
+      <circle cx="24" cy="27" r="14" fill="#0b6b57"/>
+      <text x="20" y="32" fill="#fff" font-size="12" font-weight="700">4</text>
+      <text x="18" y="62" fill="#17201b" font-size="16" font-weight="700">Substations</text>
+      <text x="18" y="82" fill="#17201b" font-size="16" font-weight="700">and gear</text>
+      <text x="18" y="112" fill="#5b665f">Transformers,</text>
+      <text x="18" y="130" fill="#5b665f">switchgear</text>
+    </g>
+    <g transform="translate(592 118)">
+      <rect width="126" height="142" rx="8" fill="#eef5ef" stroke="#0b6b57"/>
+      <circle cx="24" cy="27" r="14" fill="#d18a14"/>
+      <text x="20" y="32" fill="#fff" font-size="12" font-weight="700">5</text>
+      <text x="18" y="62" fill="#17201b" font-size="16" font-weight="700">Service</text>
+      <text x="18" y="82" fill="#17201b" font-size="16" font-weight="700">process</text>
+      <text x="18" y="112" fill="#5b665f">Studies, deposits,</text>
+      <text x="18" y="130" fill="#5b665f">agreements</text>
+    </g>
+    <g transform="translate(728 118)">
+      <rect width="126" height="142" rx="8" fill="#ffffff" stroke="#d7ded6"/>
+      <circle cx="24" cy="27" r="14" fill="#714c8f"/>
+      <text x="20" y="32" fill="#fff" font-size="12" font-weight="700">6</text>
+      <text x="18" y="62" fill="#17201b" font-size="16" font-weight="700">Cooling</text>
+      <text x="18" y="82" fill="#17201b" font-size="16" font-weight="700">and water</text>
+      <text x="18" y="112" fill="#5b665f">Heat becomes</text>
+      <text x="18" y="130" fill="#5b665f">engineering</text>
+    </g>
+    <g transform="translate(864 118)">
+      <rect width="126" height="142" rx="8" fill="#eef5ef" stroke="#0b6b57"/>
+      <circle cx="24" cy="27" r="14" fill="#c84f3f"/>
+      <text x="20" y="32" fill="#fff" font-size="12" font-weight="700">7</text>
+      <text x="18" y="62" fill="#17201b" font-size="16" font-weight="700">Reliability</text>
+      <text x="18" y="82" fill="#17201b" font-size="16" font-weight="700">quality</text>
+      <text x="18" y="112" fill="#5b665f">Voltage, backup,</text>
+      <text x="18" y="130" fill="#5b665f">frequency</text>
+    </g>
+    <g transform="translate(1000 118)">
+      <rect width="126" height="142" rx="8" fill="#ffffff" stroke="#d7ded6"/>
+      <circle cx="24" cy="27" r="14" fill="#17201b"/>
+      <text x="20" y="32" fill="#fff" font-size="12" font-weight="700">8</text>
+      <text x="18" y="62" fill="#17201b" font-size="16" font-weight="700">Permits</text>
+      <text x="18" y="82" fill="#17201b" font-size="16" font-weight="700">and costs</text>
+      <text x="18" y="112" fill="#5b665f">Who approves</text>
+      <text x="18" y="130" fill="#5b665f">and pays?</text>
+    </g>
+  </g>
+  <g fill="none" stroke="#0b6b57" stroke-width="2" stroke-linecap="round">
+    <path d="M174 189 H184"/>
+    <path d="M310 189 H320"/>
+    <path d="M446 189 H456"/>
+    <path d="M582 189 H592"/>
+    <path d="M718 189 H728"/>
+    <path d="M854 189 H864"/>
+    <path d="M990 189 H1000"/>
+  </g>
+</svg>

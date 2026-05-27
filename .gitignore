@@ -45,6 +45,7 @@ computer/system/project-index.md
 ~$*
 
 # Optional large generated artifacts.
+release-assets/
 workspace/reports/**/*.png
 workspace/converted/**/*.png
 workspace/converted/**/*.jpg

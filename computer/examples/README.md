@@ -10,6 +10,7 @@ You do not need to use a special command to experience Agent Computer. Open this
 
 Start with one of these:
 
+- [Power Is the New GPU Showcase](showcases/power-is-the-new-gpu/README.md)
 - [Research to PPT](scenarios/research-to-ppt.md)
 - [Document to Report and PPT](scenarios/document-to-report-and-ppt.md)
 - [Build a New Agent](scenarios/build-a-new-agent.md)
