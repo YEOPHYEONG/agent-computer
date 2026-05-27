@@ -136,8 +136,8 @@ Agent Computer turned that into:
 
 - a [source-backed research report](computer/examples/showcases/power-is-the-new-gpu/research-report.md)
 - an [interactive local HTML report](computer/examples/showcases/power-is-the-new-gpu/web/ai-electricity-bottleneck-report/index.html)
-- an editable PowerPoint deck with native text, shapes, tables, bars, and diagrams
-- a full-slide `$imagegen` visual research deck
+- an editable PowerPoint deck with native text, shapes, tables, bars, and diagrams ([download PPTX](https://github.com/YEOPHYEONG/agent-computer/releases/download/v0.1.1/electricity-ai-time-to-power-bottleneck-deck.pptx))
+- a full-slide `$imagegen` visual research deck ([download PPTX](https://github.com/YEOPHYEONG/agent-computer/releases/download/v0.1.1/power-is-the-new-gpu-image-deck.pptx), [PDF](https://github.com/YEOPHYEONG/agent-computer/releases/download/v0.1.1/power-is-the-new-gpu-image-deck.pdf))
 - [source maps](computer/examples/showcases/power-is-the-new-gpu/source-map.md), [claim verification](computer/examples/showcases/power-is-the-new-gpu/claim-verification-map.md), and QA notes
 
 The thesis: AI's power bottleneck is best understood as **regional time-to-power**, not global electricity scarcity.

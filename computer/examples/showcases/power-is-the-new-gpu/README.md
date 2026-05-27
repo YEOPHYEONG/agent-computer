@@ -56,13 +56,13 @@ Representative slides from the full-slide `$imagegen` deck:
 
 ## Large Files
 
-To keep the repository lightweight, the full PPTX/PDF deck files are not committed here.
+To keep the repository lightweight, the full PPTX/PDF deck files are attached to the GitHub release instead of committed directly.
 
-Recommended release assets:
+Download:
 
-- `electricity-ai-time-to-power-bottleneck-deck.pptx`
-- `power-is-the-new-gpu-image-deck.pptx`
-- `power-is-the-new-gpu-image-deck.pdf`
+- [Editable PPTX deck](https://github.com/YEOPHYEONG/agent-computer/releases/download/v0.1.1/electricity-ai-time-to-power-bottleneck-deck.pptx)
+- [Image-generated PPTX deck](https://github.com/YEOPHYEONG/agent-computer/releases/download/v0.1.1/power-is-the-new-gpu-image-deck.pptx)
+- [Image-generated PDF deck](https://github.com/YEOPHYEONG/agent-computer/releases/download/v0.1.1/power-is-the-new-gpu-image-deck.pdf)
 
 ## What To Notice
 
