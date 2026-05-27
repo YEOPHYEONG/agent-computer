@@ -1,8 +1,10 @@
 # Agent Computer
 
-**A local operating system for AI agents.**
+**A local operating system for high-quality AI agent work.**
 
 Turn Codex, Claude Code, or any file-editing coding agent into a durable workspace where agents run like apps, create project folders, use tools, preserve memory, produce real files, and leave QA trails you can inspect.
+
+Designed for top-tier outputs, not disposable chat answers: deep research reports, interactive web reports, editable decks, image-generated decks, source maps, and QA artifacts.
 
 [![Release](https://img.shields.io/github/v/release/YEOPHYEONG/agent-computer?label=release)](https://github.com/YEOPHYEONG/agent-computer/releases)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -34,13 +36,17 @@ Agent Computer should route the work, create a fresh project folder, run the rig
 
 ## See It Work
 
+This is not a hand-built mockup.
+
 One ordinary research question:
 
 ```text
 Is electricity becoming the next big bottleneck for AI stocks?
 ```
 
-became a complete workspace project with:
+A human provided the topic and boundaries. Agent Computer handled the workflow: research planning, source-backed synthesis, report writing, interactive web report, editable PPT deck, full-slide image deck, source mapping, claim verification, and QA.
+
+The result became a complete workspace project with:
 
 - a [source-backed research report](computer/examples/showcases/power-is-the-new-gpu/research-report.md)
 - an [interactive local HTML report](computer/examples/showcases/power-is-the-new-gpu/web/ai-electricity-bottleneck-report/index.html)

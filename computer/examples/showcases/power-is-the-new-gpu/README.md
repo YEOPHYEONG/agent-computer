@@ -1,5 +1,9 @@
 # Showcase: Power Is the New GPU
 
+This showcase was not hand-built.
+
+A human provided the topic, scope, and safety boundary. Agent Computer handled the workflow: research planning, source-backed synthesis, report writing, editable deck building, full-slide image deck generation, interactive web report creation, source mapping, claim verification, and QA.
+
 One natural-language research question became a project folder with four deliverables:
 
 - a source-backed deep research report
@@ -17,7 +21,7 @@ Can you research this deeply and write an English report?
 Please treat it as educational research, not investment advice.
 ```
 
-Agent Computer routed the work through deep research, source mapping, claim verification, report writing, presentation building, image-deck generation, web building, and QA.
+The point is not that Agent Computer answered in chat. The point is that it created a durable project folder full of inspectable work artifacts.
 
 ## Result
 
