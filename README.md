@@ -4,7 +4,7 @@
 
 Not a chatbot. Not another automation script. Open this folder with Codex, Claude Code, or any file-editing coding agent, then ask for work in natural language.
 
-Agents run installed apps, use tools, create project folders, and leave behind top-tier work artifacts: deep research reports, interactive web reports, editable decks, image-generated decks, source maps, memory, and QA.
+Agents run installed apps, use tools, create project folders, and leave behind durable project artifacts: deep research reports, interactive web reports, editable decks, image-generated decks, source maps, memory, and QA.
 
 [![Release](https://img.shields.io/github/v/release/YEOPHYEONG/agent-computer?label=release)](https://github.com/YEOPHYEONG/agent-computer/releases)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -12,6 +12,45 @@ Agents run installed apps, use tools, create project folders, and leave behind t
 [![Agent Apps](https://img.shields.io/badge/agent%20apps-15%2B-111827.svg)](computer/agents/README.md)
 
 ![Agent Computer cover](computer/docs/assets/agent-computer-cover-v4.png)
+
+## Who This Is For
+
+Agent Computer is built for people already using coding agents and local files:
+
+- Codex, Claude Code, Cursor-like tools, or other file-editing agents
+- GitHub repos, Markdown, terminals, and project folders
+- research, reports, decks, web pages, source maps, and QA-heavy work
+
+If your AI work keeps disappearing into chat history, Agent Computer is the folder-shaped operating layer around the agent you already use.
+
+## Try It In 5 Minutes
+
+1. Clone this repo.
+2. Open the folder with Codex, Claude Code, or another file-editing coding agent.
+3. Ask:
+
+```text
+Read AGENTS.md. How do I use this workspace?
+```
+
+4. Then try one useful workflow:
+
+```text
+Research this topic, write a report, and turn it into a PPT. Save everything under workspace/projects/.
+```
+
+Expected shape:
+
+```text
+workspace/projects/{project}/
+  research/
+  reports/
+  presentations/
+  web/
+  qa/
+```
+
+If this workspace pattern seems useful, star the repo and try one workflow. Early feedback will shape the default agent apps.
 
 ## What It Is
 
@@ -37,6 +76,8 @@ Agent Computer should route the work, create a fresh project folder, run the rig
 ## See It Work
 
 This is not a hand-built mockup.
+
+The topic is not the point. The point is that one request became a complete, inspectable project folder.
 
 One ordinary research question:
 

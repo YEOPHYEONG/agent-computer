@@ -6,6 +6,45 @@ Agent Computer is a local computer operated by your coding agent. You open this 
 
 The agent should run installed agent apps, create project folders, and leave durable results behind instead of only answering in chat.
 
+## First 10 Minutes
+
+1. Clone or copy this repo.
+2. Open the folder with Codex, Claude Code, or another file-editing coding agent.
+3. Ask:
+
+```text
+Read AGENTS.md. How do I use this workspace?
+```
+
+4. Try one real task:
+
+```text
+Research a topic, write a report, and turn it into a PPT. Save everything under workspace/projects/.
+```
+
+A good first run should leave a project folder like:
+
+```text
+workspace/projects/{project}/
+  research/
+  reports/
+  presentations/
+  qa/
+```
+
+The goal is not a perfect demo answer. The goal is to see the shift from chat output to durable project artifacts.
+
+## What Not To Expect
+
+Agent Computer is not:
+
+- a SaaS dashboard
+- a background daemon
+- a fully autonomous employee
+- a replacement for Codex or Claude Code
+
+It is a local workspace and operating layer for the coding agent you already use.
+
 ## If You Are a User
 
 Start with these folders:
@@ -62,6 +101,13 @@ Research newsletter success cases deeply and turn the findings into a rich edita
 ```
 
 Agent Computer should create a fresh project, save outputs under `workspace/projects/`, and run QA when appropriate.
+
+What success looks like:
+
+- a named project folder exists
+- intermediate notes and final artifacts are saved as files
+- QA notes explain remaining uncertainty or validation gaps
+- the work can be inspected, edited, continued, or shared without scrolling through chat
 
 For web reports, ask naturally:
 
