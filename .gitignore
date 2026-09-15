@@ -50,3 +50,6 @@ workspace/reports/**/*.png
 workspace/converted/**/*.png
 workspace/converted/**/*.jpg
 workspace/converted/**/*.jpeg
+
+# Local duplicate of the tracked v1 cover retained on the original Mac.
+computer/docs/assets/agent-computer-cover.png
