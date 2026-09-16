@@ -19,8 +19,10 @@
    - Medium: rough report, email draft, quick research, or first-time organization.
    - High: deep research, PPT/deck, web page, strategy, marketing, sales, branding, counseling, new agent, or large multi-agent artifact.
 12. For high intent-sensitivity work, identify the surface request and likely hidden goals. Ask concise Socratic questions when the answers would materially change the output.
-13. If you ask an outcome-changing question, stop and wait for the user's answer. Do not continue execution in the same turn.
-14. If you infer hidden intent, present it as a hypothesis and ask for confirmation before acting on it.
+13. If the execution gate is `STOP_BEFORE_EXECUTION`, ask the gate question and stop. Do not continue into research, reports, decks, web pages, email packages, or agent implementation in the same turn.
+14. Do not convert `Ask User Now` into assumptions unless the user explicitly says to proceed under reasonable assumptions or not to ask.
+15. If you ask an outcome-changing question, stop and wait for the user's answer. Do not continue execution in the same turn.
+16. If you infer hidden intent, present it as a hypothesis and ask for confirmation before acting on it.
 15. Match the request to an installed agent.
 16. If needed, build an agent chain.
 17. Apply Chain Checkpoints from `computer/docs/chain-checkpoints.md`.

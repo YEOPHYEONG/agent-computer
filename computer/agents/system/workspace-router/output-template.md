@@ -34,6 +34,15 @@
 - Confirmation gate needed:
 - If a question is asked, stop and wait before execution:
 
+## Execution Gate
+
+- Gate state: PROCEED / ASK_IF_MATERIAL / STOP_BEFORE_EXECUTION / PROCEED_WITH_EXPLICIT_ASSUMPTIONS
+- Why:
+- Allowed before user answer:
+- Blocked before user answer:
+- Ask now:
+- If `STOP_BEFORE_EXECUTION`, ask and wait. Do not create final research reports, strategy recommendations, decks, web pages, send packages, or new agent implementations in the same turn.
+
 ## Chain Checkpoints
 
 - Chain type:

@@ -60,6 +60,23 @@ If an agent asks a question that can change the outcome, it must stop and wait f
 
 When an agent infers a hidden intent, present it as a hypothesis and confirm it before acting on it.
 
+For high intent-sensitivity work, do not convert `Ask User Now` questions into assumptions unless the user explicitly says to proceed under reasonable assumptions or not to ask. Phrases like "make a strategy", "deeply research", "build a deck", "make a web page", "create a new agent", or "position this product" should trigger an execution gate before final deliverables are created.
+
+Allowed before the user answers:
+
+- read routing and agent instructions
+- draft a chain contract
+- create preflight-only notes or intent checks
+
+Blocked before the user answers:
+
+- final research reports
+- strategy recommendations
+- PPT/deck files
+- web pages
+- email/send packages
+- new agent implementation
+
 Example:
 
 ```text
@@ -94,6 +111,22 @@ Each agent should hand off durable artifacts, assumptions, unresolved questions,
 If a checkpoint asks an outcome-changing question, stop and wait for the user's answer.
 
 See `computer/docs/chain-checkpoints.md` for the shared chain policy.
+
+## Research Mode Rule
+
+Deep research should behave like a research operating loop, not a long answer generator.
+
+For serious research, `deep-dive-researcher` should define a research contract, choose Deep/Wide/Hybrid mode, set source policy, keep a question ledger, preserve an evidence store, verify consequential claims, and explain why the research stopped.
+
+Use:
+
+- Deep Mode for one hard question, strategic judgment, mechanisms, or conflicting evidence.
+- Wide Mode for many independent items that can share one rubric.
+- Hybrid Mode when broad coverage must feed a deep synthesis.
+
+Do not silently spawn runtime subagents. Use subagents only when the user explicitly asks for subagents, delegation, or parallel agent work and the runtime supports it. Otherwise, preserve Wide Mode with worker packets or sequential per-item notes.
+
+See `computer/docs/research-modes.md` for the shared research policy.
 
 ## Agent Computer Boundary Rule
 

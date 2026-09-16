@@ -104,10 +104,13 @@ Hand off:
 
 Hand off:
 
+- `research-contract.md`
 - research report
+- evidence store
 - source map
 - claim verification map
 - question ledger
+- selected research mode
 - unresolved evidence gaps
 - recommended report stance
 

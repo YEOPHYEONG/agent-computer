@@ -30,7 +30,7 @@ Usage:
   node computer/tools/agent-computer.mjs qa <file>
   node computer/tools/agent-computer.mjs build-agent <name> [--category work|system|personal] [--with-tools]
   node computer/tools/agent-computer.mjs quick-research <file> [--question "..."]
-  node computer/tools/agent-computer.mjs deep-research <file> [--question "..."]
+  node computer/tools/agent-computer.mjs deep-research <file> [--question "..."] [--runtime codex|claude-code|fallback|auto] [--native-subagents] [--materialize-subagents]
   node computer/tools/agent-computer.mjs report <file> [--audience "..."]
   node computer/tools/agent-computer.mjs ppt <file> [--title "..."] [--max-slides 18] [--plan-only]
   node computer/tools/agent-computer.mjs email-contact add --alias "..." --email "..." [--name "..."] [--replace]
@@ -155,7 +155,12 @@ async function main() {
   if (command === 'deep-research') {
     const file = firstValue();
     if (!file) throw new Error('deep-research requires a file path.');
-    printResult(await deepResearch(root, resolveWorkspacePath(root, file), { question: option('--question', '') }));
+    printResult(await deepResearch(root, resolveWorkspacePath(root, file), {
+      question: option('--question', ''),
+      runtime: option('--runtime', 'auto'),
+      nativeSubagents: has('--native-subagents'),
+      materializeSubagents: has('--materialize-subagents')
+    }));
     return;
   }
 
