@@ -261,6 +261,7 @@ function runSmokeChecks() {
     ['node', ['computer/tools/agent-computer.mjs', 'route', 'How do I use this workspace?']],
     ['node', ['computer/tools/agent-computer.mjs', 'route', 'Convert this PDF into a report and PPT.']],
     ['node', ['computer/tools/agent-computer.mjs', 'route', 'Research newsletter success cases deeply and turn the success formulas into a rich editable PPT.']],
+    ['node', ['computer/tools/agent-computer.mjs', 'route', 'Compare 30 AI research agents with the same rubric.']],
     ['node', ['computer/tools/agent-computer.mjs', 'route', 'Save person@example.com as a contact named Alex.']]
   ];
 

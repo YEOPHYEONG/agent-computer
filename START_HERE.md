@@ -26,6 +26,7 @@ Inside each project, look for:
 - `research/`: research briefs
 - `reports/`: written reports and documents
 - `presentations/`: PPT decks, specs, prototypes, and slide assets
+- `web/`: local HTML pages and interactive web reports
 - `qa/`: verification notes
 
 ## If You Are Looking at the Operating Layer
@@ -60,6 +61,14 @@ Research newsletter success cases deeply and turn the findings into a rich edita
 
 Agent Computer should create a fresh project, save outputs under `workspace/projects/`, and run QA when appropriate.
 
+For web reports, ask naturally:
+
+```text
+Research this market deeply, write the full report, then turn it into an interactive HTML page.
+```
+
+Agent Computer should keep the deep Markdown research/report separate from the HTML page.
+
 ## Good Usage Answer
 
 If you ask how to use Agent Computer, the answer should sound roughly like this:
@@ -79,7 +88,7 @@ For example, you can ask:
 "Organize this workspace by project. Show me the dry-run first."
 "Draft an email to Alex about the Agent Computer preview."
 
-Results usually live under workspace/projects/{project-name}/ in converted, research, reports, presentations, and qa folders.
+Results usually live under workspace/projects/{project-name}/ in converted, research, reports, presentations, web, and qa folders.
 
 I do not send email, access external accounts, operate host apps, delete files, or actually move files unless you explicitly approve that action.
 ```

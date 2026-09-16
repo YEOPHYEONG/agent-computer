@@ -29,6 +29,32 @@ Use this workspace with Codex by opening the `agent-computer` folder and asking 
 - Confirm inferred hidden intent before acting on it.
 - For multi-agent chains, define handoff artifacts, quality gates, and final QA criteria before execution.
 
+## Native Subagents
+
+Agent Computer ships prebuilt deep-research specialist specs under `computer/agents/work/deep-dive-researcher/subagents/`.
+
+In Codex, those files are not auto-registered by their directory alone. Treat them as canonical prompts and role contracts.
+
+Use native Codex subagents only when the user explicitly asks for subagents, delegation, or parallel agent work. Ordinary requests such as "research this" should create `runtime-subagent-plan.md` and `worker-packets/ac-*.md`, then proceed through the deep-dive researcher.
+
+Use the fixed roster only. Do not invent one-off personality subagents as product behavior. Serious research should prepare preflight roles first:
+
+- `ac-intent-analyst`
+- `ac-research-architect`
+
+When native subagents are explicitly authorized:
+
+1. Read the selected role specs.
+2. Spawn only the roles needed for the selected research architecture.
+3. Give each subagent a bounded task.
+4. Wait for the results.
+5. Write or summarize each result under `workspace/projects/<project-slug>/research/subagent-results/ac-*.md`.
+6. Have the deep-dive researcher synthesize as Research Director.
+
+Subagents should gather, verify, critique, or structure findings. They should not own the final report.
+
+Each run should also create `subagent-orchestration.md`, `subagent-results/README.md`, and `subagent-results/_template.md`. Do not claim native subagents ran unless the `subagent-results/ac-*.md` files contain actual findings or faithful summaries.
+
 ## Example
 
 ```text

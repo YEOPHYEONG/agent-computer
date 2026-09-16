@@ -39,6 +39,7 @@ projects/<project-slug>/
   research/
   reports/
   presentations/
+  web/
   qa/
   assets/
   tasks/

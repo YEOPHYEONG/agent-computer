@@ -34,6 +34,15 @@
 - Confirmation gate needed:
 - If a question is asked, stop and wait before execution:
 
+## Execution Gate
+
+- Gate state: PROCEED / ASK_IF_MATERIAL / STOP_BEFORE_EXECUTION / PROCEED_WITH_EXPLICIT_ASSUMPTIONS
+- Why:
+- Allowed before user answer:
+- Blocked before user answer:
+- Ask now:
+- If `STOP_BEFORE_EXECUTION`, ask and wait. Do not create final research reports, strategy recommendations, decks, web pages, send packages, or new agent implementations in the same turn.
+
 ## Chain Checkpoints
 
 - Chain type:
@@ -61,6 +70,7 @@ For usage/help requests, mark the project as not applicable and answer from `STA
 - For `document-ingestor`, use `projects/<project-slug>/converted/source.agent.md`, not `converted.md`.
 - For `document-ingestor`, also expect `projects/<project-slug>/converted/conversion-log.md`.
 - For `report-writer`, expect the default Markdown report at `projects/<project-slug>/reports/<topic>_report.md`.
+- For `web-builder`, expect local static web files at `projects/<project-slug>/web/<topic>/index.html`, `styles.css`, optional `app.js`, `README.md`, assets, and web QA under `projects/<project-slug>/qa/`.
 - For `ppt-builder`, expect `projects/<project-slug>/presentations/<topic>.pptx` plus content/design/build specs under `projects/<project-slug>/presentations/`, prototype/preview/assets/layout work under `projects/<project-slug>/presentations/`, and PPT QA under `projects/<project-slug>/qa/`.
 - For `file-organizer`, expect dry-run plans, move logs, move manifests, and index updates when it actually organizes files.
 - For `email-operator`, expect drafts, follow-ups, and send checklists under `projects/<project-slug>/reports/<topic>_email-package.md`. Actual sending requires explicit approval and an available connector.

@@ -46,6 +46,8 @@ export function cleanProjectSlug(value) {
     .replace(/-report$/, '')
     .replace(/-ppt-(content-spec|design-spec|build-plan|qa)$/, '')
     .replace(/-ppt-production-plan$/, '')
+    .replace(/-web-(content-spec|design-spec|build-plan|qa)$/, '')
+    .replace(/-web-report$/, '')
     .replace(/-(content-spec|design-spec|build-plan|production-plan)$/, '')
     .replace(/-email-package$/, '')
     .replace(/-reflection$/, '')

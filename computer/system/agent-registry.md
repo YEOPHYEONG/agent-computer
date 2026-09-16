@@ -18,6 +18,7 @@
 | quick-researcher | `computer/agents/work/quick-researcher` | Fast focused research |
 | deep-dive-researcher | `computer/agents/work/deep-dive-researcher` | Deep research |
 | report-writer | `computer/agents/work/report-writer` | Reports and documents |
+| web-builder | `computer/agents/work/web-builder` | Local static HTML pages and interactive web reports |
 | ppt-builder | `computer/agents/work/ppt-builder` | Editable PPT decks |
 | email-operator | `computer/agents/work/email-operator` | Email drafts and follow-ups |
 | instagram-growth-analyst | `computer/agents/work/instagram-growth-analyst` | Analyze local Instagram performance data and produce growth experiments without external account access |

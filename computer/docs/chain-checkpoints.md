@@ -104,12 +104,30 @@ Hand off:
 
 Hand off:
 
-- research report
+- `research-contract.md`
+- MI-grade deep research report
+- evidence store
 - source map
 - claim verification map
 - question ledger
+- selected research mode
 - unresolved evidence gaps
 - recommended report stance
+
+### report-writer -> web-builder
+
+Hand off:
+
+- final Markdown report
+- evidence map
+- source links
+- target audience
+- page purpose
+- must-preserve claims
+- caveats that must remain visible
+- sections that can be distilled into cards, tables, charts, or interactions
+
+`web-builder` should not replace `deep-dive-researcher`. It turns the approved report/research package into HTML after the deep research and narrative report exist.
 
 ### report-writer -> ppt-builder
 
